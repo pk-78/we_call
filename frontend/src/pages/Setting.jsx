@@ -7,16 +7,18 @@ import Level from "../components/Level";
 import Task from "../components/Task";
 import BackPack from "../components/BackPack";
 import Profile from "../components/Profile";
+import { TbCardsFilled } from "react-icons/tb";
 
 export default function Setting() {
   const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState(""); // Store the active component
+  const messageClicked = "false"
 
   const renderComponent = () => {
     switch (activeItem) {
       case "message":
         return (
-          <Message activeItem={activeItem} setActiveItem={setActiveItem} />
+          <Message activeItem={activeItem} messageClicked="true" setActiveItem={setActiveItem} />
         );
       case "level":
         return <Level activeItem={activeItem} setActiveItem={setActiveItem} />;
@@ -40,8 +42,11 @@ export default function Setting() {
   };
 
   // Toggle function to handle button clicks
-  const handleButtonClick = (item) => {
+  const handleButtonClick = (item, messageClicked) => {
+    messageClicked= true;
     setActiveItem(activeItem === item ? "" : item);
+
+    console.log("la bhaiya ", activeItem);
   };
 
   return (
@@ -52,7 +57,7 @@ export default function Setting() {
           {/* Profile Picture */}
           <div className="relative">
             <img
-              src="https://via.placeholder.com/150"
+              src="/profile_man.png"
               alt="Profile"
               className="rounded-full h-24 w-24 object-cover border-4 border-teal-500"
             />
@@ -81,15 +86,35 @@ export default function Setting() {
           </div>
 
           {/* Total Coins */}
-          <div className="mt-6 bg-teal-100 p-4 rounded-lg shadow-sm w-full flex justify-between items-center transition duration-500 ease-in-out transform hover:scale-105">
-            <span className="text-gray-700 font-semibold">Total Coins:</span>
-            <span className="text-3xl text-teal-600 font-bold">{coins}</span>
+          <div className="mt-6 bg-teal-100 p-6 rounded-lg shadow-lg w-full max-w-md mx-auto transition duration-500 ease-in-out transform hover:scale-105">
+            {/* Total Coins Section */}
+            <div className="flex items-center justify-between">
+              <span className="text-gray-700 font-semibold text-lg">
+                Total Coins:
+              </span>
+              <span className="text-xl text-teal-600 font-bold">{coins}</span>
+            </div>
+
+            {/* Stats Section */}
+            <div className="flex justify-between mt-1">
+              {/* Left Icon and Value */}
+              <div className="flex items-center space-x-2">
+                <TbCardsFilled className="text-pink-400 text-3xl" />
+                <p className="text-gray-800 font-semibold text-xl">2</p>
+              </div>
+
+              {/* Right Icon and Value */}
+              <div className="flex items-center space-x-2">
+                <TbCardsFilled className="text-orange-400 text-3xl" />
+                <p className="text-gray-800 font-semibold text-xl">3</p>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 mt-4">
             {/* Message */}
             <button
-              onClick={() => handleButtonClick("message")}
+              onClick={() => handleButtonClick("message"); messageClicked= true}
               className={`p-4 w-44 bg-gray-200 rounded-lg text-center hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105 ${
                 activeItem === "message" ? "bg-gray-300" : ""
               }`}

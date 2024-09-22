@@ -1,6 +1,6 @@
 import React from "react";
 import { FaArrowLeft } from "react-icons/fa";
-export default function Profile({activeItem,setActiveItem}) {
+export default function Profile({ activeItem, setActiveItem }) {
   return (
     <div className="p-6 bg-gray-50 h-[569px] rounded-lg  flex flex-col justify-center items-center">
       {/* Profile Container */}
@@ -8,7 +8,7 @@ export default function Profile({activeItem,setActiveItem}) {
         {/* Profile Header */}
         <div
           onClick={() => {
-            setActiveItem(!activeItem);
+            setActiveItem("");
             console.log("clicked");
           }}
           className="cursor-pointer"

@@ -1,7 +1,7 @@
 import React from "react";
 import { FaArrowLeft } from "react-icons/fa";
 
-export default function Level({activeItem, setActiveItem}) {
+export default function Level({ activeItem, setActiveItem }) {
   return (
     <div className="p-6 bg-gray-50 h-[569px] rounded-lg  flex flex-col justify-center items-center">
       {/* Level Container */}
@@ -9,7 +9,8 @@ export default function Level({activeItem, setActiveItem}) {
         {/* Header */}
         <div
           onClick={() => {
-            setActiveItem(!activeItem);
+            setActiveItem("");
+            console.log("kya hua", !activeItem);
             console.log("clicked");
           }}
           className="cursor-pointer"
@@ -17,7 +18,6 @@ export default function Level({activeItem, setActiveItem}) {
           <FaArrowLeft />
         </div>
         <div className="text-center mb-8">
-            
           <h1 className="text-3xl font-semibold text-gray-800">Your Level</h1>
           <p className="text-gray-600">Track your progress to the next level</p>
         </div>
@@ -26,7 +26,9 @@ export default function Level({activeItem, setActiveItem}) {
         <div className="space-y-6">
           {/* Current Level */}
           <div className="text-center">
-            <p className="text-gray-700 text-xl font-medium">Your Current Level:</p>
+            <p className="text-gray-700 text-xl font-medium">
+              Your Current Level:
+            </p>
             <p className="text-4xl text-teal-500 font-bold">4</p>
           </div>
 
@@ -55,7 +57,9 @@ export default function Level({activeItem, setActiveItem}) {
           {/* Message */}
           <div className="text-center">
             <p className="text-gray-700">
-              You need to spend <span className="text-teal-600 font-semibold">46,000</span> more coins to reach
+              You need to spend{" "}
+              <span className="text-teal-600 font-semibold">46,000</span> more
+              coins to reach
               <span className="text-teal-600 font-semibold"> Level 5</span>.
             </p>
           </div>

@@ -10,7 +10,7 @@ export default function BackPack({ activeItem, setActiveItem }) {
         {/* Header */}
         <div
           onClick={() => {
-            setActiveItem(!activeItem);
+            setActiveItem("");
             console.log("clicked");
           }}
           className="cursor-pointer"

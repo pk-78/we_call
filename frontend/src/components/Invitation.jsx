@@ -8,7 +8,7 @@ export default function Invitation({ activeItem, setActiveItem }) {
       {/* Invite Title */}
       <div
         onClick={() => {
-          setActiveItem(!activeItem);
+          setActiveItem("");
           console.log("clicked");
         }}
         className="cursor-pointer"

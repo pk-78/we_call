@@ -9,7 +9,7 @@ export default function Task({ activeItem, setActiveItem }) {
         {/* Header */}
         <div
           onClick={() => {
-            setActiveItem(!activeItem);
+            setActiveItem("");
             console.log("clicked");
           }}
           className="cursor-pointer"

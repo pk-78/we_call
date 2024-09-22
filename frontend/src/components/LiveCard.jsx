@@ -16,14 +16,13 @@ export default function LiveCard({ rate }) {
         <img
           src="/car.jpg"
           alt="Wait for the images"
-          className="w-full h-[400px] object-cover rounded-t-xl transform transition-transform duration-00 group-hover:scale-105"
+          className="w-full h-[400px] object-cover rounded-t-xl transform transition-transform duration-00 "
         />
         <button
           className={` flex gap-1 absolute top-2 right-2 bg-teal-600 bg-opacity-20 text-white text-sm py-1 px-3 rounded-full shadow-lg hover:bg-teal-700 focus:outline-none`}
         >
-            <FaPlus  className="mt-1"/>
+          <FaPlus className="mt-1" />
           Follow
-          
         </button>
         {/* Call Button */}
         <button
