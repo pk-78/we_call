@@ -8,17 +8,26 @@ import Task from "../components/Task";
 import BackPack from "../components/BackPack";
 import Profile from "../components/Profile";
 import { TbCardsFilled } from "react-icons/tb";
+import { MdTask } from "react-icons/md";
+import DailyCheckIn from "../components/DailyCheckIn";
+import { GiCrossedBones } from "react-icons/gi";
 
 export default function Setting() {
   const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState(""); // Store the active component
-  const messageClicked = "false"
+  const [messageClicked, setMessageClicked] = useState("false");
+  const [dailyCheckIn, setDailyCheckIn] = useState(false);
+
 
   const renderComponent = () => {
     switch (activeItem) {
       case "message":
         return (
-          <Message activeItem={activeItem} messageClicked="true" setActiveItem={setActiveItem} />
+          <Message
+            activeItem={activeItem}
+            messageClicked
+            setActiveItem={setActiveItem}
+          />
         );
       case "level":
         return <Level activeItem={activeItem} setActiveItem={setActiveItem} />;
@@ -43,7 +52,7 @@ export default function Setting() {
 
   // Toggle function to handle button clicks
   const handleButtonClick = (item, messageClicked) => {
-    messageClicked= true;
+    messageClicked = "true";
     setActiveItem(activeItem === item ? "" : item);
 
     console.log("la bhaiya ", activeItem);
@@ -51,8 +60,10 @@ export default function Setting() {
 
   return (
     <div className="flex justify-center items-start p-6 bg-gray-200 min-h-screen">
+      
       {/* Settings Card */}
-      <div className="bg-white shadow-lg rounded-lg w-full max-w-md p-6">
+      <div className="relative bg-white shadow-lg rounded-lg w-full max-w-md p-6">
+      <button onClick={()=>{setDailyCheckIn(true)}} className="absolute text-3xl top-2 right-2 text-yellow-500 hover:text-yellow-600"><MdTask className="cursor-pointer"/></button>
         <div className="flex flex-col items-center">
           {/* Profile Picture */}
           <div className="relative">
@@ -86,7 +97,7 @@ export default function Setting() {
           </div>
 
           {/* Total Coins */}
-          <div className="mt-6 bg-teal-100 p-6 rounded-lg shadow-lg w-full max-w-md mx-auto transition duration-500 ease-in-out transform hover:scale-105">
+          <div className="mt-4 mx-12 bg-teal-100  p-6 rounded-lg shadow-lg w-full transition duration-500 ease-in-out transform hover:scale-105">
             {/* Total Coins Section */}
             <div className="flex items-center justify-between">
               <span className="text-gray-700 font-semibold text-lg">
@@ -114,7 +125,7 @@ export default function Setting() {
           <div className="grid grid-cols-2 gap-4 mt-4">
             {/* Message */}
             <button
-              onClick={() => handleButtonClick("message"); messageClicked= true}
+              onClick={() => handleButtonClick("message", messageClicked)}
               className={`p-4 w-44 bg-gray-200 rounded-lg text-center hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105 ${
                 activeItem === "message" ? "bg-gray-300" : ""
               }`}
@@ -180,6 +191,22 @@ export default function Setting() {
           }`}
         >
           {renderComponent()}
+        </div>
+      )}
+      {dailyCheckIn && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+          <div className="relative bg-white rounded-lg p-4">
+            <button
+              onClick={() => {
+                setDailyCheckIn(false);
+              }}
+              className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+            >
+              <GiCrossedBones size={24} />
+            </button>
+            <DailyCheckIn/>
+            
+          </div>
         </div>
       )}
     </div>

@@ -2,8 +2,11 @@ import React from "react";
 import { IoCallOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import { coins } from "../url/coins";
+import RequestCall from "./RequestCall";
+import { useNavigate } from "react-router-dom";
 
-export default function LiveCard({ rate }) {
+export default function LiveCard({ rate, requestCall, setRequestCall }) {
+  const navigate = useNavigate();
   const buttonColor =
     coins >= rate
       ? "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700"
@@ -26,6 +29,9 @@ export default function LiveCard({ rate }) {
         </button>
         {/* Call Button */}
         <button
+          onClick={() => {
+            setRequestCall(true);
+          }}
           className={`absolute bottom-4 right-4 ${buttonColor} text-2xl flex rounded-full p-3 text-white shadow-lg transition-all ease-in-out duration-200 transform hover:scale-105 focus:outline-none`}
         >
           <IoCallOutline />
@@ -41,10 +47,16 @@ export default function LiveCard({ rate }) {
             <img
               src="/profile_man.png"
               alt="Profile"
-              className="w-8 h-8 rounded-full object-cover"
+              onClick={() => navigate("/profile")}
+              className="w-8 h-8  rounded-full object-cover cursor-pointer"
             />
             <div>
-              <p className="text-xl font-bold text-teal-700">pk_78</p>
+              <p
+                className="text-xl font-bold text-teal-700 cursor-pointer"
+                onClick={() => navigate("/profile")}
+              >
+                pk_78
+              </p>
               <p className="text-sm text-teal-500">India</p>
             </div>
           </div>

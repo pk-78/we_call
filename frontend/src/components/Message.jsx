@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { IoIosArrowDown, IoIosArrowBack } from "react-icons/io";
 import SingleMessageCard from "./SingleMessageCard";
 
-export default function Message({ activeItem, setActiveitem }) {
+export default function Message({ activeItem, messageClicked="false", setActiveitem }) {
   console.log("daba diye gye kya");
   const [openMessageBox, setOpenMessageBox] = useState(false);
 
@@ -10,7 +10,7 @@ export default function Message({ activeItem, setActiveitem }) {
 
   return (
     <div
-      className={`w-[300px] px-1  z-20 fixed right-1 transition-all duration-700 ${
+      className={`w-[300px] px-1  z-20 fixed ${messageClicked === "true"? "right-20":"right-1"} transition-all duration-700 ${
         openMessageBox ? "top-14 h-[80vh]" : "bottom-16 h-12"
       }`}
     >

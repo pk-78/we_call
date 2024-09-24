@@ -17,6 +17,7 @@ import { useState } from "react";
 import PrivateRoute from "./ui/PrivateRoute";
 import Message from "./components/Message";
 import Post from "./pages/Post";
+import OtherProfile from "./components/OtherProfile";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -47,6 +48,9 @@ function App() {
         <Route path="/party" element={<Party coins={coins} />} />
         <Route path="/post" element={<Post coins={coins} />} />
         <Route path="/setting" element={<Setting coins={coins} />} />
+        <Route path="/setting" element={<Setting coins={coins} />} />
+        <Route path="/profile" element={<OtherProfile coins={coins} />} />
+
         {/* // </PrivateRoute>
           // } */}
         {/* /> */}

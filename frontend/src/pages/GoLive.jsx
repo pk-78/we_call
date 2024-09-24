@@ -5,7 +5,7 @@ export default function GoLive() {
   coins; // Example value; ideally, this would be a prop or fetched from a state/store.
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg text-center">
+    <div className="max-w-md mx-auto my-10 p-6 bg-white shadow-lg rounded-lg text-center">
       {coins >= 200 ? (
         <div>
           <h2 className="text-2xl font-semibold text-green-600 mb-4">

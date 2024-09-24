@@ -15,7 +15,7 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
     <nav className="bg-teal-800 p-4">
       <div className="container mx-auto flex items-center justify-between">
         {/* Navigation Links */}
-        <ul className="flex flex-grow justify-center space-x-6">
+        <ul className="flex flex-grow justify-center md:space-x-6 space-x-3">
           <li>
             <NavLink
               to="/home"
