@@ -3,7 +3,7 @@ import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
 export default function PartyCard() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <div className="border border-gray-200 rounded-xl shadow-lg w-80 bg-white overflow-hidden hover:shadow-4xl hover:shadow-light-blue/40 transition-all duration-300 ease-in-out transform hover:scale-105">
       {/* Image Section */}
@@ -11,7 +11,7 @@ export default function PartyCard() {
         <img
           src="/car.jpg"
           alt="Party image"
-          className="w-full h-[300px] object-cover rounded-t-xl transform transition-transform duration-300 "
+          className="w-full h-[300px] object-cover cursor-pointer rounded-t-xl transform transition-transform duration-300 "
         />
         <button
           className={` flex gap-1 absolute top-2 right-2 bg-teal-600 bg-opacity-20 text-white text-sm py-1 px-3 rounded-full shadow-lg hover:bg-teal-700 focus:outline-none`}
@@ -62,7 +62,10 @@ export default function PartyCard() {
               <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
               <p className="m-0">100+ people have joined</p>
             </div>
-            <button className="bg-green-600 text-green-100 font-semibold text-lg px-4 py-1 rounded-full shadow-sm">
+            <button
+              onClick={() => navigate("/party-room")}
+              className="bg-green-600 text-green-100 font-semibold text-lg px-4 py-1 rounded-full shadow-sm"
+            >
               Join
             </button>
           </div>

@@ -18,9 +18,14 @@ import PrivateRoute from "./ui/PrivateRoute";
 import Message from "./components/Message";
 import Post from "./pages/Post";
 import OtherProfile from "./components/OtherProfile";
+import LiveWatch from "./pages/LiveRoom";
+import PartyRoom from "./pages/PartyRoom";
+import OfferPage from "./components/OfferPage";
+import Live from "./components/Live";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [offerPage, setOfferPage] = useState(false);
 
   const coins = 200;
   return (
@@ -43,18 +48,23 @@ function App() {
         {/* <Route */}
         {/* // element={ */}
         {/* // <PrivateRoute isLoggedIn={isLoggedIn}> */}
-        <Route path="/home" element={<Home coins={coins} />} />
+        <Route path="/home" element={<Home coins={coins}  />} />
         <Route path="/golive" element={<GoLive coins={coins} />} />
         <Route path="/party" element={<Party coins={coins} />} />
         <Route path="/post" element={<Post coins={coins} />} />
         <Route path="/setting" element={<Setting coins={coins} />} />
-        <Route path="/setting" element={<Setting coins={coins} />} />
+
         <Route path="/profile" element={<OtherProfile coins={coins} />} />
+        <Route path="/live-room" element={<LiveWatch coins={coins} />} />
+        <Route path="/party-room" element={<PartyRoom coins={coins} />} />
+        <Route path="/pricing" element={<OfferPage coins={coins} />} />
+        <Route path="/live" element={<Live coins={coins} />} />
 
         {/* // </PrivateRoute>
           // } */}
         {/* /> */}
       </Routes>
+
       <Message />
 
       <Footer />

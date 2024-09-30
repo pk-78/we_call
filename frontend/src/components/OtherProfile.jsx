@@ -17,7 +17,7 @@ export default function OtherProfile({ coins }) {
       <div className="bg-white shadow-lg rounded-lg w-full max-w-md  mb-6 lg:max-w-3xl lg:p-6 lg:space-x-6">
         <div className="w-full lg:space-y-4">
           <img
-            src="/rand_profile.jpg"
+            src="/random_profile.jpg"
             alt="Cover"
             className="w-full object-cover rounded-lg mb-4"
           />

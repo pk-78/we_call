@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import LiveCard from "../components/LiveCard";
 import RequestCall from "../components/RequestCall";
+import { GiCrossedBones } from "react-icons/gi";
 
 export default function Home() {
   const [buttonClick, setButtonClick] = useState("random");
   const [requestCall, setRequestCall] = useState(false);
+  const [checkEnoughBalance, setCheckEnoughBalance] = useState(false);
 
   const randomButton = "";
 
@@ -17,12 +19,18 @@ export default function Home() {
   //   console.log(buttonClick);
   // }
 
+  function checkRequestCall() {}
+
+  console.log("ye le bacha", checkEnoughBalance);
+
   console.log(requestCall);
   return (
     <div className=" relative md:px-28 md:py-10 my-5 bg-gray-50">
       {/* Title Section */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="md:text-3xl pl-5 font-bold text-gray-800">Currently Live</h1>
+        <h1 className="md:text-3xl pl-5 font-bold text-gray-800">
+          Currently Live
+        </h1>
         <div className="space-x-4 pr-4">
           <button
             onClick={() => {
@@ -74,46 +82,55 @@ export default function Home() {
               rate={300}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={300}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={200}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={300}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={200}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={200}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={200}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={300}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={300}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
           </div>
         ) : buttonClick === "nearby" ? (
@@ -122,31 +139,37 @@ export default function Home() {
               rate={300}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={300}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={200}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={300}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={200}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={200}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
 
             <LiveCard rate={300} />
@@ -158,40 +181,49 @@ export default function Home() {
               rate={300}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={300}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={200}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={300}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={200}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
             <LiveCard
               rate={300}
               requestCall={requestCall}
               setRequestCall={setRequestCall}
+              setCheckEnoughBalance={setCheckEnoughBalance}
             />
           </div>
         )}
       </div>
 
       {requestCall && (
-        <div className="absolute top-3 right-8">
-          <RequestCall setRequestCall={setRequestCall}  />
-        </div>
+        
+            <RequestCall
+              checkEnoughBalance={checkEnoughBalance}
+              setRequestCall={setRequestCall}
+            />
+          
       )}
     </div>
   );

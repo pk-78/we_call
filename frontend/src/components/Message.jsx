@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { IoIosArrowDown, IoIosArrowBack } from "react-icons/io";
 import SingleMessageCard from "./SingleMessageCard";
 
-export default function Message({ activeItem, messageClicked="false", setActiveitem }) {
+export default function Message({ messageClicked="false", setActiveitem }) {
   console.log("daba diye gye kya");
   const [openMessageBox, setOpenMessageBox] = useState(false);
 
-  console.log(activeItem);
+
 
   return (
     <div
