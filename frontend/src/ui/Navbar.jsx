@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FaHome } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
 import { MdLiveTv, MdPostAdd } from "react-icons/md";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { LuLogOut } from "react-icons/lu";
 import { NavLink, useNavigate } from "react-router-dom";
+import UserContext from "../context/UserContext";
 
-export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
+export default function Navbar() {
   const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
 
   function logoutHandler() {
     setIsLoggedIn(false); // Update the state correctly
@@ -36,24 +38,22 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
             </NavLink>
           </li>
 
-          {isLoggedIn && (
-            <li>
-              <NavLink
-                to="/party"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-white border-b-2 border-white font-bold"
-                    : "text-light-gray hover:border-b-2 hover:border-white hover:text-white transition-all"
-                }
-              >
-                {/* Show icon on mobile, text on larger screens */}
-                <span className=" text-xl md:hidden">
-                  <FaPeopleGroup />
-                </span>
-                <span className="hidden md:inline">Party</span>
-              </NavLink>
-            </li>
-          )}
+          <li>
+            <NavLink
+              to="/party"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-white border-b-2 border-white font-bold"
+                  : "text-light-gray hover:border-b-2 hover:border-white hover:text-white transition-all"
+              }
+            >
+              {/* Show icon on mobile, text on larger screens */}
+              <span className=" text-xl md:hidden">
+                <FaPeopleGroup />
+              </span>
+              <span className="hidden md:inline">Party</span>
+            </NavLink>
+          </li>
 
           <li>
             <NavLink

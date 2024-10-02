@@ -3,7 +3,7 @@ import { FaArrowLeft } from "react-icons/fa";
 
 export default function Task({ activeItem, setActiveItem }) {
   return (
-    <div className="p-6 bg-gray-50 h-[569px] rounded-lg  flex flex-col justify-center items-center">
+    <div className="p-6  h-[569px] rounded-lg  flex flex-col justify-center items-center">
       {/* Task Container */}
       <div className="bg-white shadow-lg rounded-lg p-6 max-w-lg w-full">
         {/* Header */}

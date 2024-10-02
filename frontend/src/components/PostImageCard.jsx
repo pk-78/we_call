@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../context/UserContext";
 
 export default function PostImageCard() {
   const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
+    useContext(UserContext);
   return (
     <div className="rounded-lg overflow-hidden shadow-lg bg-white relative">
       {/* Main Image */}
@@ -15,6 +18,12 @@ export default function PostImageCard() {
         />
         {/* Follow Button */}
         <button
+        onClick={() => {
+          if (!isLoggedIn) {
+            setNotLoggedInPage(true);
+          } else {
+          }
+        }}
           className={` flex gap-1 absolute top-2 md:right-3 right-6 bg-teal-600 bg-opacity-20 text-white text-sm py-1 px-3 rounded-full shadow-lg hover:bg-teal-600 focus:outline-none`}
         >
           <FaPlus className="mt-1" />

@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import LiveCard from "../components/LiveCard";
 import RequestCall from "../components/RequestCall";
 import { GiCrossedBones } from "react-icons/gi";
+import UserContext from "../context/UserContext";
+import NotLoggedIn from "../components/NotLoggedIn";
 
 export default function Home() {
   const [buttonClick, setButtonClick] = useState("random");
   const [requestCall, setRequestCall] = useState(false);
   const [checkEnoughBalance, setCheckEnoughBalance] = useState(false);
+  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
+  useContext(UserContext);
 
   const randomButton = "";
 
@@ -31,7 +35,7 @@ export default function Home() {
         <h1 className="md:text-3xl pl-5 font-bold text-gray-800">
           Currently Live
         </h1>
-        <div className="space-x-4 pr-4">
+        { isLoggedIn && <div className="space-x-4 pr-4">
           <button
             onClick={() => {
               console.log("daab diye nearby ko");
@@ -71,7 +75,7 @@ export default function Home() {
           >
             Follow
           </button>
-        </div>
+        </div>}
       </div>
 
       {/* Live Cards Grid Section */}
@@ -224,6 +228,21 @@ export default function Home() {
               setRequestCall={setRequestCall}
             />
           
+      )}
+      {notLoggedInPage && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+          <div className="relative bg-white rounded-lg p-4">
+            <button
+              onClick={() => {
+                setNotLoggedInPage(false);
+              }}
+              className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+            >
+              <GiCrossedBones size={24} />
+            </button>
+            <NotLoggedIn />
+          </div>
+        </div>
       )}
     </div>
   );

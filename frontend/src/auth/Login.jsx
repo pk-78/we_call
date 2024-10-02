@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { url } from "../url/url";
+import UserContext from "../context/UserContext";
 
-export default function Login({ setIsLoggedIn }) {
+export default function Login() {
   const {
     register,
     handleSubmit,
@@ -14,6 +15,7 @@ export default function Login({ setIsLoggedIn }) {
     reset,
   } = useForm();
   const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
 
   const onSubmit = async (formData) => {
     console.log(formData);

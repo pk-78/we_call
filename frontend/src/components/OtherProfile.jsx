@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FaRegStar, FaStar, FaArrowLeft, FaStarHalfAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../context/UserContext";
+import { FaPlus } from "react-icons/fa6";
 
 export default function OtherProfile({ coins }) {
   const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
+    useContext(UserContext);
+
   return (
     <div className="flex justify-center items-start p-2 mb-8 bg-gray-200 min-h-screen">
       {/* Back Button */}
@@ -35,6 +40,18 @@ export default function OtherProfile({ coins }) {
                 <p className="text-gray-500">India</p>
               </div>
               <div>
+                <button
+                  onClick={() => {
+                    if (!isLoggedIn) {
+                      setNotLoggedInPage(true);
+                    } else {
+                    }
+                  }}
+                  className={` flex gap-2 py-2 px-6 bg-teal-600  text-white text-sm rounded-lg shadow-lg hover:bg-teal-700 focus:outline-none`}
+                >
+                  <FaPlus className="mt-1" />
+                  Follow
+                </button>
                 <button className="mt-2 px-6 py-2 bg-teal-600 text-white rounded-lg shadow-md hover:bg-teal-500">
                   Message
                 </button>

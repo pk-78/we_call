@@ -2,7 +2,7 @@ import React from "react";
 import { FaArrowLeft } from "react-icons/fa";
 export default function Profile({ activeItem, setActiveItem }) {
   return (
-    <div className="p-6 bg-gray-50 h-[569px] rounded-lg  flex flex-col justify-center items-center">
+    <div className="p-6  h-[569px] rounded-lg  flex flex-col justify-center items-center">
       {/* Profile Container */}
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
         {/* Profile Header */}
@@ -20,9 +20,8 @@ export default function Profile({ activeItem, setActiveItem }) {
         </div>
 
         {/* Profile Details */}
-        <div className="flex flex-col items-center space-y-4">
+        <div className="flex flex-col items-center space-y-2">
           {/* Username */}
-          <p className="text-xl font-medium text-gray-700">pk_78</p>
 
           {/* Profile Picture */}
           <div className="relative">
@@ -39,20 +38,24 @@ export default function Profile({ activeItem, setActiveItem }) {
 
           {/* Gmail */}
           <div className="text-center">
-            <p className="text-gray-600">Email</p>
-            <p className="text-gray-800 font-medium">example@gmail.com</p>
-          </div>
+            <p className="text-xl font-medium text-gray-700">pk_78</p>
+            <p className="text-gray-800 font-medium">ID</p>
+            <p className="text-gray-800 font-medium">Email</p>
+            <p className="text-gray-800 font-medium">Gender</p>
+            <p className="text-gray-800 font-medium">Age</p>
+            <p className="text-gray-800 font-medium">Location</p>
+            <p className="text-gray-800 font-medium">English</p>
+            <p className="text-gray-800 font-medium">Mobile Number</p>
 
-          {/* Mobile Number */}
-          <div className="text-center">
-            <p className="text-gray-600">Mobile Number</p>
-            <p className="text-gray-800 font-medium">+123 456 7890</p>
+            <p className="text-gray-800 font-medium">Password</p>
           </div>
         </div>
 
         {/* Button for Edit Profile */}
         <div className="mt-8 text-center">
-          <button className="bg-teal-500 text-white px-6 py-2 rounded-lg shadow-md hover:bg-teal-700 transition duration-300 ease-in-out">
+          <button
+          onClick={()=>{Navigate("/editProfile")}}
+          className="bg-teal-500 text-white px-6 py-2 rounded-lg shadow-md hover:bg-teal-700 transition duration-300 ease-in-out">
             Edit Profile
           </button>
         </div>

@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import PostImageCard from "../components/PostImageCard";
 import { FaPlus } from "react-icons/fa6";
 import ImageUpload from "../components/ImageUpload";
 import { GiCrossedBones } from "react-icons/gi";
+import UserContext from "../context/UserContext";
+import NotLoggedIn from "../components/NotLoggedIn";
 
 export default function Post() {
   const [buttonClick, setButtonClick] = useState("follow");
   const [createPost, setCreatePost] = useState(false);
+  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
+  useContext(UserContext);
 
   // UseEffect to handle scroll lock when modal is open
   useEffect(() => {
@@ -29,7 +33,7 @@ export default function Post() {
       {/* Header Section */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="md:text-3xl pl-5 font-bold text-gray-800">Posts</h1>
-        <div className="space-x-4 pr-4">
+        {isLoggedIn && <div className="space-x-4 pr-4">
           {/* Follow Button */}
           <button
             onClick={() => {
@@ -74,7 +78,7 @@ export default function Post() {
               Create Post
             </span>
           </button>
-        </div>
+        </div>}
       </div>
 
       {/* Posts Grid */}
@@ -116,6 +120,21 @@ export default function Post() {
               <GiCrossedBones size={24} />
             </button>
             <ImageUpload />
+          </div>
+        </div>
+      )}
+      {notLoggedInPage && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+          <div className="relative bg-white rounded-lg p-4">
+            <button
+              onClick={() => {
+                setNotLoggedInPage(false);
+              }}
+              className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+            >
+              <GiCrossedBones size={24} />
+            </button>
+            <NotLoggedIn />
           </div>
         </div>
       )}

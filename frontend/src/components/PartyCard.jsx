@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../context/UserContext";
 
 export default function PartyCard() {
   const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
+    useContext(UserContext);
   return (
     <div className="border border-gray-200 rounded-xl shadow-lg w-80 bg-white overflow-hidden hover:shadow-4xl hover:shadow-light-blue/40 transition-all duration-300 ease-in-out transform hover:scale-105">
       {/* Image Section */}
@@ -14,6 +17,12 @@ export default function PartyCard() {
           className="w-full h-[300px] object-cover cursor-pointer rounded-t-xl transform transition-transform duration-300 "
         />
         <button
+        onClick={() => {
+          if (!isLoggedIn) {
+            setNotLoggedInPage(true);
+          } else {
+          }
+        }}
           className={` flex gap-1 absolute top-2 right-2 bg-teal-600 bg-opacity-20 text-white text-sm py-1 px-3 rounded-full shadow-lg hover:bg-teal-700 focus:outline-none`}
         >
           <FaPlus className="mt-1" />

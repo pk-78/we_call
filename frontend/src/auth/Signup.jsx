@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { url } from "../url/url";
 import axios from "axios";
+import UserContext from "../context/UserContext";
 
 export default function Signup() {
   const {
@@ -14,6 +15,7 @@ export default function Signup() {
     reset,
   } = useForm();
   const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
 
   const onSubmit = async (data) => {
     if (password.length <= 8) {

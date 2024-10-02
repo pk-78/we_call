@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { IoCallOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import { coins } from "../url/coins";
 import RequestCall from "./RequestCall";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../context/UserContext";
 
 export default function LiveCard({
   rate,
@@ -13,11 +14,12 @@ export default function LiveCard({
 }) {
   // console.log(setCheckEnoughBalance);
   const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
+    useContext(UserContext);
   const buttonColor =
     coins >= rate
       ? "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700"
       : "bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700";
-        
 
   return (
     <div className="border border-gray-300 rounded-xl shadow-lg w-80 bg-white overflow-hidden hover:shadow-2xl hover:shadow-light-blue/30 transition-all duration-300 ease-in-out transform hover:scale-105">
@@ -32,6 +34,12 @@ export default function LiveCard({
           className="w-full h-[400px] object-cover cursor-pointer rounded-t-xl transform transition-transform duration-00 "
         />
         <button
+          onClick={() => {
+            if (!isLoggedIn) {
+              setNotLoggedInPage(true);
+            } else {
+            }
+          }}
           className={` flex gap-1 absolute top-2 right-2 bg-teal-600 bg-opacity-20 text-white text-sm py-1 px-3 rounded-full shadow-lg hover:bg-teal-700 focus:outline-none`}
         >
           <FaPlus className="mt-1" />
@@ -40,8 +48,14 @@ export default function LiveCard({
         {/* Call Button */}
         <button
           onClick={() => {
-            setRequestCall(true);
-            coins >= rate ? setCheckEnoughBalance(true) : setCheckEnoughBalance(false);
+            if (!isLoggedIn) {
+              setNotLoggedInPage(true);
+            } else {
+              setRequestCall(true);
+              coins >= rate
+                ? setCheckEnoughBalance(true)
+                : setCheckEnoughBalance(false);
+            }
           }}
           className={`absolute bottom-4 right-4 ${buttonColor} text-2xl flex rounded-full p-3 text-white shadow-lg transition-all ease-in-out duration-200 transform hover:scale-105 focus:outline-none`}
         >

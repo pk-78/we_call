@@ -22,6 +22,7 @@ import LiveWatch from "./pages/LiveRoom";
 import PartyRoom from "./pages/PartyRoom";
 import OfferPage from "./components/OfferPage";
 import Live from "./components/Live";
+import EditProfile from "./components/EditProfile";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,25 +31,19 @@ function App() {
   const coins = 200;
   return (
     <div>
-      <Navbar isLoggedIn={isLoggedIn} setisLoggedin={setIsLoggedIn} />
+      <Navbar />
       <Toaster />
 
       <Routes>
-        <Route path="/" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-        <Route
-          path="/login"
-          element={<Login setIsLoggedIn={setIsLoggedIn} />}
-        />
-        <Route
-          path="/signup"
-          element={<Signup setIsLoggedIn={setIsLoggedIn} />}
-        />
+        <Route path="/" element={<Home coins={coins} />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
         {/* Nested routes under AppLayout */}
         {/* <Route */}
         {/* // element={ */}
         {/* // <PrivateRoute isLoggedIn={isLoggedIn}> */}
-        <Route path="/home" element={<Home coins={coins}  />} />
+        <Route path="/home" element={<Home coins={coins} />} />
         <Route path="/golive" element={<GoLive coins={coins} />} />
         <Route path="/party" element={<Party coins={coins} />} />
         <Route path="/post" element={<Post coins={coins} />} />
@@ -59,6 +54,7 @@ function App() {
         <Route path="/party-room" element={<PartyRoom coins={coins} />} />
         <Route path="/pricing" element={<OfferPage coins={coins} />} />
         <Route path="/live" element={<Live coins={coins} />} />
+        <Route path="/editProfile" element={<EditProfile coins={coins} />} />
 
         {/* // </PrivateRoute>
           // } */}
