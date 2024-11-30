@@ -51,7 +51,7 @@ export default function Navbar() {
               <span className=" text-xl md:hidden">
                 <FaPeopleGroup />
               </span>
-              <span className="hidden md:inline">Party</span>
+              {/* <span className="hidden md:inline">Party</span> */}
             </NavLink>
           </li>
 

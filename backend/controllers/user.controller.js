@@ -1,26 +1,36 @@
-import User from "../models/user.js";
+import User from "../models/user.model.js";
 
 export const createUser = async (req, res) => {
   const { name, userName, email, gender, password } = req.body;
   try {
-    if (!name || !userName || !email || !gender || !password) {
+    if ([name,userName,email,gender,password].some((field)=>field?.trim ==="")) {
       return res
         .status(400)
         .json({ success: false, error: "All fields are required" });
     }
-    const emailExists = await User.findOne({ email });
-    if (emailExists) {
-      return res
-        .status(400)
-        .json({ success: false, error: "User already exists with this email" });
-    }
+    // const emailExists = await User.findOne({ email });
+    // if (emailExists) {
+    //   return res
+    //     .status(400)
+    //     .json({ success: false, error: "User already exists with this email" });
+    // }
 
-    // Check if username already exists
-    const userNameExists = await User.findOne({ userName });
-    if (userNameExists) {
+    // // Check if username already exists
+    // const userNameExists = await User.findOne({ userName });
+    // if (userNameExists) {
+    //   return res
+    //     .status(400)
+    //     .json({ success: false, error: "Username is already taken" });
+    // }
+
+    const existedUser = User.findOne({
+      $or:[{ userName }, { email }]
+    })
+
+    if (existedUser){
       return res
-        .status(400)
-        .json({ success: false, error: "Username is already taken" });
+        .status(409)
+        .json({success:false, error:"User with email or userName already exists"})
     }
     if (password.length < 8) {
       return res
@@ -77,3 +87,31 @@ export const loginUser = async (req, res) => {
     });
   }
 };
+
+export const userProfile= async(req,res)=>{
+  try {
+    const { age, location, userId} = req.body;
+
+    const user = await User.findOne({userId})
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found with the provided userid.",
+      });
+    }
+   
+
+
+    
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+      error: err.message,
+    });
+    
+  }
+
+}

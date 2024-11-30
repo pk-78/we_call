@@ -15,7 +15,10 @@ app.use(express.json());
 app.use(cors());
 
 // Static files (if any)
-app.use(express.static(path.join(process.cwd(), "public")));
+app.use(express.static( "public"));
+
+app.use(express.json({limit:"16Kb"}))
+app.use(express.urlencoded({extended:true, limit:"16Kb"}))
 
 // Database connection
 connectDB();
