@@ -4,12 +4,13 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { MdLiveTv, MdPostAdd } from "react-icons/md";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { LuLogOut } from "react-icons/lu";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import UserContext from "../context/UserContext";
 
-export default function Navbar() {
+export default function Navbar({name}) {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
+
 
   function logoutHandler() {
     setIsLoggedIn(false); // Update the state correctly
@@ -23,7 +24,7 @@ export default function Navbar() {
         <ul className="flex flex-grow justify-center md:space-x-6 space-x-9">
           <li>
             <NavLink
-              to="/home"
+              to="/home/:id"
               className={({ isActive }) =>
                 isActive
                   ? "text-white border-b-2 border-white font-bold"
@@ -40,7 +41,7 @@ export default function Navbar() {
 
           <li>
             <NavLink
-              to="/party"
+              to="/party/:id"
               className={({ isActive }) =>
                 isActive
                   ? "text-white border-b-2 border-white font-bold"
@@ -57,7 +58,7 @@ export default function Navbar() {
 
           <li>
             <NavLink
-              to="/golive"
+              to="/golive/:id"
               className={({ isActive }) =>
                 isActive
                   ? "text-white border-b-2 border-white font-bold"
@@ -74,7 +75,7 @@ export default function Navbar() {
 
           <li>
             <NavLink
-              to="/post"
+              to="/post/:id"
               className={({ isActive }) =>
                 isActive
                   ? "text-white border-b-2 border-white font-bold"
@@ -92,7 +93,7 @@ export default function Navbar() {
           {isLoggedIn && (
             <li>
               <NavLink
-                to="/setting"
+                to="/setting/:id"
                 className={({ isActive }) =>
                   isActive
                     ? "text-white border-b-2 border-white font-bold"
@@ -112,16 +113,20 @@ export default function Navbar() {
         {/* Authentication Buttons */}
         <div className="flex space-x-4">
           {isLoggedIn ? (
-            <button
-              className="text-light-gray hover:text-white transition-colors duration-300"
-              onClick={logoutHandler}
-            >
-              {/* Show icon on mobile, text on larger screens */}
-              <span className="text-xl md:hidden">
-                <LuLogOut />
-              </span>
-              <span className="hidden md:inline">Logout</span>
-            </button>
+            <div className="flex gap-3 text-xl">
+              <h2 className="text-light-gray hover:text-white transition-colors cursor-pointer duration-300">
+                {name}
+              </h2>
+              <button
+                className="text-light-gray hover:text-white transition-colors duration-300"
+                onClick={logoutHandler}
+              >
+                {/* Show icon on mobile, text on larger screens */}
+                <span className="text-xl ">
+                  <LuLogOut />
+                </span>
+              </button>
+            </div>
           ) : (
             <>
               <button

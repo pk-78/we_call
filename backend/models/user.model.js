@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    username: {
+    userName: {
       type: String,
       required: true,
       unique: true,
@@ -24,9 +24,16 @@ const userSchema = new mongoose.Schema(
     },
     age: {
       type: String,
-      required: true,
+      required: false,
+    },
+    description:{
+      type:String
     },
     password: {
+      type: String,
+      required: true,
+    },
+    confirmPassword: {
       type: String,
       required: true,
     },
@@ -40,18 +47,23 @@ const userSchema = new mongoose.Schema(
     coverImage: {
       type: String,
     },
-    locationCity: {
+    location: {
       type: String,
     },
-    refreshToken:{
-      type:String
-    },  
+    hobby: {
+      type: String,
+    },
+    language: {
+      type: String,
+    },
+    refreshToken: {
+      type: String,
+    },
     userProfile: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "UserProfile",
       required: false,
     },
-    
   },
   { timestamps: true }
 );

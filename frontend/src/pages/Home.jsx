@@ -4,19 +4,23 @@ import RequestCall from "../components/RequestCall";
 import { GiCrossedBones } from "react-icons/gi";
 import UserContext from "../context/UserContext";
 import NotLoggedIn from "../components/NotLoggedIn";
+import { useParams } from "react-router-dom";
 
 export default function Home() {
   const [buttonClick, setButtonClick] = useState("random");
   const [requestCall, setRequestCall] = useState(false);
   const [checkEnoughBalance, setCheckEnoughBalance] = useState(false);
+  const { id } = useParams();
+  
   const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
-  useContext(UserContext);
+    useContext(UserContext);
 
   const randomButton = "";
 
   const nearby = 10;
   const random = 12;
   const follow = 14;
+  
 
   // function buttonHandler(clickedValue) {
   //   setButtonClick(clickedValue);
@@ -35,47 +39,49 @@ export default function Home() {
         <h1 className="md:text-3xl pl-5 font-bold text-gray-800">
           Currently Live
         </h1>
-        { isLoggedIn && <div className="space-x-4 pr-4">
-          <button
-            onClick={() => {
-              console.log("daab diye nearby ko");
-              setButtonClick("nearby");
-            }}
-            className={`md:px-4 px-1 py-2 md:text-base text-sm  ${
-              buttonClick === "nearby"
-                ? "bg-teal-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            } font-semibold rounded-lg shadow-md hover:bg-teal-600 hover:text-white focus:outline-none`}
-          >
-            Nearby
-          </button>
-          <button
-            onClick={() => {
-              console.log("daab diye random ko");
-              setButtonClick("random");
-            }}
-            className={`md:px-4 px-1 py-2 md:text-base text-sm ${
-              buttonClick === "random"
-                ? "bg-teal-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            } font-semibold rounded-lg shadow-md hover:bg-teal-600 hover:text-white focus:outline-none`}
-          >
-            Random
-          </button>
-          <button
-            onClick={() => {
-              console.log("daab diye follow ko");
-              setButtonClick("follow");
-            }}
-            className={`md:px-4 px-1 py-2 md:text-base text-sm  ${
-              buttonClick === "follow"
-                ? "bg-teal-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            } font-semibold rounded-lg shadow-md hover:bg-teal-600 hover:text-white focus:outline-none`}
-          >
-            Follow
-          </button>
-        </div>}
+        {isLoggedIn && (
+          <div className="space-x-4 pr-4">
+            <button
+              onClick={() => {
+                console.log("daab diye nearby ko");
+                setButtonClick("nearby");
+              }}
+              className={`md:px-4 px-1 py-2 md:text-base text-sm  ${
+                buttonClick === "nearby"
+                  ? "bg-teal-600 text-white"
+                  : "bg-gray-200 text-gray-700"
+              } font-semibold rounded-lg shadow-md hover:bg-teal-600 hover:text-white focus:outline-none`}
+            >
+              Nearby
+            </button>
+            <button
+              onClick={() => {
+                console.log("daab diye random ko");
+                setButtonClick("random");
+              }}
+              className={`md:px-4 px-1 py-2 md:text-base text-sm ${
+                buttonClick === "random"
+                  ? "bg-teal-600 text-white"
+                  : "bg-gray-200 text-gray-700"
+              } font-semibold rounded-lg shadow-md hover:bg-teal-600 hover:text-white focus:outline-none`}
+            >
+              Random
+            </button>
+            <button
+              onClick={() => {
+                console.log("daab diye follow ko");
+                setButtonClick("follow");
+              }}
+              className={`md:px-4 px-1 py-2 md:text-base text-sm  ${
+                buttonClick === "follow"
+                  ? "bg-teal-600 text-white"
+                  : "bg-gray-200 text-gray-700"
+              } font-semibold rounded-lg shadow-md hover:bg-teal-600 hover:text-white focus:outline-none`}
+            >
+              Follow
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Live Cards Grid Section */}
@@ -222,12 +228,10 @@ export default function Home() {
       </div>
 
       {requestCall && (
-        
-            <RequestCall
-              checkEnoughBalance={checkEnoughBalance}
-              setRequestCall={setRequestCall}
-            />
-          
+        <RequestCall
+          checkEnoughBalance={checkEnoughBalance}
+          setRequestCall={setRequestCall}
+        />
       )}
       {notLoggedInPage && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">

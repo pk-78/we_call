@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
@@ -7,7 +7,7 @@ import axios from "axios";
 import { url } from "../url/url";
 import UserContext from "../context/UserContext";
 
-export default function Login() {
+export default function Login({setName}) {
   const {
     register,
     handleSubmit,
@@ -15,7 +15,8 @@ export default function Login() {
     reset,
   } = useForm();
   const navigate = useNavigate();
-  const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
+  const [loading, setLoading]= useState(false);
+  const { isLoggedIn, setIsLoggedIn, setUserDetail } = useContext(UserContext);
 
   const onSubmit = async (formData) => {
     console.log(formData);
@@ -27,12 +28,14 @@ export default function Login() {
 
       // Extract the success status and user data from the response
       const { success, data: userData } = response.data;
-
+      
       // Validate the response
       if (success) {
         toast.success("Login successful!");
         setIsLoggedIn(true);
-        navigate("/home"); // Redirect to home page or dashboard
+        // setUserDetail(response.data.data)
+        setName(userData?.name)
+        navigate(`/home/${userData?._id}`); // Redirect to home page or dashboard
       } else {
         toast.error("Invalid credentials. Please try again.");
       }

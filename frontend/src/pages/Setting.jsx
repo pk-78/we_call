@@ -249,7 +249,7 @@
 //   );
 // }
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TbCardsFilled } from "react-icons/tb";
 import { MdTask } from "react-icons/md";
@@ -264,11 +264,15 @@ import Profile from "../components/Profile";
 import { coins } from "../url/coins";
 import { FaArrowLeft, FaRegStar, FaStar } from "react-icons/fa6";
 import { FaStarHalfAlt } from "react-icons/fa";
+import UserContext from "../context/UserContext";
 
 export default function Setting() {
   const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState(""); // Store the active component
   const [dailyCheckIn, setDailyCheckIn] = useState(false);
+  const { userDetail, setuserDetail } = useContext(UserContext);
+
+  console.log(userDetail)
   coins;
 
   const renderComponent = () => {
@@ -383,7 +387,7 @@ export default function Setting() {
             </div>
 
             <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mt-2">
-              pk_78
+             {userDetail?.userName}
             </h2>
             <p className="text-sm">This is my description</p>
             <div className="mt-2 ">

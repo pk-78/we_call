@@ -18,6 +18,7 @@ export default function Signup() {
   const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
 
   const onSubmit = async (data) => {
+    console.log(data)
     if (password.length <= 8) {
       toast.error("password should have atleast 8 character");
     } else if (data.password !== data.confirmPassword) {
