@@ -1,10 +1,10 @@
 import React from "react";
 import { FaArrowLeft } from "react-icons/fa";
-export default function Profile({ activeItem, setActiveItem }) {
+export default function Profile({ activeItem, setActiveItem, user }) {
   return (
     <div className="p-6  h-[569px] rounded-lg  flex flex-col justify-center items-center">
       {/* Profile Container */}
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
+      <div className="bg-white shadow-lg rounded-lg py-8 px-6 max-w-lg w-full">
         {/* Profile Header */}
         <div
           onClick={() => {
@@ -37,17 +37,17 @@ export default function Profile({ activeItem, setActiveItem }) {
           </div>
 
           {/* Gmail */}
-          <div className="text-center">
-            <p className="text-xl font-medium text-gray-700">pk_78</p>
-            <p className="text-gray-800 font-medium">ID</p>
-            <p className="text-gray-800 font-medium">Email</p>
-            <p className="text-gray-800 font-medium">Gender</p>
-            <p className="text-gray-800 font-medium">Age</p>
-            <p className="text-gray-800 font-medium">Location</p>
-            <p className="text-gray-800 font-medium">English</p>
-            <p className="text-gray-800 font-medium">Mobile Number</p>
+          <div className="text-left">
+            <p className="text-xl font-medium text-gray-700">{user.name}</p>
+            <p className="text-gray-800 font-medium">ID: <span>{user.userName}</span></p>
+            <p className="text-gray-800 font-medium">Email: <span>{user.email}</span> </p>
+            <p className="text-gray-800 font-medium">Gender: <span>{user.gender}</span></p>
+            <p className="text-gray-800 font-medium">Age: <span>{user.age}</span></p>
+            <p className="text-gray-800 font-medium">Location: <span>{user.location}</span></p>
+            <p className="text-gray-800 font-medium">Language: <span>{user.language}</span></p>
+            
 
-            <p className="text-gray-800 font-medium">Password</p>
+            {/* <p className="text-gray-800 font-medium">Password</p> */}
           </div>
         </div>
 

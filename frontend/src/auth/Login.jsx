@@ -7,7 +7,7 @@ import axios from "axios";
 import { url } from "../url/url";
 import UserContext from "../context/UserContext";
 
-export default function Login({setName}) {
+export default function Login({ setName }) {
   const {
     register,
     handleSubmit,
@@ -15,7 +15,7 @@ export default function Login({setName}) {
     reset,
   } = useForm();
   const navigate = useNavigate();
-  const [loading, setLoading]= useState(false);
+  const [loading, setLoading] = useState(false);
   const { isLoggedIn, setIsLoggedIn, setUserDetail } = useContext(UserContext);
 
   const onSubmit = async (formData) => {
@@ -28,14 +28,17 @@ export default function Login({setName}) {
 
       // Extract the success status and user data from the response
       const { success, data: userData } = response.data;
-      
+
       // Validate the response
       if (success) {
+        const { user, token } = response.data;
         toast.success("Login successful!");
         setIsLoggedIn(true);
         // setUserDetail(response.data.data)
-        setName(userData?.name)
-        navigate(`/home/${userData?._id}`); // Redirect to home page or dashboard
+        setName(userData?.name);
+        localStorage.setItem("id", user.id);
+        localStorage.setItem("token",token);
+        navigate("/home"); // Redirect to home page or dashboard
       } else {
         toast.error("Invalid credentials. Please try again.");
       }

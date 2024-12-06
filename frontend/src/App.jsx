@@ -45,18 +45,18 @@ function App() {
         {/* <Route */}
         {/* // element={ */}
         {/* // <PrivateRoute isLoggedIn={isLoggedIn}> */}
-        <Route path="/home/:id" element={<Home />} />
-        <Route path="/golive/:id" element={<GoLive coins={coins} />} />
-        <Route path="/party/:id" element={<Party coins={coins} />} />
-        <Route path="/post/:id" element={<Post coins={coins} />} />
-        <Route path="/setting/:id" element={<Setting coins={coins} />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/golive" element={<GoLive coins={coins} />} />
+        <Route path="/party" element={<Party coins={coins} />} />
+        <Route path="/post" element={<Post coins={coins} />} />
+        <Route path="/setting" element={<Setting coins={coins} />} />
 
-        <Route path="/profile/:id" element={<OtherProfile coins={coins} />} />
-        <Route path="/live-room/:id" element={<LiveWatch coins={coins} />} />
-        <Route path="/party-room/:id" element={<PartyRoom coins={coins} />} />
-        <Route path="/pricing/:id" element={<OfferPage coins={coins} />} />
-        <Route path="/live/:id" element={<Live coins={coins} />} />
-        <Route path="/editProfile/:id" element={<EditProfile coins={coins} />} />
+        <Route path="/profile" element={<OtherProfile coins={coins} />} />
+        <Route path="/live-room" element={<LiveWatch coins={coins} />} />
+        <Route path="/party-room" element={<PartyRoom coins={coins} />} />
+        <Route path="/pricing" element={<OfferPage coins={coins} />} />
+        <Route path="/live" element={<Live coins={coins} />} />
+        <Route path="/editProfile" element={<EditProfile coins={coins} />} />
 
         {/* // </PrivateRoute>
           // } */}

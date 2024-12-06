@@ -15,13 +15,11 @@ const userProfileSchema = new mongoose.Schema({
   },
   rating: {
     type: String,
+    default: 4,
   },
   coins: {
     type: Number,
     default: 0,
-  },
-  locationCity: {
-    type: String,
   },
 });
 const UserProfile = mongoose.model("UserProfile", userProfileSchema);

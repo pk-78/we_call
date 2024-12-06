@@ -249,7 +249,7 @@
 //   );
 // }
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TbCardsFilled } from "react-icons/tb";
 import { MdTask } from "react-icons/md";
@@ -265,15 +265,33 @@ import { coins } from "../url/coins";
 import { FaArrowLeft, FaRegStar, FaStar } from "react-icons/fa6";
 import { FaStarHalfAlt } from "react-icons/fa";
 import UserContext from "../context/UserContext";
+import axios from "axios";
+import { url } from "../url/url";
 
 export default function Setting() {
   const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState(""); // Store the active component
   const [dailyCheckIn, setDailyCheckIn] = useState(false);
-  const { userDetail, setuserDetail } = useContext(UserContext);
+  const [user, setUser] = useState("");
+  const { id } = useContext(UserContext);
 
-  console.log(userDetail)
+  useEffect(() => {
+    const fetchUserDetail = async () => {
+      try {
+        const response = await axios.get(`${url}/api/user/getuser/${id}`);
+        console.log(response);
+        setUser(response.data.user);
+      } catch (error) {
+        console.log(error);
+        toast.error("Something wrong while fetching details");
+      }
+    };
+    fetchUserDetail();
+  }, [id]);
+
+  
   coins;
+  console.log("id mila", id);
 
   const renderComponent = () => {
     switch (activeItem) {
@@ -295,7 +313,7 @@ export default function Setting() {
         );
       case "profile":
         return (
-          <Profile activeItem={activeItem} setActiveItem={setActiveItem} />
+          <Profile activeItem={activeItem} setActiveItem={setActiveItem} user={user} />
         );
       default:
         return null;
@@ -386,10 +404,11 @@ export default function Setting() {
               </button>
             </div>
 
-            <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mt-2">
-             {userDetail?.userName}
+           
+            <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
+              {user.name}
             </h2>
-            <p className="text-sm">This is my description</p>
+            <p className="text-sm">{user.description}</p>
             <div className="mt-2 ">
               <div className="">
                 <div className="flex lg:justify-start space-x-3 mt-2">
@@ -417,20 +436,19 @@ export default function Setting() {
 
             {/* Stats: Friends, Followers, Following */}
             <div className="flex justify-around mt-6 text-center lg:justify-start lg:space-x-8">
-            <div className="flex flex-col">
-              <span className="text-gray-600">Friends</span>
-              <span className="text-xl font-bold">120</span>
+              <div className="flex flex-col">
+                <span className="text-gray-600">Friends</span>
+                <span className="text-xl font-bold">120</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-gray-600">Followers</span>
+                <span className="text-xl font-bold">250</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-gray-600">Following</span>
+                <span className="text-xl font-bold">180</span>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-gray-600">Followers</span>
-              <span className="text-xl font-bold">250</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-gray-600">Following</span>
-              <span className="text-xl font-bold">180</span>
-            </div>
-          </div>
-            
 
             <div className="mt-6 flex  justify-between">
               <div>
@@ -493,7 +511,6 @@ export default function Setting() {
         <div
           className={`ml-8 w-full sm:w-1/2 transform transition-transform duration-500 ease-in-out`}
         >
-         
           {renderComponent()}
         </div>
       )}

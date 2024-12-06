@@ -14,6 +14,8 @@ export default function Navbar({name}) {
 
   function logoutHandler() {
     setIsLoggedIn(false); // Update the state correctly
+    localStorage.removeItem("token");
+    localStorage.removeItem("id");
     navigate("/login");
   }
 
@@ -24,7 +26,7 @@ export default function Navbar({name}) {
         <ul className="flex flex-grow justify-center md:space-x-6 space-x-9">
           <li>
             <NavLink
-              to="/home/:id"
+              to="/home"
               className={({ isActive }) =>
                 isActive
                   ? "text-white border-b-2 border-white font-bold"
@@ -41,7 +43,7 @@ export default function Navbar({name}) {
 
           <li>
             <NavLink
-              to="/party/:id"
+              to="/party"
               className={({ isActive }) =>
                 isActive
                   ? "text-white border-b-2 border-white font-bold"
@@ -58,7 +60,7 @@ export default function Navbar({name}) {
 
           <li>
             <NavLink
-              to="/golive/:id"
+              to="/golive"
               className={({ isActive }) =>
                 isActive
                   ? "text-white border-b-2 border-white font-bold"
@@ -75,7 +77,7 @@ export default function Navbar({name}) {
 
           <li>
             <NavLink
-              to="/post/:id"
+              to="/post"
               className={({ isActive }) =>
                 isActive
                   ? "text-white border-b-2 border-white font-bold"
@@ -93,7 +95,7 @@ export default function Navbar({name}) {
           {isLoggedIn && (
             <li>
               <NavLink
-                to="/setting/:id"
+                to="/setting"
                 className={({ isActive }) =>
                   isActive
                     ? "text-white border-b-2 border-white font-bold"
