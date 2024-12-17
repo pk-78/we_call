@@ -2,16 +2,16 @@ import mongoose from "mongoose";
 
 const userProfileSchema = new mongoose.Schema({
   friends: {
-    type: Number,
-    default: 0,
+    type: [String],
+    default: [],
   },
   followers: {
-    type: Number,
-    default: 0,
+    type: [String],
+    default: [],
   },
   following: {
-    type: Number,
-    default: 0,
+    type: [String],
+    default: [],
   },
   rating: {
     type: String,
@@ -21,6 +21,7 @@ const userProfileSchema = new mongoose.Schema({
     type: Number,
     default: 200,
   },
+  
 });
 const UserProfile = mongoose.model("UserProfile", userProfileSchema);
 export default UserProfile;

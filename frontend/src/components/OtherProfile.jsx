@@ -12,6 +12,7 @@ export default function OtherProfile({ coins }) {
   const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
     useContext(UserContext);
   const { id } = useParams();
+
   // console.log(id);
 
   useEffect(() => {
@@ -25,6 +26,7 @@ export default function OtherProfile({ coins }) {
       }
     };
     fetchUserDetail();
+    
   }, [id]);
 
   return (
@@ -87,11 +89,9 @@ export default function OtherProfile({ coins }) {
         <div className="lg:w-2/3 px-2 lg:px-0">
           {/* Bio Section */}
           <div className="text-left">
-            <p className="text-gray-700">
-              {user?.description}
-            </p>
+            <p className="text-gray-700">{user?.description}</p>
             <div className="flex justify-center lg:justify-start space-x-3 mt-2">
-              {user?.language?.map(( language,index) => (
+              {user?.language?.map((language, index) => (
                 <span
                   key={index}
                   className="bg-teal-200 px-3 py-1 rounded-full text-gray-800"
@@ -120,22 +120,22 @@ export default function OtherProfile({ coins }) {
           <div className="flex justify-around mt-6 text-center lg:justify-start lg:space-x-8">
             <div className="flex flex-col">
               <span className="text-gray-600">Friends</span>
-              <span className="text-xl font-bold">120</span>
+              <span className="text-xl font-bold">{user?.otherProfile?.friends?.length}</span>
             </div>
             <div className="flex flex-col">
               <span className="text-gray-600">Followers</span>
-              <span className="text-xl font-bold">250</span>
+              <span className="text-xl font-bold">{user?.otherProfile?.followers?.length}</span>
             </div>
             <div className="flex flex-col">
               <span className="text-gray-600">Following</span>
-              <span className="text-xl font-bold">180</span>
+              <span className="text-xl font-bold">{user?.otherProfile?.following?.length}</span>
             </div>
           </div>
 
           {/* Rating Section */}
           <div className="mt-6 flex  justify-between">
             <div>
-              <h3 className="text-lg font-bold text-gray-700">Rating:</h3>
+              <h3 className="text-lg font-bold text-gray-700">Rating:{user?.otherProfile?.rating}</h3>
             </div>
             <div className="flex items-center space-x-1">
               <FaStar className="text-yellow-400 text-xl" />
@@ -150,18 +150,14 @@ export default function OtherProfile({ coins }) {
           <div className="mt-6">
             <h3 className="text-lg font-bold text-teal-600">Tags:</h3>
             <div className="flex flex-wrap gap-2 mt-2">
-              <span className="bg-teal-100 px-3 py-1 rounded-full text-gray-800">
-                Beautiful
-              </span>
-              <span className="bg-teal-100 px-3 py-1 rounded-full text-gray-800">
-                Adventurous
-              </span>
-              <span className="bg-teal-100 px-3 py-1 rounded-full text-gray-800">
-                Creative
-              </span>
-              <span className="bg-teal-100 px-3 py-1 rounded-full text-gray-800">
-                Charming
-              </span>
+              {user?.tags?.map((tag, index) => (
+                <span
+                  key={index}
+                  className="bg-teal-100 px-3 py-1 rounded-full text-gray-800"
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
           </div>
         </div>

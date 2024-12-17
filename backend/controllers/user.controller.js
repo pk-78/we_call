@@ -86,8 +86,7 @@ export const loginUser = async (req, res) => {
         message: "Invalid email or password.",
       });
     }
-    const newProfile = new UserProfile(); // Default values from schema will be applied
-    await newProfile.save();
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "10h",
     });
@@ -122,11 +121,12 @@ export const editUser = async (req, res) => {
       confirmPassword,
       hobby,
       description,
+      tags,
     } = req.body;
     // console.log(id)
     const user = await User.findOneAndUpdate(
       { _id: id },
-      { name, age, location, language, hobby, description },
+      { name, age, location, language, hobby, description, tags },
       { new: true }
     );
 

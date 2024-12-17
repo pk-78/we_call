@@ -27,8 +27,10 @@ export default function UserContextProvider({ children }) {
         // console.log(response?.data?.user);
         const city = response?.data?.user?.location?.city;
         const state = response?.data?.user?.location?.state;
+        const user =response?.data?.user
         setCity(city);
         setState(state);
+        setUserDetail(user)
       } catch (error) {
         console.log(error);
       }

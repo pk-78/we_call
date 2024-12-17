@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FaArrowLeft } from "react-icons/fa";
+import UserContext from "../context/UserContext";
 
 export default function Level({ activeItem, setActiveItem }) {
+  const {userDetail} = useContext(UserContext)
   return (
     <div className="p-6  h-[569px] rounded-lg  flex flex-col justify-center items-center ">
       {/* Level Container */}
@@ -30,7 +32,7 @@ export default function Level({ activeItem, setActiveItem }) {
             <p className="text-gray-700 text-xl font-medium">
               Your Current Level:
             </p>
-            <p className="text-4xl text-teal-500 font-bold">4</p>
+            <p className="text-4xl text-teal-500 font-bold">{userDetail?.otherProfile?.rating}</p>
           </div>
 
           {/* Progress Bar */}
