@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import UserProfile from "../models/userProfile.model.js";
 
 export const createUser = async (req, res) => {
   const { name, userName, email, gender, password, confirmPassword } = req.body;
@@ -39,6 +40,10 @@ export const createUser = async (req, res) => {
         .status(400)
         .json({ success: false, error: "Please enter a strong password" });
     }
+    const newProfile = new UserProfile(); // Default values from schema will be applied
+    await newProfile.save();
+
+    // Create a new User and link the UserProfile
     const newUser = new User({
       name,
       userName,
@@ -46,7 +51,9 @@ export const createUser = async (req, res) => {
       gender,
       password,
       confirmPassword,
+      otherProfile: newProfile._id, // Link the UserProfile to this User
     });
+
     await newUser.save();
     res
       .status(200)
@@ -62,7 +69,7 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     // Check if both userName and email exist
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select("+password");
     console.log("mila", user);
 
     // If no user is found with both userName and email
@@ -79,6 +86,8 @@ export const loginUser = async (req, res) => {
         message: "Invalid email or password.",
       });
     }
+    const newProfile = new UserProfile(); // Default values from schema will be applied
+    await newProfile.save();
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "10h",
     });
@@ -177,21 +186,21 @@ export const getuserById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // // Validate the ObjectId
-    // if (!mongoose.Types.ObjectId.isValid(id)) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "Invalid user ID format.",
-    //   });
-    // }
+    // Validate the ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user ID format.",
+      });
+    }
 
-    // Fetch user and populate userProfile
+    // Fetch user and populate otherProfile
     const user = await User.findOne({ _id: id }).populate("otherProfile");
 
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User not found with the provided user ID.",
+        message: "User not found with the provided ID.",
       });
     }
 
@@ -247,16 +256,13 @@ export const getUserByLocation = async (req, res) => {
     }
 
     const user = await User.find({
-      $or: [
-        { "location.city": city },
-        { "location.state": state }
-      ]
+      $or: [{ "location.city": city }, { "location.state": state }],
     });
     res.status(200).json({
-      success:true,
-      message:"Users Found",
-      user
-    })
+      success: true,
+      message: "Users Found",
+      user,
+    });
   } catch (err) {
     console.error("Error in getting User by location", err.message);
     res.status(500).json({

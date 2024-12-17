@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema(
     },
     description: {
       type: String,
+      default: "Welcome to my place , please follow me for more",
     },
     password: {
       type: String,
@@ -83,7 +84,7 @@ const userSchema = new mongoose.Schema(
         "Collecting",
         "Watching Movies",
       ],
-      default: ["Reading"], // Optional: Default hobby
+      default: ["Reading", "Cooking", "Music"], // Optional: Default hobby
     },
 
     language: {
@@ -103,7 +104,7 @@ const userSchema = new mongoose.Schema(
         "Assamese",
         "Urdu",
       ],
-      default: ["Hindi"], // Optional: Set a default language
+      default: ["Hindi", "English"], // Optional: Set a default language
     },
 
     refreshToken: {

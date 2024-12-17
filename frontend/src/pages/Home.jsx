@@ -14,6 +14,7 @@ export default function Home() {
   const [checkEnoughBalance, setCheckEnoughBalance] = useState(false);
   const [locationUser, setLocationUser] = useState([]);
   const [loading, setIsLoading] = useState(false);
+  const [notState, setNotState] = useState(false);
   const id = localStorage.getItem("id");
 
   const {
@@ -28,7 +29,11 @@ export default function Home() {
   console.log(city, state);
 
   useEffect(() => {
+    if (state === undefined && state === undefined) {
+      setNotState(true);
+    }
     const fetchLocationUsers = async () => {
+      setNotState(false);
       setIsLoading(true);
       try {
         const response = await axios.post(`${url}/api/user/getuserByLocation`, {
@@ -175,7 +180,9 @@ export default function Home() {
             />
           </div>
         ) : buttonClick === "nearby" ? (
-          loading ? (
+          notState ? (
+            <div className="text-center font-bold text-2xl text-red-600">Please update Your Location</div>
+          ) : loading ? (
             <div>Fetching users near you</div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
