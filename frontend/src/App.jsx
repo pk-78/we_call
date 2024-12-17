@@ -51,7 +51,7 @@ function App() {
         <Route path="/post" element={<Post coins={coins} />} />
         <Route path="/setting" element={<Setting coins={coins} />} />
 
-        <Route path="/profile" element={<OtherProfile coins={coins} />} />
+        <Route path="/profile/:id" element={<OtherProfile coins={coins} />} />
         <Route path="/live-room" element={<LiveWatch coins={coins} />} />
         <Route path="/party-room" element={<PartyRoom coins={coins} />} />
         <Route path="/pricing" element={<OfferPage coins={coins} />} />

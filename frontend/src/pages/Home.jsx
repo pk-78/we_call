@@ -1,26 +1,57 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import LiveCard from "../components/LiveCard";
 import RequestCall from "../components/RequestCall";
 import { GiCrossedBones } from "react-icons/gi";
 import UserContext from "../context/UserContext";
 import NotLoggedIn from "../components/NotLoggedIn";
 import { useParams } from "react-router-dom";
+import axios from "axios";
+import { url } from "../url/url";
 
 export default function Home() {
   const [buttonClick, setButtonClick] = useState("random");
   const [requestCall, setRequestCall] = useState(false);
   const [checkEnoughBalance, setCheckEnoughBalance] = useState(false);
-  const { id } = useParams();
-  
-  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
-    useContext(UserContext);
+  const [locationUser, setLocationUser] = useState([]);
+  const [loading, setIsLoading] = useState(false);
+  const id = localStorage.getItem("id");
+
+  const {
+    isLoggedIn,
+
+    notLoggedInPage,
+    setNotLoggedInPage,
+    state,
+    city,
+  } = useContext(UserContext);
+  // console.log(location);
+  console.log(city, state);
+
+  useEffect(() => {
+    const fetchLocationUsers = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.post(`${url}/api/user/getuserByLocation`, {
+          city: city,
+          state: state,
+        });
+        console.log(response?.data?.user);
+        setLocationUser(response?.data?.user);
+      } catch (error) {
+        console.log(error);
+      }
+      setIsLoading(false);
+    };
+    if (city && state) {
+      fetchLocationUsers();
+    }
+  }, [city, state]);
 
   const randomButton = "";
 
   const nearby = 10;
   const random = 12;
   const follow = 14;
-  
 
   // function buttonHandler(clickedValue) {
   //   setButtonClick(clickedValue);
@@ -144,46 +175,24 @@ export default function Home() {
             />
           </div>
         ) : buttonClick === "nearby" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
-            <LiveCard
-              rate={300}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={300}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={200}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={300}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={200}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={200}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-
-            <LiveCard rate={300} />
-          </div>
+          loading ? (
+            <div>Fetching users near you</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
+              {locationUser?.map((user, id) => (
+                <div key={id}>
+                  <LiveCard
+                    id={id}
+                    user={user}
+                    rate={200}
+                    requestCall={requestCall}
+                    setRequestCall={setRequestCall}
+                    setCheckEnoughBalance={setCheckEnoughBalance}
+                  />
+                </div>
+              ))}
+            </div>
+          )
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
             {" "}

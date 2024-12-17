@@ -267,6 +267,7 @@ import { FaStarHalfAlt } from "react-icons/fa";
 import UserContext from "../context/UserContext";
 import axios from "axios";
 import { url } from "../url/url";
+import toast from "react-hot-toast";
 
 export default function Setting() {
   const navigate = useNavigate();

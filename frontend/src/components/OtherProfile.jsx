@@ -1,13 +1,31 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaRegStar, FaStar, FaArrowLeft, FaStarHalfAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import { FaPlus } from "react-icons/fa6";
+import axios from "axios";
+import { url } from "../url/url";
 
 export default function OtherProfile({ coins }) {
   const navigate = useNavigate();
+  const [user, setuser] = useState([]);
   const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
     useContext(UserContext);
+  const { id } = useParams();
+  // console.log(id);
+
+  useEffect(() => {
+    const fetchUserDetail = async () => {
+      try {
+        const response = await axios.get(`${url}/api/user/getuser/${id}`);
+        console.log(response?.data?.user);
+        setuser(response?.data?.user);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUserDetail();
+  }, [id]);
 
   return (
     <div className="flex justify-center items-start p-2 mb-8 bg-gray-200 min-h-screen">
@@ -36,7 +54,12 @@ export default function OtherProfile({ coins }) {
 
             <div className="flex justify-between ">
               <div>
-                <h2 className="text-2xl font-bold text-gray-800">pk_78</h2>
+                <h2 className="text-2xl font-bold text-gray-800">
+                  {user.name}
+                </h2>
+                <h2 className="text-xl font-semibold text-gray-800">
+                  {user.userName}
+                </h2>
                 <p className="text-gray-500">India</p>
               </div>
               <div>
@@ -65,30 +88,31 @@ export default function OtherProfile({ coins }) {
           {/* Bio Section */}
           <div className="text-left">
             <p className="text-gray-700">
-              Let's meet on a video call to discuss more.
+              {user?.description}
             </p>
             <div className="flex justify-center lg:justify-start space-x-3 mt-2">
-              <span className="bg-teal-200 px-3 py-1 rounded-full text-gray-800">
-                English
-              </span>
-              <span className="bg-teal-200 px-3 py-1 rounded-full text-gray-800">
-                Hindi
-              </span>
+              {user?.language?.map(( language,index) => (
+                <span
+                  key={index}
+                  className="bg-teal-200 px-3 py-1 rounded-full text-gray-800"
+                >
+                  {language}
+                </span>
+              ))}
             </div>
           </div>
 
           {/* Hobbies Section */}
           <div className="mt-2">
             <div className="flex justify-center lg:justify-start space-x-3 mt-2">
-              <span className="bg-pink-400 text-white px-3 py-1 rounded-full">
-                Dancer
-              </span>
-              <span className="bg-pink-400 px-3 py-1 rounded-full text-white">
-                Singer
-              </span>
-              <span className="bg-pink-400 px-3 py-1 rounded-full text-white">
-                Film Lover
-              </span>
+              {user?.hobby?.map((hobby, index) => (
+                <span
+                  key={index}
+                  className="bg-pink-400 text-white px-3 py-1 rounded-full"
+                >
+                  {hobby}
+                </span>
+              ))}
             </div>
           </div>
 

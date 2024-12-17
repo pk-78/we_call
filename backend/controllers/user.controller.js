@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 export const createUser = async (req, res) => {
   const { name, userName, email, gender, password, confirmPassword } = req.body;
@@ -61,7 +62,7 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     // Check if both userName and email exist
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('+password');
     console.log("mila", user);
 
     // If no user is found with both userName and email
@@ -143,12 +144,16 @@ export const editUser = async (req, res) => {
     });
   }
 };
-export const getuserById = async (req, res) => {
+export const editLocation = async (req, res) => {
   try {
     const { id } = req.params;
-
+    const { city, state } = req.body;
     // console.log(id)
-    const user = await User.findOne({ _id: id }).populate("userProfile");
+    const user = await User.findByIdAndUpdate(
+      { _id: id }, // The user's ID
+      { location: { city: city, state: state } }, // The updated location
+      { new: true } // Return the updated document
+    );
 
     if (!user) {
       return res.status(404).json({
@@ -157,9 +162,103 @@ export const getuserById = async (req, res) => {
       });
     }
 
-    res.status(200).json({ message: "User Found successfully", user });
+    res.status(200).json({ message: "User updated successfully", user });
   } catch (err) {
     console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+      error: err.message,
+    });
+  }
+};
+
+export const getuserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // // Validate the ObjectId
+    // if (!mongoose.Types.ObjectId.isValid(id)) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Invalid user ID format.",
+    //   });
+    // }
+
+    // Fetch user and populate userProfile
+    const user = await User.findOne({ _id: id }).populate("otherProfile");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found with the provided user ID.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "User found successfully",
+      user,
+    });
+  } catch (err) {
+    console.error("Error in getuserById:", err.message);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+      error: err.message,
+    });
+  }
+};
+
+export const getAlluser = async (req, res) => {
+  try {
+    const user = await User.find();
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found with the provided user ID.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "User found successfully",
+      user,
+    });
+  } catch (err) {
+    console.error("Error in getting All User:", err.message);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+      error: err.message,
+    });
+  }
+};
+
+export const getUserByLocation = async (req, res) => {
+  const { city, state } = req.body;
+  try {
+    if (!city && !state) {
+      return res.status(404).json({
+        success: false,
+        message: "City and State is not found.",
+      });
+    }
+
+    const user = await User.find({
+      $or: [
+        { "location.city": city },
+        { "location.state": state }
+      ]
+    });
+    res.status(200).json({
+      success:true,
+      message:"Users Found",
+      user
+    })
+  } catch (err) {
+    console.error("Error in getting User by location", err.message);
     res.status(500).json({
       success: false,
       message: "Internal server error.",

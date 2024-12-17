@@ -11,6 +11,8 @@ export default function LiveCard({
   setCheckEnoughBalance,
   requestCall,
   setRequestCall,
+  id="",
+  user=""
 }) {
   // console.log(setCheckEnoughBalance);
   const navigate = useNavigate();
@@ -20,6 +22,7 @@ export default function LiveCard({
     coins >= rate
       ? "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700"
       : "bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700";
+      console.log(user)
 
   return (
     <div className="border border-gray-300 rounded-xl shadow-lg w-80 bg-white overflow-hidden hover:shadow-2xl hover:shadow-light-blue/30 transition-all duration-300 ease-in-out transform hover:scale-105">
@@ -72,15 +75,15 @@ export default function LiveCard({
             <img
               src="/profile_man.png"
               alt="Profile"
-              onClick={() => navigate("/profile")}
+              onClick={() => navigate(`/profile/${user?._id}`)}
               className="w-8 h-8  rounded-full object-cover cursor-pointer"
             />
             <div>
               <p
                 className="text-xl font-bold text-teal-700 cursor-pointer"
-                onClick={() => navigate("/profile")}
+                onClick={() => navigate(`/profile/${user?._id}`)}
               >
-                pk_78
+               {user?.userName}
               </p>
               <p className="text-sm text-teal-500">India</p>
             </div>

@@ -7,10 +7,11 @@ import { LuLogOut } from "react-icons/lu";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import UserContext from "../context/UserContext";
 
-export default function Navbar({name}) {
+export default function Navbar({ name }) {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
 
+  console.log("Inside navbar:",isLoggedIn);
 
   function logoutHandler() {
     setIsLoggedIn(false); // Update the state correctly

@@ -18,6 +18,8 @@ export default function Login({ setName }) {
   const [loading, setLoading] = useState(false);
   const { isLoggedIn, setIsLoggedIn, setUserDetail } = useContext(UserContext);
 
+  console.log("login check", isLoggedIn)
+
   const onSubmit = async (formData) => {
     console.log(formData);
     try {

@@ -3,24 +3,25 @@ import mongoose from "mongoose";
 const userProfileSchema = new mongoose.Schema({
   friends: {
     type: Number,
-    default: 0,
+    default: 1,
   },
   followers: {
     type: Number,
-    default: 0,
+    default: 1,
   },
   following: {
     type: Number,
-    default: 0,
+    default: 1,
   },
   rating: {
-    type: String,
+    type: Number, // Changed to Number
     default: 4,
   },
   coins: {
     type: Number,
-    default: 0,
+    default: 200,
   },
 });
+
 const UserProfile = mongoose.model("UserProfile", userProfileSchema);
 export default UserProfile;
