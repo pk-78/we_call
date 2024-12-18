@@ -24,6 +24,9 @@ export default function Setting() {
   const [dailyCheckIn, setDailyCheckIn] = useState(false);
   const [user, setUser] = useState("");
   const { id, userDetail } = useContext(UserContext);
+  const [fullStar, setFullStar] = useState(5);
+  const [halfStar, setHalfStar] = useState(0);
+  const [emptyStar, setEmptyStar] = useState(0);
 
   useEffect(() => {
     const fetchUserDetail = async () => {
@@ -36,8 +39,23 @@ export default function Setting() {
         toast.error("Something wrong while fetching details");
       }
     };
+    const showRating = async () => {
+      const intPart = Math.trunc(user?.otherProfile?.rating);
+      setFullStar(intPart);
+      const fractionPart = user?.otherProfile?.rating - intPart;
+      setHalfStar(fractionPart);
+      if (fractionPart > 0) {
+        const leftPart = 4 - intPart;
+        setEmptyStar(leftPart);
+      } else {
+        const leftPart = 5 - intPart;
+        setEmptyStar(leftPart);
+      }
+      console.log(fullStar, halfStar, emptyStar);
+    };
     fetchUserDetail();
-  }, [id]);
+    showRating();
+  }, [id, user?.otherProfile?.rating]);
 
   coins;
   console.log("id mila", id);
@@ -164,6 +182,9 @@ export default function Setting() {
             <div className="mt-2 ">
               <div className="">
                 <div className="flex lg:justify-start space-x-3 mt-2">
+                  <h3 className="text-lg font-semibold text-teal-600">
+                    Language:
+                  </h3>
                   {user?.language?.map((language, index) => (
                     <span className="bg-teal-200 px-3 py-1 rounded-full text-gray-800">
                       {language}
@@ -172,6 +193,7 @@ export default function Setting() {
                 </div>
               </div>
               <div className="flex justify-center lg:justify-start space-x-3 mt-2">
+                <h3 className="text-lg font-semibold text-teal-600">Hobby:</h3>
                 {user?.hobby?.map((hobby, index) => (
                   <span
                     key={index}
@@ -212,25 +234,47 @@ export default function Setting() {
                 </h3>
               </div>
               <div className="flex items-center space-x-1">
-                <FaStar className="text-yellow-400 text-xl" />
-                <FaStar className="text-yellow-400 text-xl" />
-                <FaStar className="text-yellow-400 text-xl" />
-                <FaStarHalfAlt className="text-yellow-400 text-xl" />
-                <FaRegStar className="text-yellow-400 text-xl" />
-              </div>
-            </div>
-            <div className="mt-6">
-              <h3 className="text-lg font-bold text-teal-600">Tags:</h3>
-              <div className="flex  gap-2 mt-2">
-                {user?.tags?.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="bg-teal-100 px-3 py-1 rounded-full text-gray-800"
-                  >
-                    {tag}
-                  </span>
+                {/* Full Stars */}
+                {[
+                  ...Array(
+                    Number.isInteger(fullStar) && fullStar > 0 ? fullStar : 0
+                  ),
+                ].map((_, index) => (
+                  <FaStar
+                    key={`full-${index}`}
+                    className="text-yellow-400 text-xl"
+                  />
+                ))}
+
+                {/* Half Star */}
+                {halfStar > 0 && (
+                  <FaStarHalfAlt className="text-yellow-400 text-xl" />
+                )}
+
+                {/* Empty Stars */}
+                {[
+                  ...Array(
+                    Number.isInteger(emptyStar) && emptyStar > 0 ? emptyStar : 0
+                  ),
+                ].map((_, index) => (
+                  <FaRegStar
+                    key={`empty-${index}`}
+                    className="text-yellow-400 text-xl"
+                  />
                 ))}
               </div>
+            </div>
+            <div className="flex justify-center lg:justify-start space-x-3 mt-2">
+              <h3 className="text-lg font-bold text-teal-600">Tags:</h3>
+
+              {user?.tags?.map((tag, index) => (
+                <span
+                  key={index}
+                  className="bg-teal-100 px-3 py-1 rounded-full text-gray-800"
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
 
             {/* Total Coins */}

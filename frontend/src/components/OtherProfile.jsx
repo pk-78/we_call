@@ -12,6 +12,9 @@ export default function OtherProfile({ coins }) {
   const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
     useContext(UserContext);
   const { id } = useParams();
+  const [fullStar, setFullStar] = useState(null);
+  const [halfStar, setHalfStar] = useState(null);
+  const [emptyStar, setEmptyStar] = useState(null);
 
   // console.log(id);
 
@@ -25,8 +28,22 @@ export default function OtherProfile({ coins }) {
         console.log(error);
       }
     };
+    const showRating = async () => {
+      const intPart = Math.trunc(user?.otherProfile?.rating);
+      setFullStar(intPart);
+      const fractionPart = user?.otherProfile?.rating - intPart;
+      setHalfStar(fractionPart);
+      if (fractionPart > 0) {
+        const leftPart = 4 - intPart;
+        setEmptyStar(leftPart);
+      } else {
+        const leftPart = 5 - intPart;
+        setEmptyStar(leftPart);
+      }
+      console.log(fullStar, halfStar, emptyStar);
+    };
     fetchUserDetail();
-    
+    showRating();
   }, [id]);
 
   return (
@@ -77,7 +94,7 @@ export default function OtherProfile({ coins }) {
                   <FaPlus className="mt-1" />
                   Follow
                 </button>
-                <button className="mt-2 px-6 py-2 bg-teal-600 text-white rounded-lg shadow-md hover:bg-teal-500">
+                <button className="mt-2 px-6 py-2 bg-teal-600 text-white  rounded-lg shadow-md hover:bg-teal-700">
                   Message
                 </button>
               </div>
@@ -90,7 +107,8 @@ export default function OtherProfile({ coins }) {
           {/* Bio Section */}
           <div className="text-left">
             <p className="text-gray-700">{user?.description}</p>
-            <div className="flex justify-center lg:justify-start space-x-3 mt-2">
+            <div className="flex  lg:justify-start space-x-3 mt-2">
+              <h3 className="text-lg font-semibold text-teal-600">Language:</h3>
               {user?.language?.map((language, index) => (
                 <span
                   key={index}
@@ -104,7 +122,8 @@ export default function OtherProfile({ coins }) {
 
           {/* Hobbies Section */}
           <div className="mt-2">
-            <div className="flex justify-center lg:justify-start space-x-3 mt-2">
+            <div className="flex  lg:justify-start space-x-3 mt-2">
+              <h3 className="text-lg font-semibold text-teal-600">Hobby:</h3>
               {user?.hobby?.map((hobby, index) => (
                 <span
                   key={index}
@@ -120,36 +139,66 @@ export default function OtherProfile({ coins }) {
           <div className="flex justify-around mt-6 text-center lg:justify-start lg:space-x-8">
             <div className="flex flex-col">
               <span className="text-gray-600">Friends</span>
-              <span className="text-xl font-bold">{user?.otherProfile?.friends?.length}</span>
+              <span className="text-xl font-bold">
+                {user?.otherProfile?.friends?.length}
+              </span>
             </div>
             <div className="flex flex-col">
               <span className="text-gray-600">Followers</span>
-              <span className="text-xl font-bold">{user?.otherProfile?.followers?.length}</span>
+              <span className="text-xl font-bold">
+                {user?.otherProfile?.followers?.length}
+              </span>
             </div>
             <div className="flex flex-col">
               <span className="text-gray-600">Following</span>
-              <span className="text-xl font-bold">{user?.otherProfile?.following?.length}</span>
+              <span className="text-xl font-bold">
+                {user?.otherProfile?.following?.length}
+              </span>
             </div>
           </div>
 
           {/* Rating Section */}
           <div className="mt-6 flex  justify-between">
             <div>
-              <h3 className="text-lg font-bold text-gray-700">Rating:{user?.otherProfile?.rating}</h3>
+              <h3 className="text-lg font-bold text-gray-700">
+                Rating:{user?.otherProfile?.rating}
+              </h3>
             </div>
             <div className="flex items-center space-x-1">
-              <FaStar className="text-yellow-400 text-xl" />
-              <FaStar className="text-yellow-400 text-xl" />
-              <FaStar className="text-yellow-400 text-xl" />
-              <FaStarHalfAlt className="text-yellow-400 text-xl" />
-              <FaRegStar className="text-yellow-400 text-xl" />
+              {[
+                ...Array(
+                  Number.isInteger(fullStar) && fullStar > 0 ? fullStar : 0
+                ),
+              ].map((_, index) => (
+                <FaStar
+                  key={`full-${index}`}
+                  className="text-yellow-400 text-xl"
+                />
+              ))}
+
+              {/* Half Star */}
+              {halfStar > 0 && (
+                <FaStarHalfAlt className="text-yellow-400 text-xl" />
+              )}
+
+              {/* Empty Stars */}
+              {[
+                ...Array(
+                  Number.isInteger(emptyStar) && emptyStar > 0 ? emptyStar : 0
+                ),
+              ].map((_, index) => (
+                <FaRegStar
+                  key={`empty-${index}`}
+                  className="text-yellow-400 text-xl"
+                />
+              ))}
             </div>
           </div>
 
           {/* Tags Section */}
-          <div className="mt-6">
-            <h3 className="text-lg font-bold text-teal-600">Tags:</h3>
+          <div className="my-2">
             <div className="flex flex-wrap gap-2 mt-2">
+              <h3 className="text-lg font-bold text-teal-600">Tags:</h3>
               {user?.tags?.map((tag, index) => (
                 <span
                   key={index}

@@ -13,20 +13,26 @@ export default function Home() {
   const [requestCall, setRequestCall] = useState(false);
   const [checkEnoughBalance, setCheckEnoughBalance] = useState(false);
   const [locationUser, setLocationUser] = useState([]);
+  const [randomUser, setRandomUser] = useState([]);
+  const [followingUser, setFollowingUser] = useState([]);
   const [loading, setIsLoading] = useState(false);
+  const [randomLoading, setRandomLoading] = useState(false);
+  const [followingLoading, setFollowingLoading] = useState(false);
   const [notState, setNotState] = useState(false);
   const id = localStorage.getItem("id");
 
   const {
     isLoggedIn,
-
     notLoggedInPage,
     setNotLoggedInPage,
     state,
     city,
+    tag,
+    followingList,
   } = useContext(UserContext);
   // console.log(location);
-  console.log(city, state);
+  // console.log(city, state);
+  console.log(followingList);
 
   useEffect(() => {
     if (state === undefined && state === undefined) {
@@ -40,8 +46,11 @@ export default function Home() {
           city: city,
           state: state,
         });
-        console.log(response?.data?.user);
-        setLocationUser(response?.data?.user);
+        // console.log(response?.data?.user);
+        const filterdLocationUser = response?.data?.user?.filter(
+          (user) => user._id !== id
+        );
+        setLocationUser(filterdLocationUser);
       } catch (error) {
         console.log(error);
       }
@@ -51,12 +60,66 @@ export default function Home() {
       fetchLocationUsers();
     }
   }, [city, state]);
+  useEffect(() => {
+    const fetchRandomUsers = async () => {
+      console.log(tag);
+      setRandomLoading(true);
+      try {
+        const response = await axios.post(`${url}/api/user/getRandomUser`, {
+          tag: tag,
+        });
 
-  const randomButton = "";
+        const filteredRandomuser = response?.data?.user?.filter(
+          (user) => user._id !== id
+        );
+        setRandomUser(filteredRandomuser);
+        // console.log(randomUser);
+      } catch (error) {
+        console.log(error);
+      }
+      setRandomLoading(false);
+    };
+    if (tag) {
+      fetchRandomUsers();
+    }
+  }, [tag]);
+  useEffect(() => {
+    const fetchFollowingUsers = async () => {
+      setFollowingLoading(true);
+      try {
+        const userResponses = await Promise.all(
+          followingList.map((userId) =>
+            axios.get(`${url}/api/user/getUser/${userId}`)
+          )
+        );
 
-  const nearby = 10;
-  const random = 12;
-  const follow = 14;
+        const newUsers = userResponses
+          .map((response) => response?.data?.user)
+          .filter((user) => user);
+
+        // Update state while ensuring no duplicates
+        setFollowingUser((prev) => {
+          const uniqueUsers = [...prev];
+          newUsers.forEach((newUser) => {
+            if (!uniqueUsers.some((user) => user._id === newUser._id)) {
+              uniqueUsers.push(newUser);
+            }
+          });
+          return uniqueUsers;
+        });
+      } catch (error) {
+        console.error("Error fetching following users:", error);
+      } finally {
+        setFollowingLoading(false);
+      }
+    };
+
+    if (followingList) {
+      fetchFollowingUsers();
+    }
+  }, [followingList]);
+
+  console.log(followingUser);
 
   // function buttonHandler(clickedValue) {
   //   setButtonClick(clickedValue);
@@ -65,9 +128,9 @@ export default function Home() {
 
   function checkRequestCall() {}
 
-  console.log("ye le bacha", checkEnoughBalance);
+  // console.log("ye le bacha", checkEnoughBalance);
 
-  console.log(requestCall);
+  // console.log(requestCall);
   return (
     <div className=" relative md:px-28 md:py-10 my-5 bg-gray-50">
       {/* Title Section */}
@@ -123,73 +186,36 @@ export default function Home() {
       {/* Live Cards Grid Section */}
       <div>
         {buttonClick === "follow" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
-            <LiveCard
-              rate={300}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={300}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={200}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={300}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={200}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={200}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={200}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={300}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={300}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-          </div>
+          followingLoading ? (
+            <div>Loading your follower </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
+              {followingUser?.map((user, index)=>(
+                <LiveCard
+                key={index}
+                user={user}
+                rate={300}
+                requestCall={requestCall}
+                setRequestCall={setRequestCall}
+                setCheckEnoughBalance={setCheckEnoughBalance}
+              />
+              ))}
+              
+            </div>
+          )
         ) : buttonClick === "nearby" ? (
           notState ? (
-            <div className="text-center font-bold text-2xl text-red-600">Please update Your Location</div>
+            <div className="text-center font-bold text-2xl text-red-600">
+              Please update Your Location
+            </div>
           ) : loading ? (
             <div>Fetching users near you</div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
-              {locationUser?.map((user, id) => (
-                <div key={id}>
+              {locationUser?.map((user, index) => (
+                <div key={index}>
                   <LiveCard
-                    id={id}
+                    // id={id}
                     user={user}
                     rate={200}
                     requestCall={requestCall}
@@ -200,45 +226,22 @@ export default function Home() {
               ))}
             </div>
           )
+        ) : randomLoading ? (
+          <div>Fetching Random Users</div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
-            {" "}
-            <LiveCard
-              rate={300}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={300}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={200}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={300}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={200}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
-            <LiveCard
-              rate={300}
-              requestCall={requestCall}
-              setRequestCall={setRequestCall}
-              setCheckEnoughBalance={setCheckEnoughBalance}
-            />
+            {randomUser?.map((user, index) => (
+              <div key={index}>
+                <LiveCard
+                  // id={id}
+                  user={user}
+                  rate={200}
+                  requestCall={requestCall}
+                  setRequestCall={setRequestCall}
+                  setCheckEnoughBalance={setCheckEnoughBalance}
+                />
+              </div>
+            ))}
           </div>
         )}
       </div>

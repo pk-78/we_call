@@ -15,7 +15,7 @@ const userProfileSchema = new mongoose.Schema({
   },
   rating: {
     type: String,
-    default: 4,
+    default: 3.5,
   },
   coins: {
     type: Number,

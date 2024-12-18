@@ -139,7 +139,7 @@ const userSchema = new mongoose.Schema(
         "Persuasive",
         "Diplomatic",
       ],
-      default: [],
+      default: ["Kind","Generous","Caring"],
     },
 
     refreshToken: {

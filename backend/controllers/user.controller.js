@@ -272,3 +272,40 @@ export const getUserByLocation = async (req, res) => {
     });
   }
 };
+
+export const getRandomUser = async (req, res) => {
+  const { tag } = req.body;
+  console.log(tag);
+
+  if (!tag || !Array.isArray(tag)) {
+    return res.status(400).json({
+      success: false,
+      message: "Tag is required and should be an array",
+    });
+  }
+
+  try {
+    // Find a user where at least one tag matches
+    const user = await User.find({ tags: { $in: tag } });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "No user found with matching tags",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User found",
+       user,
+    });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the user",
+      error: error.message,
+    });
+  }
+};

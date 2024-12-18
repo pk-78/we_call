@@ -4,10 +4,12 @@ import {
   editLocation,
   editUser,
   getAlluser,
+  getRandomUser,
   getuserById,
   getUserByLocation,
   loginUser,
 } from "../controllers/user.controller.js";
+import { followingList } from "../controllers/userProfile.controller.js";
 
 const router = express.Router();
 
@@ -18,5 +20,7 @@ router.put("/editlocation/:id", editLocation);
 router.get("/getuser/:id", getuserById);
 router.get("/getallUsers", getAlluser);
 router.post("/getuserByLocation", getUserByLocation);
+router.post("/getRandomUser", getRandomUser)
+router.post("/following/:id",followingList)
 
 export default router;

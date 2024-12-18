@@ -5,24 +5,42 @@ import { coins } from "../url/coins";
 import RequestCall from "./RequestCall";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
+import axios from "axios";
+import { url } from "../url/url";
+import toast from "react-hot-toast";
 
 export default function LiveCard({
   rate,
   setCheckEnoughBalance,
   requestCall,
   setRequestCall,
-  id="",
-  user=""
+  // id = "",
+  user = "",
 }) {
+  const myId = localStorage.getItem("id");
+  const followUnfollow = async (userId) => {
+    console.log("Saamne wale kii id", userId);
+    console.log("Meri id ", myId);
+
+    try {
+      const response = await axios.post(`${url}/api/user/following/${myId}`, {
+        otherId: userId,
+      });
+      toast.success("Followed Successfully");
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // console.log(setCheckEnoughBalance);
   const navigate = useNavigate();
-  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
+  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage,followingList } =
     useContext(UserContext);
   const buttonColor =
     coins >= rate
       ? "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700"
       : "bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700";
-      console.log(user)
+  console.log(user);
 
   return (
     <div className="border border-gray-300 rounded-xl shadow-lg w-80 bg-white overflow-hidden hover:shadow-2xl hover:shadow-light-blue/30 transition-all duration-300 ease-in-out transform hover:scale-105">
@@ -36,18 +54,19 @@ export default function LiveCard({
           }}
           className="w-full h-[400px] object-cover cursor-pointer rounded-t-xl transform transition-transform duration-00 "
         />
-        <button
+        {!followingList.includes(user._id) && <button
           onClick={() => {
             if (!isLoggedIn) {
               setNotLoggedInPage(true);
             } else {
+              followUnfollow(user._id);
             }
           }}
           className={` flex gap-1 absolute top-2 right-2 bg-teal-600 bg-opacity-20 text-white text-sm py-1 px-3 rounded-full shadow-lg hover:bg-teal-700 focus:outline-none`}
         >
           <FaPlus className="mt-1" />
           Follow
-        </button>
+        </button>}
         {/* Call Button */}
         <button
           onClick={() => {
@@ -83,7 +102,7 @@ export default function LiveCard({
                 className="text-xl font-bold text-teal-700 cursor-pointer"
                 onClick={() => navigate(`/profile/${user?._id}`)}
               >
-               {user?.userName}
+                {user?.userName}
               </p>
               <p className="text-sm text-teal-500">India</p>
             </div>
