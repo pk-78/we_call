@@ -7,13 +7,14 @@ export default function UserContextProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [notLoggedInPage, setNotLoggedInPage] = useState(false);
   const [userDetail, setUserDetail] = useState();
-  const [id, setId] = useState(localStorage.getItem("id"));  //ye maine pta nhi kyu likha h, hasi aarhi h dekh kr
+  const id = localStorage.getItem("id"); //ye maine pta nhi kyu likha h, hasi aarhi h dekh kr
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
-  const [tag, setTag]= useState(null)
-  const [followingList, setFollowingList]= useState([])
+  const [tag, setTag] = useState(null);
+  const [followingList, setFollowingList] = useState([]);
   const token = useState(localStorage.getItem("token"));
   // console.log(token[0])
+  console.log(id);
 
   useEffect(() => {
     if (token[0]) {
@@ -29,14 +30,14 @@ export default function UserContextProvider({ children }) {
         // console.log(response?.data?.user);
         const city = response?.data?.user?.location?.city;
         const state = response?.data?.user?.location?.state;
-        const user =response?.data?.user
-        const tag=response?.data?.user?.tags
-        const following= response?.data?.user?.otherProfile?.following
+        const user = response?.data?.user;
+        const tag = response?.data?.user?.tags;
+        const following = response?.data?.user?.otherProfile?.following;
         setCity(city);
         setState(state);
-        setUserDetail(user)
-        setTag(tag)
-        setFollowingList(following)
+        setUserDetail(user);
+        setTag(tag);
+        setFollowingList(following);
       } catch (error) {
         console.log(error);
       }
@@ -60,7 +61,7 @@ export default function UserContextProvider({ children }) {
         city,
         state,
         tag,
-        followingList
+        followingList,
       }}
     >
       {children}

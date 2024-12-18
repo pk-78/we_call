@@ -39,6 +39,12 @@ export default function Setting() {
         toast.error("Something wrong while fetching details");
       }
     };
+   
+    if(id)
+    {fetchUserDetail();}
+  }, [id]);
+
+  useEffect(()=>{
     const showRating = async () => {
       const intPart = Math.trunc(user?.otherProfile?.rating);
       setFullStar(intPart);
@@ -53,9 +59,9 @@ export default function Setting() {
       }
       console.log(fullStar, halfStar, emptyStar);
     };
-    fetchUserDetail();
     showRating();
-  }, [id, user?.otherProfile?.rating]);
+
+  },[ user?.otherProfile?.rating])
 
   coins;
   console.log("id mila", id);
