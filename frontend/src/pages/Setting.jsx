@@ -27,6 +27,10 @@ export default function Setting() {
   const [fullStar, setFullStar] = useState(5);
   const [halfStar, setHalfStar] = useState(0);
   const [emptyStar, setEmptyStar] = useState(0);
+  const [profileImage, setProfileImage] = useState(null);
+  const [bannerImage, setBannerImage] = useState(null);
+  const [selectedProfileFile, setSelectedProfileFile] = useState(null);
+  const [selectedBannerFile, setSelectedBannerFile] = useState(null);
 
   useEffect(() => {
     const fetchUserDetail = async () => {
@@ -39,16 +43,17 @@ export default function Setting() {
         toast.error("Something wrong while fetching details");
       }
     };
-   
-    if(id)
-    {fetchUserDetail();}
+
+    if (id) {
+      fetchUserDetail();
+    }
   }, [id]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const showRating = async () => {
-      const intPart = Math.trunc(user?.otherProfile?.rating);
+      const intPart = Math.trunc(user?.rating);
       setFullStar(intPart);
-      const fractionPart = user?.otherProfile?.rating - intPart;
+      const fractionPart = user?.rating - intPart;
       setHalfStar(fractionPart);
       if (fractionPart > 0) {
         const leftPart = 4 - intPart;
@@ -60,8 +65,7 @@ export default function Setting() {
       console.log(fullStar, halfStar, emptyStar);
     };
     showRating();
-
-  },[ user?.otherProfile?.rating])
+  }, [user?.rating]);
 
   coins;
   console.log("id mila", id);
@@ -73,7 +77,7 @@ export default function Setting() {
           <Message activeItem={activeItem} setActiveItem={setActiveItem} />
         );
       case "level":
-        return <Level activeItem={activeItem} setActiveItem={setActiveItem} />;
+        return <Level activeItem={activeItem} setActiveItem={setActiveItem} myLevel={user?.level} myConsumption={user?.coinConsumption} />;
       case "task":
         return <Task activeItem={activeItem} setActiveItem={setActiveItem} />;
       case "backpack":
@@ -100,6 +104,80 @@ export default function Setting() {
   const handleButtonClick = (item) => {
     setActiveItem(activeItem === item ? "" : item);
   };
+  const handleProfileImage = (event) => {
+    const file = event.target.files[0];
+    setProfileImage(file);
+    // console.log(file)
+    if (file) {
+      setSelectedProfileFile(URL.createObjectURL(file));
+    }
+  };
+  const handleBannerImage = (event) => {
+    const file = event.target.files[0];
+    setBannerImage(file);
+    // console.log(file)
+    if (file) {
+      setSelectedBannerFile(URL.createObjectURL(file));
+    }
+  };
+  const handleUploadProfile = async () => {
+    console.log(profileImage);
+    if (!profileImage) {
+      toast.error("No image found please try again");
+    }
+    if (!id) {
+      console.log("No id found");
+    }
+    try {
+      const formData = new FormData();
+      formData.append("profilePicture", profileImage);
+      const response = await axios.post(
+        `${url}/api/user/updateProfile/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        toast.success("Profile Updated SuccessFully");
+        setProfileImage(null);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something Went Wrong");
+    }
+  };
+  const handleUploadBanner = async () => {
+    if (!bannerImage) {
+      toast.error("No image found please try again");
+    }
+    if (!id) {
+      console.log("No id found");
+    }
+    try {
+      const formData = new FormData();
+      formData.append("bannerImage", bannerImage);
+      const response = await axios.post(
+        `${url}/api/user/updatebanner/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (response.status === 200) {
+        toast.success("Cover Picture Updated SuccessFully");
+        setBannerImage(null);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something Went Wrong");
+    }
+  };
 
   return (
     <div className="flex justify-center items-start p-2 mb-4 sm:p-6 bg-gray-200 min-h-screen">
@@ -109,14 +187,33 @@ export default function Setting() {
       {!activeItem ? (
         <div className="relative bg-white shadow-lg rounded-lg w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-3xl p-4 sm:p-6">
           <div className="flex flex-col items-start">
-            <div className="w-full lg:space-y-2">
+            <div className=" relative w-full lg:space-y-2">
               <img
-                src="/random_profile.jpg"
+                src={
+                  selectedBannerFile
+                    ? selectedBannerFile
+                    : user?.coverImage
+                    ? user?.coverImage
+                    : "/random_profile.jpg"
+                }
                 alt="Cover"
                 className="w-full object-cover rounded-lg mb-4"
               />
+              <label
+                htmlFor="bannerPicture"
+                className="cursor-pointer absolute top-0 right-0 opacity-80 bg-teal-600 hover:bg-teal-700 text-white text-xs rounded-full p-1 transition duration-300 ease-in-out"
+              >
+                ✏️
+              </label>
+              <input
+                id="bannerPicture"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleBannerImage}
+              />
             </div>
-            <div className="flex gap-1 md:gap-4 my-1">
+            <div className="flex gap-1 md:gap-1 my-1">
               <button
                 onClick={() => handleButtonClick("level")}
                 className={` md:px-8 px-1  text-sm md:text-lg bg-gray-200 rounded-lg text-center hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105 ${
@@ -133,6 +230,7 @@ export default function Setting() {
               >
                 <p className="text-gray-700 font-semibold">Task</p>
               </button>
+              
               {/* <button
                 onClick={() => handleButtonClick("backpack")}
                 className={` md:px-8 px-1  text-sm md:text-lg bg-gray-200 rounded-lg text-center hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105 ${
@@ -157,28 +255,71 @@ export default function Setting() {
               >
                 <p className="text-gray-700 font-semibold">Profile</p>
               </button>
+              <button
+                onClick={() => navigate("/pricing")}
+                className={` md:px-8 px-1  text-sm md:text-lg bg-gray-200 rounded-lg text-center hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105 ${
+                  activeItem === "task" ? "bg-gray-300" : ""
+                }`}
+              >
+                <p className="text-gray-700 font-semibold">Recharge</p>
+              </button>
             </div>
 
             <div className="relative w-full">
               <div className="relative ">
                 <img
-                  src="/profile_man.png"
+                  src={
+                    selectedProfileFile
+                      ? selectedProfileFile
+                      : user?.avatar
+                      ? user?.avatar
+                      : "/profile_man.png"
+                  }
                   alt="Profile"
                   className="rounded-full h-20 w-20 sm:h-24 sm:w-24 object-cover border-4 border-teal-500"
                 />
-                <button className="absolute bottom-0 left-16 bg-teal-500 hover:bg-teal-700 text-white text-xs rounded-full p-1 transition duration-300 ease-in-out">
+                <label
+                  htmlFor="profilePicture"
+                  className="cursor-pointer absolute bottom-0 left-16 bg-teal-500 hover:bg-teal-700 text-white text-xs rounded-full p-1 transition duration-300 ease-in-out"
+                >
                   ✏️
-                </button>
+                </label>
+                <input
+                  id="profilePicture"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleProfileImage}
+                />
               </div>
 
-              <button
-                onClick={() => {
-                  setDailyCheckIn(true);
-                }}
-                className="absolute text-2xl sm:text-3xl top-2 right-2 text-yellow-500 hover:text-yellow-600"
-              >
-                <MdTask className="cursor-pointer" />
-              </button>
+              <div>
+                <button
+                  onClick={() => {
+                    setDailyCheckIn(true);
+                  }}
+                  className="absolute text-2xl sm:text-3xl top-2 right-2 text-yellow-500 hover:text-yellow-600"
+                >
+                  <MdTask className="cursor-pointer"  />
+                </button>
+
+                {bannerImage && (
+                  <button
+                    onClick={handleUploadBanner}
+                    className="absolute text-base font-semibold py-1 bg-teal-600 px-2 rounded text-white  top-18 right-2"
+                  >
+                    Upload Banner
+                  </button>
+                )}
+                {profileImage && (
+                  <button
+                    onClick={handleUploadProfile}
+                    className="absolute text-base font-semibold py-1 bg-teal-600 px-2 rounded text-white  bottom-4 right-2"
+                  >
+                    Upload Profile
+                  </button>
+                )}
+              </div>
             </div>
 
             <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
@@ -212,7 +353,7 @@ export default function Setting() {
             </div>
 
             {/* Stats: Friends, Followers, Following */}
-            <div className="flex justify-around mt-6 text-center lg:justify-start lg:space-x-8">
+            <div className="flex justify-around gap-2 mt-6 text-center lg:justify-start lg:space-x-8">
               <div className="flex flex-col">
                 <span className="text-gray-600">Friends</span>
                 <span className="text-xl font-bold">
@@ -236,7 +377,7 @@ export default function Setting() {
             <div className="mt-6 flex  justify-between">
               <div>
                 <h3 className="text-lg font-bold text-gray-700">
-                  Rating: <span>{user?.otherProfile?.rating}</span>
+                  Rating: <span>{user?.rating}</span>
                 </h3>
               </div>
               <div className="flex items-center space-x-1">
@@ -289,9 +430,15 @@ export default function Setting() {
                 <span className="text-gray-700 font-semibold text-lg">
                   Total Coins:
                 </span>
-                <span className="text-xl text-teal-600 font-bold">{coins}</span>
+                <span className="text-xl text-teal-600 font-bold">{user?.coins}</span>
               </div>
-              <div className="flex justify-between mt-1">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-700 font-semibold text-lg">
+                  My Calling Price:
+                </span>
+                <span className="text-xl text-teal-600 font-bold">{user?.rate}{" "}coins/min</span>
+              </div>
+              {/* <div className="flex justify-between mt-1">
                 <div className="flex items-center space-x-2">
                   <TbCardsFilled className="text-pink-400 text-2xl sm:text-3xl" />
                   <p className="text-gray-800 font-semibold text-lg sm:text-xl">
@@ -304,7 +451,7 @@ export default function Setting() {
                     3
                   </p>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Buttons */}
@@ -328,7 +475,7 @@ export default function Setting() {
             >
               <GiCrossedBones size={24} />
             </button>
-            <DailyCheckIn />
+            <DailyCheckIn checkIn={user?.dailyCheckIn} />
           </div>
         </div>
       )}

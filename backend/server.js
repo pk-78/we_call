@@ -4,8 +4,13 @@ import path from "path";
 import dotenv from "dotenv";
 import connectDB from "./db/db.js";
 import userRoutes from "./routes/userRoutes.js";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 5200;
@@ -15,10 +20,12 @@ app.use(express.json());
 app.use(cors());
 
 // Static files (if any)
-app.use(express.static( "public"));
+// app.use(express.static( "public"));
+app.use("/profile", express.static(path.join(__dirname, "uploads/profile")));
+app.use("/banner", express.static(path.join(__dirname, "uploads/banners")));
 
-app.use(express.json({limit:"16Kb"}))
-app.use(express.urlencoded({extended:true, limit:"16Kb"}))
+app.use(express.json({ limit: "16Kb" }));
+app.use(express.urlencoded({ extended: true, limit: "16Kb" }));
 
 // Database connection
 connectDB();

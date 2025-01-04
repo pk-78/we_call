@@ -5,16 +5,19 @@ import UserContext from "../context/UserContext";
 import { FaPlus } from "react-icons/fa6";
 import axios from "axios";
 import { url } from "../url/url";
+import FollowButton from "./FollowButton";
 
 export default function OtherProfile({ coins }) {
   const navigate = useNavigate();
   const [user, setuser] = useState([]);
-  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
+  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage,followingList } =
     useContext(UserContext);
   const { id } = useParams();
+  const myId = localStorage.getItem("id");
   const [fullStar, setFullStar] = useState(null);
   const [halfStar, setHalfStar] = useState(null);
   const [emptyStar, setEmptyStar] = useState(null);
+  const [followerList, setFollowersList] = useState([]);
 
   // console.log(id);
 
@@ -24,14 +27,15 @@ export default function OtherProfile({ coins }) {
         const response = await axios.get(`${url}/api/user/getuser/${id}`);
         console.log(response?.data?.user);
         setuser(response?.data?.user);
+        setFollowersList(response?.data?.user?.otherProfile?.followers);
       } catch (error) {
         console.log(error);
       }
     };
     const showRating = async () => {
-      const intPart = Math.trunc(user?.otherProfile?.rating);
+      const intPart = Math.trunc(user?.rating);
       setFullStar(intPart);
-      const fractionPart = user?.otherProfile?.rating - intPart;
+      const fractionPart = user?.rating - intPart;
       setHalfStar(fractionPart);
       if (fractionPart > 0) {
         const leftPart = 4 - intPart;
@@ -59,14 +63,14 @@ export default function OtherProfile({ coins }) {
       <div className="bg-white shadow-lg rounded-lg w-full max-w-md  mb-6 lg:max-w-3xl lg:p-6 lg:space-x-6">
         <div className="w-full lg:space-y-4">
           <img
-            src="/random_profile.jpg"
+            src={user.coverImage ? user?.coverImage : "/random_profile.jpg"}
             alt="Cover"
             className="w-full object-cover rounded-lg mb-4"
           />
 
           <div className="lg:px-6 px-2">
             <img
-              src="/profile_man.png"
+              src={user?.avatar ? user?.avatar : "/profile_man.png"}
               alt="Profile"
               className="w-20 h-20 rounded-full border-4 border-teal-500 object-cover mt-2 mb-4 shadow-md"
             />
@@ -82,21 +86,32 @@ export default function OtherProfile({ coins }) {
                 <p className="text-gray-500">India</p>
               </div>
               <div>
-                <button
-                  onClick={() => {
-                    if (!isLoggedIn) {
-                      setNotLoggedInPage(true);
-                    } else {
-                    }
-                  }}
-                  className={` flex gap-2 py-2 px-6 bg-teal-600  text-white text-sm rounded-lg shadow-lg hover:bg-teal-700 focus:outline-none`}
-                >
-                  <FaPlus className="mt-1" />
-                  Follow
-                </button>
-                <button className="mt-2 px-6 py-2 bg-teal-600 text-white  rounded-lg shadow-md hover:bg-teal-700">
+                {!followerList?.includes(myId) ? (
+                  <FollowButton
+                    followingList={followingList}
+                    userId={user?._id}
+                    otherProfile="true"
+                  />
+                ) : (
+                  <button
+                    aria-label="Follow this user"
+                    onClick={() => {
+                      if (!isLoggedIn) {
+                        setNotLoggedInPage(true);
+                      } else {
+                        // Call the follow logic
+                        followUser(myId);
+                      }
+                    }}
+                    className="flex gap-2 py-2 px-6 bg-teal-600 text-white text-sm rounded-lg shadow-lg hover:bg-teal-700 focus:outline-none"
+                  >
+                    Unfollow
+                  </button>
+                )}
+
+                {/* <button className="mt-2 px-6 py-2 bg-teal-600 text-white  rounded-lg shadow-md hover:bg-teal-700">
                   Message
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
@@ -161,7 +176,7 @@ export default function OtherProfile({ coins }) {
           <div className="mt-6 flex  justify-between">
             <div>
               <h3 className="text-lg font-bold text-gray-700">
-                Rating:{user?.otherProfile?.rating}
+                Rating:{user?.rating}
               </h3>
             </div>
             <div className="flex items-center space-x-1">

@@ -1,3 +1,3 @@
-const coins = 200;
+const coins=0;
 
 export { coins };

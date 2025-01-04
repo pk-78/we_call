@@ -9,14 +9,14 @@ import { GiCrossedBones } from "react-icons/gi";
 export default function GoLive() {
   const [isLive, setIsLive] = useState(false);
   const navigate = useNavigate();
-  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
+  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage, userDetail } =
     useContext(UserContext);
   // const [notLoggedInPage, setNotLoggedInPage] = useState(false);
   coins; // Example value; ideally, this would be a prop or fetched from a state/store.
 
   return (
     <div className=" relative max-w-md mx-auto my-2 p-6 bg-white shadow-lg rounded-lg text-center">
-      {coins >= 200 ? (
+      {userDetail?.coins >= 200 ? (
         isLive ? (
           <Live setIsLive={setIsLive} />
         ) : (

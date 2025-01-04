@@ -139,7 +139,50 @@ const userSchema = new mongoose.Schema(
         "Persuasive",
         "Diplomatic",
       ],
-      default: ["Kind","Generous","Caring"],
+      default: ["Kind", "Generous", "Caring"],
+    },
+    rate: {
+      type: Number,
+      default: 200,
+    },
+    rating: {
+      type: String,
+      default: 3.5,
+    },
+    coins: {
+      type: Number,
+      default: 200,
+    },
+    dailyCheckIn: {
+      type: String,
+      default: 1,
+    },
+    lastLogin: {
+      type: Date,
+      default: new Date('2017-10-17T00:00:00Z'), 
+    },
+    isLive: {
+      type: Boolean,
+      default: false,
+    },
+    level: {
+      type: String,
+      default: 1,
+    },
+    TotalEarning: {
+      type: String,
+      default: 0,
+    },
+    todayEarning: {
+      type: String,
+      default: 0,
+    },
+    coinConsumption: {
+      type: String,
+      default: 0,
+    },
+    dob: {
+      type: Date,
     },
 
     refreshToken: {

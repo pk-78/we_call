@@ -18,7 +18,7 @@ export default function Login({ setName }) {
   const [loading, setLoading] = useState(false);
   const { isLoggedIn, setIsLoggedIn, setUserDetail } = useContext(UserContext);
 
-  console.log("login check", isLoggedIn)
+  console.log("login check", isLoggedIn);
 
   const onSubmit = async (formData) => {
     console.log(formData);
@@ -39,7 +39,8 @@ export default function Login({ setName }) {
         // setUserDetail(response.data.data)
         setName(userData?.name);
         localStorage.setItem("id", user.id);
-        localStorage.setItem("token",token);
+        localStorage.setItem("token", token);
+        
         navigate("/home"); // Redirect to home page or dashboard
       } else {
         toast.error("Invalid credentials. Please try again.");

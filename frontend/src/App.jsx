@@ -18,17 +18,17 @@ import PrivateRoute from "./ui/PrivateRoute";
 import Message from "./components/Message";
 import Post from "./pages/Post";
 import OtherProfile from "./components/OtherProfile";
-import LiveWatch from "./pages/LiveRoom";
+// import LiveWatch from "./pages/LiveRoom";
 import PartyRoom from "./pages/PartyRoom";
 import OfferPage from "./components/OfferPage";
 import Live from "./components/Live";
 import EditProfile from "./components/EditProfile";
+import LiveRoom from "./pages/LiveRoom";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [offerPage, setOfferPage] = useState(false);
-  const [name, setName]= useState("")
- 
+  const [name, setName] = useState("");
 
   const coins = 200;
   return (
@@ -37,7 +37,7 @@ function App() {
       <Toaster />
 
       <Routes>
-        <Route path="/" element={<Home coins={coins} />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login setName={setName} />} />
         <Route path="/signup" element={<Signup />} />
 
@@ -46,24 +46,24 @@ function App() {
         {/* // element={ */}
         {/* // <PrivateRoute isLoggedIn={isLoggedIn}> */}
         <Route path="/home" element={<Home />} />
-        <Route path="/golive" element={<GoLive coins={coins} />} />
-        <Route path="/party" element={<Party coins={coins} />} />
-        <Route path="/post" element={<Post coins={coins} />} />
-        <Route path="/setting" element={<Setting coins={coins} />} />
+        <Route path="/golive" element={<GoLive />} />
+        <Route path="/party" element={<Party />} />
+        <Route path="/post" element={<Post />} />
+        <Route path="/setting" element={<Setting />} />
 
-        <Route path="/profile/:id" element={<OtherProfile coins={coins} />} />
-        <Route path="/live-room" element={<LiveWatch coins={coins} />} />
-        <Route path="/party-room" element={<PartyRoom coins={coins} />} />
-        <Route path="/pricing" element={<OfferPage coins={coins} />} />
-        <Route path="/live" element={<Live coins={coins} />} />
-        <Route path="/editProfile" element={<EditProfile coins={coins} />} />
+        <Route path="/profile/:id" element={<OtherProfile />} />
+        <Route path="/live-room/:id" element={<LiveRoom />} />
+        <Route path="/party-room" element={<PartyRoom />} />
+        <Route path="/pricing" element={<OfferPage />} />
+        <Route path="/live" element={<Live />} />
+        <Route path="/editProfile" element={<EditProfile />} />
 
         {/* // </PrivateRoute>
           // } */}
         {/* /> */}
       </Routes>
 
-      <Message />
+      {/* <Message /> */}
 
       <Footer />
     </div>

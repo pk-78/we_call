@@ -1,6 +1,8 @@
 import express from "express";
 import {
+  bannerPicture,
   createUser,
+  dailyCheckIn,
   editLocation,
   editUser,
   getAlluser,
@@ -8,8 +10,11 @@ import {
   getuserById,
   getUserByLocation,
   loginUser,
+  profilePicture,
 } from "../controllers/user.controller.js";
 import { followingList } from "../controllers/userProfile.controller.js";
+import { profileUpload, bannerUpload } from "../middleware/multer.js";
+
 
 const router = express.Router();
 
@@ -20,7 +25,10 @@ router.put("/editlocation/:id", editLocation);
 router.get("/getuser/:id", getuserById);
 router.get("/getallUsers", getAlluser);
 router.post("/getuserByLocation", getUserByLocation);
-router.post("/getRandomUser", getRandomUser)
-router.post("/following/:id",followingList)
+router.post("/getRandomUser", getRandomUser);
+router.post("/following/:id", followingList);
+router.post("/updateProfile/:id", profileUpload, profilePicture);
+router.post("/updatebanner/:id", bannerUpload, bannerPicture);
+router.post("/dailyCheckIn/:id", dailyCheckIn)
 
 export default router;

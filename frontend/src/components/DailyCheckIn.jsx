@@ -1,7 +1,8 @@
 import React from "react";
 import { RiCoinLine } from "react-icons/ri";
 
-export default function DailyCheckIn() {
+export default function DailyCheckIn({checkIn}) {
+  console.log(checkIn)
   const days = [
     { day: "Day 1", reward: 50 },
     { day: "Day 2", reward: 60 },
@@ -9,7 +10,7 @@ export default function DailyCheckIn() {
     { day: "Day 4", reward: 80 },
     { day: "Day 5", reward: 90 },
     { day: "Day 6", reward: 100 },
-    { day: "Day 7", reward: 120 },
+    { day: "Day 7", reward: 110 },
     { day: "Day 7 +", reward: 150 },
   ];
 
@@ -27,7 +28,7 @@ export default function DailyCheckIn() {
             key={index}
             className={`flex flex-col items-center justify-center p-4 border rounded-lg shadow-sm transition-transform transform hover:scale-105 
               ${
-                index === 0
+                index === Number(checkIn-1)
                   ? "bg-teal-100 border-teal-400"
                   : "bg-gray-50 border-gray-300"
               }`}

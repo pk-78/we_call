@@ -33,31 +33,43 @@ export default function OfferPage() {
   ];
 
   return (
-    <div className="px-72 bg-gray-100 p-6">
-      <h1 className="text-center text-4xl font-bold mb-8 text-teal-700">
+    <div className="bg-gray-50 py-12 px-6 sm:px-12 lg:px-24">
+      <h1 className="text-center text-3xl sm:text-4xl font-bold mb-10 text-teal-700">
         Buy Coins
       </h1>
-
-      <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {offers.map((offer, index) => (
           <div
             key={index}
-            className="bg-white p-6 rounded-lg shadow-lg text-center"
+            className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center"
           >
-            <img src="/coins.png" alt="" className="h-40 w-40" />
+            <img
+              src="/coins.png"
+              alt="Coins"
+              className="h-32 w-32 mx-auto mb-4"
+            />
             <h2 className="text-2xl font-bold text-teal-800">{offer.price}</h2>
+            <p className="mt-2 text-sm text-gray-600">{offer.description}</p>
             <div className="mt-4">
-              <p className="text-sm text-teal-700 font-semibold ">
-                Coins: {offer.coins}
+              <p className="text-teal-700 font-semibold">
+                Coins: <span className="font-bold">{offer.coins}</span>
               </p>
-              <p className="text-sm text-pink-500 font-semibold ">
-                Pink Cards: {offer.pinkCards}
-              </p>
-              <p className="text-sm text-orange-500  font-semibold">
-                Orange Cards: {offer.orangeCards ?? offer.randomCards}
-              </p>
+              {/* {offer.pinkCards && (
+                <p className="text-pink-500 font-semibold">
+                  Pink Cards:{" "}
+                  <span className="font-bold">{offer.pinkCards}</span>
+                </p>
+              )}
+              {(offer.orangeCards || offer.randomCards) && (
+                <p className="text-orange-500 font-semibold">
+                  Orange Cards:{" "}
+                  <span className="font-bold">
+                    {offer.orangeCards ?? offer.randomCards}
+                  </span>
+                </p>
+              )} */}
             </div>
-            <button className="mt-6 bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-500">
+            <button className="mt-6 bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-500 transition-colors">
               Buy Now
             </button>
           </div>

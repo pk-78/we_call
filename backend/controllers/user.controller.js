@@ -69,7 +69,9 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     // Check if both userName and email exist
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email })
+      .select("+password")
+      .populate("otherProfile");
     console.log("mila", user);
 
     // If no user is found with both userName and email
@@ -221,7 +223,7 @@ export const getuserById = async (req, res) => {
 
 export const getAlluser = async (req, res) => {
   try {
-    const user = await User.find();
+    const user = await User.find().populate("otherProfile");
 
     if (!user) {
       return res.status(404).json({
@@ -257,7 +259,7 @@ export const getUserByLocation = async (req, res) => {
 
     const user = await User.find({
       $or: [{ "location.city": city }, { "location.state": state }],
-    });
+    }).populate("otherProfile");
     res.status(200).json({
       success: true,
       message: "Users Found",
@@ -286,7 +288,9 @@ export const getRandomUser = async (req, res) => {
 
   try {
     // Find a user where at least one tag matches
-    const user = await User.find({ tags: { $in: tag } });
+    const user = await User.find({ tags: { $in: tag } }).populate(
+      "otherProfile"
+    );
 
     if (!user) {
       return res.status(404).json({
@@ -298,7 +302,7 @@ export const getRandomUser = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User found",
-       user,
+      user,
     });
   } catch (error) {
     console.error("Error fetching user:", error);
@@ -306,6 +310,137 @@ export const getRandomUser = async (req, res) => {
       success: false,
       message: "An error occurred while fetching the user",
       error: error.message,
+    });
+  }
+};
+export const profilePicture = async (req, res) => {
+  const { id } = req.params;
+  console.log(req.file);
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file found",
+      });
+    }
+    const profileLink = `${req.protocol}://${req.get("host")}/profile/${
+      req.file.filename
+    }`;
+    const user = await User.findByIdAndUpdate(
+      id,
+      { avatar: profileLink },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "No user found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile Picture updated SuccessFully",
+      profileLink,
+    });
+  } catch (error) {
+    console.log("error in profile picture", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occured while uploading profile",
+    });
+  }
+};
+export const bannerPicture = async (req, res) => {
+  const { id } = req.params;
+  console.log(req.file);
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file found",
+      });
+    }
+    const bannerLink = `${req.protocol}://${req.get("host")}/banner/${
+      req.file.filename
+    }`;
+    const user = await User.findByIdAndUpdate(
+      id,
+      { coverImage: bannerLink },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "No user found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Cover Picture updated SuccessFully",
+      bannerLink,
+    });
+  } catch (error) {
+    console.log("error in profile picture", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occured while uploading profile",
+    });
+  }
+};
+
+export const dailyCheckIn = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id);
+    console.log(user);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "No user Found",
+      });
+    }
+    console.log(user.lastLogin);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    if (
+      user.lastLogin &&
+      new Date(user.lastLogin).toDateString() === today.toDateString()
+    ) {
+      return res.status(200).json({
+        success: true,
+        message: "Already Logged In Today",
+      });
+    }
+
+    if (new Date(user.lastLogin).toDateString() === yesterday.toDateString()) {
+      user.dailyCheckIn += 1;
+    } else {
+      user.dailyCheckIn = 1;
+    }
+    console.log(today);
+    console.log(yesterday);
+    user.lastLogin = today;
+    console.log(user.lastLogin);
+    console.log(user.coins);
+    user.coins += 40 + 10 * user.dailyCheckIn; // Example reward logic
+    console.log(user.coins);
+    const rewardCoins = 40 + 10 * user.dailyCheckIn;
+    res.status(200).json({
+      message: "Daily login successful",
+      streak: user.dailyCheckIn,
+      points: rewardCoins,
+      user,
+    });
+    await user.save();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Error in daily checkIn controller",
+      error: error,
     });
   }
 };

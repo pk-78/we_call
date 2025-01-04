@@ -8,6 +8,7 @@ import UserContext from "../context/UserContext";
 import axios from "axios";
 import { url } from "../url/url";
 import toast from "react-hot-toast";
+import FollowButton from "./FollowButton";
 
 export default function LiveCard({
   rate,
@@ -18,55 +19,40 @@ export default function LiveCard({
   user = "",
 }) {
   const myId = localStorage.getItem("id");
-  const followUnfollow = async (userId) => {
-    console.log("Saamne wale kii id", userId);
-    console.log("Meri id ", myId);
-
-    try {
-      const response = await axios.post(`${url}/api/user/following/${myId}`, {
-        otherId: userId,
-      });
-      toast.success("Followed Successfully");
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  // console.log(setCheckEnoughBalance);
+ 
   const navigate = useNavigate();
-  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage,followingList } =
-    useContext(UserContext);
+  const {
+    isLoggedIn,
+    setIsLoggedIn,
+    notLoggedInPage,
+    setNotLoggedInPage,
+    followingList,
+    userDetail
+
+  } = useContext(UserContext);
+  const isEligibleToCall =userDetail?.coins >= user?.rate;
   const buttonColor =
-    coins >= rate
+    userDetail?.coins >= user?.rate
       ? "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700"
       : "bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700";
-  console.log(user);
+  // console.log(user);
 
   return (
     <div className="border border-gray-300 rounded-xl shadow-lg w-80 bg-white overflow-hidden hover:shadow-2xl hover:shadow-light-blue/30 transition-all duration-300 ease-in-out transform hover:scale-105">
       {/* Image Section */}
       <div className="relative group ">
         <img
-          src="/car.jpg"
+          src={user?.avatar? user?.avatar:"/car.jpg"}
+          
           alt="Wait for the images"
           onClick={() => {
-            navigate("/live-room");
+            navigate(`/live-room/${user?._id}`);
           }}
           className="w-full h-[400px] object-cover cursor-pointer rounded-t-xl transform transition-transform duration-00 "
         />
-        {!followingList.includes(user._id) && <button
-          onClick={() => {
-            if (!isLoggedIn) {
-              setNotLoggedInPage(true);
-            } else {
-              followUnfollow(user._id);
-            }
-          }}
-          className={` flex gap-1 absolute top-2 right-2 bg-teal-600 bg-opacity-20 text-white text-sm py-1 px-3 rounded-full shadow-lg hover:bg-teal-700 focus:outline-none`}
-        >
-          <FaPlus className="mt-1" />
-          Follow
-        </button>}
+        <div className="flex gap-1 absolute top-2 right-2">
+          <FollowButton followingList={followingList} userId={user._id} />
+        </div>
         {/* Call Button */}
         <button
           onClick={() => {
@@ -74,7 +60,7 @@ export default function LiveCard({
               setNotLoggedInPage(true);
             } else {
               setRequestCall(true);
-              coins >= rate
+              isEligibleToCall
                 ? setCheckEnoughBalance(true)
                 : setCheckEnoughBalance(false);
             }
@@ -91,12 +77,16 @@ export default function LiveCard({
           {/* Name, Profile Image, and Location */}
           <div className="flex items-center space-x-2">
             {/* Profile Image */}
+            <div className="relative">
             <img
-              src="/profile_man.png"
+              src={user?.avatar?user?.avatar:"/profile_man.png"}
               alt="Profile"
               onClick={() => navigate(`/profile/${user?._id}`)}
-              className="w-8 h-8  rounded-full object-cover cursor-pointer"
+              className="  w-9 h-9 border-2 border-teal-600  rounded-full object-cover cursor-pointer"
             />
+            <span className="absolute bottom-0 right-0 inline-block w-3 h-3 bg-green-500 rounded-full"></span>
+            
+            </div>
             <div>
               <p
                 className="text-xl font-bold text-teal-700 cursor-pointer"
@@ -111,10 +101,10 @@ export default function LiveCard({
           {/* Rate */}
           <div className="">
             <div className="bg-green-100 text-green-600 font-semibold text-base px-4 mb-1 rounded-full shadow-sm">
-              {rate} coins/min
+              {user?.rate} coins/min
             </div>
             <button className="">
-              {coins >= rate ? (
+              {isEligibleToCall ? (
                 <div></div>
               ) : (
                 <p className="text-sm bg-red-100 px-2 rounded-full text-red-600">
@@ -128,10 +118,12 @@ export default function LiveCard({
         {/* Additional Info */}
         <div className="flex justify-between items-center text-sm text-gray-600">
           <div className="flex items-center space-x-2">
-            <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-            <p>Online Now</p>
+            
+            {/* <p>Online Now</p>  */}
           </div>
-          <p className="text-gray-500">10k Followers</p>
+          {/* <p className="text-gray-500">
+            {user?.otherProfile?.followers?.length + " "} Followers
+          </p> */}
         </div>
       </div>
     </div>

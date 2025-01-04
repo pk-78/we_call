@@ -25,6 +25,7 @@ export default function Home() {
     isLoggedIn,
     notLoggedInPage,
     setNotLoggedInPage,
+    userDetail,
     state,
     city,
     tag,
@@ -51,6 +52,7 @@ export default function Home() {
           (user) => user._id !== id
         );
         setLocationUser(filterdLocationUser);
+        // console.log(locationUser)
       } catch (error) {
         console.log(error);
       }
@@ -61,6 +63,18 @@ export default function Home() {
     }
   }, [city, state]);
   useEffect(() => {
+
+    const checkIn = async () => {
+      try {
+        const checkInResponse = await axios.post(
+          `${url}/api/user/dailyCheckIn/${id}`
+        );
+        console.log(checkInResponse);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     const fetchRandomUsers = async () => {
       console.log(tag);
       setRandomLoading(true);
@@ -81,6 +95,12 @@ export default function Home() {
     };
     if (tag) {
       fetchRandomUsers();
+    }
+    const todayDate = new Date().toDateString(); // Normalize today's date to a string
+    // console.log(todayDate)
+    // console.log(new Date(userDetail?.lastLogin).toDateString())
+    if ((new Date(userDetail?.lastLogin).toDateString() !== todayDate)&& userDetail?.lastLogin) {
+      checkIn();
     }
   }, [tag]);
   useEffect(() => {
@@ -120,6 +140,8 @@ export default function Home() {
   }, [followingList]);
 
   console.log(followingUser);
+  console.log(randomUser);
+  console.log(locationUser);
 
   // function buttonHandler(clickedValue) {
   //   setButtonClick(clickedValue);
@@ -190,29 +212,59 @@ export default function Home() {
             <div>Loading your follower </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
-              {followingUser?.map((user, index)=>(
-                <LiveCard
-                key={index}
-                user={user}
-                rate={300}
-                requestCall={requestCall}
-                setRequestCall={setRequestCall}
-                setCheckEnoughBalance={setCheckEnoughBalance}
-              />
-              ))}
-              
+              {followingUser.length >= 1 ? (
+                followingUser?.map((user, index) => (
+                  <LiveCard
+                    key={index}
+                    user={user}
+                    rate={300}
+                    requestCall={requestCall}
+                    setRequestCall={setRequestCall}
+                    setCheckEnoughBalance={setCheckEnoughBalance}
+                  />
+                ))
+              ) : (
+                <div className="text-2xl text-center w-full">
+                  You have empty following list, please follow someone
+                </div>
+              )}
             </div>
           )
         ) : buttonClick === "nearby" ? (
           notState ? (
             <div className="text-center font-bold text-2xl text-red-600">
-              Please update Your Location
+              Please update Your Location In Setting
             </div>
           ) : loading ? (
             <div>Fetching users near you</div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
-              {locationUser?.map((user, index) => (
+              {locationUser.length >= 1 ? (
+                locationUser?.map((user, index) => (
+                  <div key={index}>
+                    <LiveCard
+                      // id={id}
+                      user={user}
+                      rate={200}
+                      requestCall={requestCall}
+                      setRequestCall={setRequestCall}
+                      setCheckEnoughBalance={setCheckEnoughBalance}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="text-2xl text-center w-full">
+                  No users nearby you , Please come later
+                </div>
+              )}
+            </div>
+          )
+        ) : randomLoading ? (
+          <div>Fetching Random Users</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
+            {randomUser.length >= 1 ? (
+              randomUser?.map((user, index) => (
                 <div key={index}>
                   <LiveCard
                     // id={id}
@@ -223,25 +275,12 @@ export default function Home() {
                     setCheckEnoughBalance={setCheckEnoughBalance}
                   />
                 </div>
-              ))}
-            </div>
-          )
-        ) : randomLoading ? (
-          <div>Fetching Random Users</div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
-            {randomUser?.map((user, index) => (
-              <div key={index}>
-                <LiveCard
-                  // id={id}
-                  user={user}
-                  rate={200}
-                  requestCall={requestCall}
-                  setRequestCall={setRequestCall}
-                  setCheckEnoughBalance={setCheckEnoughBalance}
-                />
+              ))
+            ) : (
+              <div className="text-2xl text-center w-full">
+                Please refresh page to watch more users
               </div>
-            ))}
+            )}
           </div>
         )}
       </div>
