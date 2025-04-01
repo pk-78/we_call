@@ -3,35 +3,41 @@ import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 
-export default function PostImageCard() {
+export default function PostImageCard( {content = "No live Today",
+  image = "/tree.jpg", name="pk78",level="1"}) {
   const navigate = useNavigate();
-  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
-    useContext(UserContext);
+  const {
+    isLoggedIn,
+    setIsLoggedIn,
+    notLoggedInPage,
+    setNotLoggedInPage,
+    
+  } = useContext(UserContext);
   return (
     <div className="rounded-lg overflow-hidden shadow-lg bg-white relative">
       {/* Main Image */}
       <div className="relative flex justify-center items-center">
         <img
           className="md:w-[300px] w-[330px] h-[400px]  object-cover rounded-lg"
-          src="/tree.jpg"
+          src={image}
           alt="Post image"
         />
         {/* Follow Button */}
-        <button
-        onClick={() => {
-          if (!isLoggedIn) {
-            setNotLoggedInPage(true);
-          } else {
-          }
-        }}
+        {/* <button
+          onClick={() => {
+            if (!isLoggedIn) {
+              setNotLoggedInPage(true);
+            } else {
+            }
+          }}
           className={` flex gap-1 absolute top-2 md:right-3 right-6 bg-teal-600 bg-opacity-20 text-white text-sm py-1 px-3 rounded-full shadow-lg hover:bg-teal-600 focus:outline-none`}
         >
           <FaPlus className="mt-1" />
           Follow
-        </button>
+        </button> */}
       </div>
       <div className="pl-4  text-sm">
-        <p>This is a very beautiful image</p>
+        <p>{content}</p>
       </div>
       {/* Profile Section */}
       <div className="flex items-center px-4">
@@ -51,9 +57,9 @@ export default function PostImageCard() {
             className="text-gray-700 text-base font-semibold cursor-pointer"
             onClick={() => navigate("/profile")}
           >
-            pk_78
+           {name}
           </p>
-          <p className="text-gray-500 text-sm">Level 3</p>
+          <p className="text-gray-500 text-sm">Level {level}</p>
         </div>
       </div>
     </div>

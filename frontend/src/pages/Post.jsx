@@ -97,12 +97,10 @@ export default function Post() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <PostImageCard content="Tomorrow at 8 pm" image="/dance.jpg" name="Priyanshu" level="4"  />
+            <PostImageCard content="Today at 10 pm" image="/musicband.webp" name="Sandeep" level="3" />
             <PostImageCard />
-            <PostImageCard />
-            <PostImageCard />
-            <PostImageCard />
-            <PostImageCard />
-            <PostImageCard />
+            
           </div>
         )}
       </div>

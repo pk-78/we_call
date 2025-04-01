@@ -42,7 +42,7 @@ export default function Navbar({ name }) {
             </NavLink>
           </li>
 
-          <li>
+          {/* <li>
             <NavLink
               to="/party"
               className={({ isActive }) =>
@@ -50,14 +50,14 @@ export default function Navbar({ name }) {
                   ? "text-white border-b-2 border-white font-bold"
                   : "text-light-gray hover:border-b-2 hover:border-white hover:text-white transition-all"
               }
-            >
+            > */}
               {/* Show icon on mobile, text on larger screens */}
-              <span className=" text-xl md:hidden">
+              {/* <span className=" text-xl md:hidden">
                 <FaPeopleGroup />
-              </span>
+              </span> */}
               {/* <span className="hidden md:inline">Party</span> */}
-            </NavLink>
-          </li>
+            {/* </NavLink>
+          </li> */}
 
           <li>
             <NavLink

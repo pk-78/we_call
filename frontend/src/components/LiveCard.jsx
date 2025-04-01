@@ -54,7 +54,7 @@ export default function LiveCard({
           <FollowButton followingList={followingList} userId={user._id} />
         </div>
         {/* Call Button */}
-        <button
+        {/* <button
           onClick={() => {
             if (!isLoggedIn) {
               setNotLoggedInPage(true);
@@ -68,7 +68,7 @@ export default function LiveCard({
           className={`absolute bottom-4 right-4 ${buttonColor} text-2xl flex rounded-full p-3 text-white shadow-lg transition-all ease-in-out duration-200 transform hover:scale-105 focus:outline-none`}
         >
           <IoCallOutline />
-        </button>
+        </button> */}
       </div>
 
       {/* Content Section */}

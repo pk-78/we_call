@@ -432,12 +432,12 @@ export default function Setting() {
                 </span>
                 <span className="text-xl text-teal-600 font-bold">{user?.coins}</span>
               </div>
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <span className="text-gray-700 font-semibold text-lg">
                   My Calling Price:
                 </span>
                 <span className="text-xl text-teal-600 font-bold">{user?.rate}{" "}coins/min</span>
-              </div>
+              </div> */}
               {/* <div className="flex justify-between mt-1">
                 <div className="flex items-center space-x-2">
                   <TbCardsFilled className="text-pink-400 text-2xl sm:text-3xl" />
