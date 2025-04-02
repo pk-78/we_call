@@ -50,6 +50,8 @@ const userSchema = new mongoose.Schema(
     coverImage: {
       type: String,
     },
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+
     location: {
       city: {
         type: String,
@@ -159,7 +161,7 @@ const userSchema = new mongoose.Schema(
     },
     lastLogin: {
       type: Date,
-      default: new Date('2017-10-17T00:00:00Z'), 
+      default: new Date("2017-10-17T00:00:00Z"),
     },
     isLive: {
       type: Boolean,

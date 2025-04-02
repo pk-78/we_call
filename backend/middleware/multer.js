@@ -12,10 +12,12 @@ const ensureFolder = (folder) => {
 // Define folder paths
 const uploadProfileFolder = "uploads/profile"; 
 const uploadBannerFolder = "uploads/banners"; 
+const uploadPostFolder = "uploads/posts";
 
 // Ensure folders exist
 ensureFolder(uploadProfileFolder);
 ensureFolder(uploadBannerFolder);
+ensureFolder(uploadPostFolder)
 
 // Common File Validation
 const fileFilter = (allowedTypes) => (req, file, cb) => {
@@ -70,6 +72,24 @@ const bannerStorage = multer.diskStorage({
     );
   },
 });
+const postStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadPostFolder);
+  },
+  filename: function (req, file, cb) {
+    const timestamp = Date.now();
+    const postName = req.body.postName || "post";
+    const originalName = path
+      .basename(file.originalname, path.extname(file.originalname))
+      .replace(/\s+/g, "_");
+    cb(
+      null,
+      `${postName}_${timestamp}_${originalName}${path.extname(
+        file.originalname
+      )}`
+    );
+  },
+});
 
 // Multer Middlewares
 const profileUpload = multer({
@@ -83,6 +103,11 @@ const bannerUpload = multer({
   fileFilter: fileFilter(/jpg|jpeg|png/),
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
 }).single("bannerImage");
+const postUpload = multer({
+  storage: postStorage,
+  fileFilter: fileFilter(/jpg|jpeg|png/),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+}).single("postImage");
 
 // Named Exports for Clarity
-export { profileUpload, bannerUpload };
+export { profileUpload, bannerUpload, postUpload };

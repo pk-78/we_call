@@ -23,6 +23,7 @@ app.use(cors());
 // app.use(express.static( "public"));
 app.use("/profile", express.static(path.join(__dirname, "uploads/profile")));
 app.use("/banner", express.static(path.join(__dirname, "uploads/banners")));
+app.use("/posts", express.static(path.join(__dirname, "uploads/posts")));
 
 app.use(express.json({ limit: "16Kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16Kb" }));

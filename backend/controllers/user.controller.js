@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import UserProfile from "../models/userProfile.model.js";
+import Post from "../models/post.model.js";
 
 export const createUser = async (req, res) => {
   const { name, userName, email, gender, password, confirmPassword } = req.body;
@@ -444,3 +445,97 @@ export const dailyCheckIn = async (req, res) => {
     });
   }
 };
+
+export const addPost = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const { description, time, date } = req.body;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "No user found with this Id",
+      });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: "Image is required" });
+    }
+
+    // Extract file path
+    const imageLink = `${req.protocol}://${req.get("host")}/post/${
+      req.file.filename
+    }`;
+
+    // Create a new post
+    const newPost = new Post({
+      imageLink,
+      description,
+      date,
+      time,
+    });
+
+    // Save the post to DB
+    const savedPost = await newPost.save();
+
+    // Add the post ID to the user's posts array
+    await User.findByIdAndUpdate(id, {
+      $push: { posts: savedPost._id },
+    });
+
+    res
+      .status(201)
+      .json({ message: "Post created successfully", post: savedPost });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error });
+  }
+};
+
+export const getPostById = async (req, res) => {
+  const { id } = req.body;
+
+  try {
+    
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(400).json({
+        success: false,
+        message: "post not found with this id",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Post found successfully",
+      post: post,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error });
+  }
+};
+export const getPostByUserId = async (req, res) => {
+  const { id } = req.params; 
+  try {
+    // Find the user and populate the 'posts' field with actual post data
+    const user = await User.findById(id).populate("posts"); 
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found with this ID",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Posts retrieved successfully",
+      posts: user.posts, // Return all posts of the user
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+

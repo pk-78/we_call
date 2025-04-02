@@ -3,23 +3,30 @@ import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 
-export default function PostImageCard( {content = "No live Today",
-  image = "/tree.jpg", name="pk78",level="1"}) {
+export default function PostImageCard({
+  description = "No live Today",
+  imageLink = "/tree.jpg",
+  name = "pk78",
+  // level = "1",
+  data = "",
+  setViewSinglePost
+}) {
   const navigate = useNavigate();
-  const {
-    isLoggedIn,
-    setIsLoggedIn,
-    notLoggedInPage,
-    setNotLoggedInPage,
-    
-  } = useContext(UserContext);
+  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
+    useContext(UserContext);
+
+  console.log(data);
   return (
-    <div className="rounded-lg overflow-hidden shadow-lg bg-white relative">
+    <div className="rounded-lg overflow-hidden shadow-lg bg-white relative cursor-pointer" 
+    onClick={() => setViewSinglePost(data)}>
+      <div className="my-1 py-2 justify-between flex font-semibold">
+        <span>Date:{data?.date}</span> <span>Time:{data?.time}</span>
+      </div>
       {/* Main Image */}
       <div className="relative flex justify-center items-center">
         <img
           className="md:w-[300px] w-[330px] h-[400px]  object-cover rounded-lg"
-          src={image}
+          src={data?.imageLink ? data?.imageLink : imageLink}
           alt="Post image"
         />
         {/* Follow Button */}
@@ -37,7 +44,7 @@ export default function PostImageCard( {content = "No live Today",
         </button> */}
       </div>
       <div className="pl-4  text-sm">
-        <p>{content}</p>
+        <p>{data?.description ? data?.description : description}</p>
       </div>
       {/* Profile Section */}
       <div className="flex items-center px-4">
@@ -57,9 +64,9 @@ export default function PostImageCard( {content = "No live Today",
             className="text-gray-700 text-base font-semibold cursor-pointer"
             onClick={() => navigate("/profile")}
           >
-           {name}
+            {name}
           </p>
-          <p className="text-gray-500 text-sm">Level {level}</p>
+          {/* <p className="text-gray-500 text-sm">Level {level}</p> */}
         </div>
       </div>
     </div>

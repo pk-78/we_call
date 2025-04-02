@@ -5,16 +5,23 @@ import ImageUpload from "../components/ImageUpload";
 import { GiCrossedBones } from "react-icons/gi";
 import UserContext from "../context/UserContext";
 import NotLoggedIn from "../components/NotLoggedIn";
+import SinglePost from "../components/SinglePost";
+import axios from "axios";
+import { url } from "../url/url";
 
 export default function Post() {
   const [buttonClick, setButtonClick] = useState("follow");
+  const [viewSinglePost, setViewSinglePost] = useState(null);
   const [createPost, setCreatePost] = useState(false);
-  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
-  useContext(UserContext);
+  const [postIdArray, setPostIdArray]=useState(null)
+  const [postData, setPostData]= useState(null)
+  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage, id,userDetail } =
+    useContext(UserContext);
 
-  // UseEffect to handle scroll lock when modal is open
+//  console.log(userDetail)
+//  setPostIdArray(userDetail.posts);
   useEffect(() => {
-    if (createPost) {
+    if (createPost|| viewSinglePost) {
       // Lock the scroll when the modal is open
       document.body.style.overflow = "hidden";
     } else {
@@ -26,66 +33,104 @@ export default function Post() {
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [createPost]);
+  }, [createPost, viewSinglePost]);
+
+  useEffect(()=>{
+    
+
+    // setPostIdArray(userDetail?.posts);
+    // console.log(postIdArray)
+
+    const postDataFunc = async()=>{
+      const response = await axios.get(`${url}/api/user/getPostByUserId/${id}`)
+      console.log(response)
+      setPostData(response?.data?.posts)
+
+      console.log(postData)
+
+
+    }
+    postDataFunc()
+  },[userDetail])
 
   return (
     <div className="relative md:px-28 md:py-10 my-5 bg-gray-50">
       {/* Header Section */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="md:text-3xl pl-5 font-bold text-gray-800">Posts</h1>
-        {isLoggedIn && <div className="space-x-4 pr-4">
-          {/* Follow Button */}
-          <button
-            onClick={() => {
-              console.log("Follow button clicked");
-              setButtonClick("follow");
-            }}
-            className={`md:px-4 px-2 py-1 md:text-base text-sm  ${
-              buttonClick === "follow"
-                ? "bg-teal-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            } font-semibold rounded-lg hover:bg-teal-600 hover:text-white shadow-md focus:outline-none`}
-          >
-            Follow
-          </button>
+        {isLoggedIn && (
+          <div className="space-x-4 pr-4">
+            {/* Follow Button */}
+            <button
+              onClick={() => {
+                console.log("Follow button clicked");
+                setButtonClick("follow");
+              }}
+              className={`md:px-4 px-2 py-1 md:text-base text-sm  ${
+                buttonClick === "follow"
+                  ? "bg-teal-600 text-white"
+                  : "bg-gray-200 text-gray-700"
+              } font-semibold rounded-lg hover:bg-teal-600 hover:text-white shadow-md focus:outline-none`}
+            >
+              Follow
+            </button>
 
-          {/* All Button */}
-          <button
-            onClick={() => {
-              console.log("Follow button clicked");
-              setButtonClick("all");
-            }}
-            className={`md:px-4 px-2 py-1 md:text-base text-sm  ${
-              buttonClick === "all"
-                ? "bg-teal-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            } font-semibold rounded-lg hover:bg-teal-600 hover:text-white shadow-md focus:outline-none`}
-          >
-            All
-          </button>
+            {/* All Button */}
+            <button
+              onClick={() => {
+                console.log("Follow button clicked");
+                setButtonClick("all");
+              }}
+              className={`md:px-4 px-2 py-1 md:text-base text-sm  ${
+                buttonClick === "all"
+                  ? "bg-teal-600 text-white"
+                  : "bg-gray-200 text-gray-700"
+              } font-semibold rounded-lg hover:bg-teal-600 hover:text-white shadow-md focus:outline-none`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => {
+                console.log("Follow button clicked");
+                setButtonClick("my");
+              }}
+              className={`md:px-4 px-2 py-1 md:text-base text-sm  ${
+                buttonClick === "my"
+                  ? "bg-teal-600 text-white"
+                  : "bg-gray-200 text-gray-700"
+              } font-semibold rounded-lg hover:bg-teal-600 hover:text-white shadow-md focus:outline-none`}
+            >
+              My
+            </button>
 
-          {/* Create Post Button */}
-          <button
-            onClick={() => {
-              console.log("Create Post button clicked");
-              setCreatePost(true);
-              //   setButtonClick("createpost");
-            }}
-            className={`md:px-4 px-2 py-1 md:text-base text-sm    font-semibold rounded-lg bg-gray-200 text-gray-700 hover:bg-teal-600 hover:text-white shadow-md  focus:outline-none`}
-          >
-            <span className="flex items-center gap-2">
-              <FaPlus className="mt-0" />
-              Create Post
-            </span>
-          </button>
-        </div>}
+            {/* Create Post Button */}
+            <button
+              onClick={() => {
+                console.log("Create Post button clicked");
+                setCreatePost(true);
+                //   setButtonClick("createpost");
+              }}
+              className={`md:px-4 px-2 py-1 md:text-base text-sm    font-semibold rounded-lg bg-gray-200 text-gray-700 hover:bg-teal-600 hover:text-white shadow-md  focus:outline-none`}
+            >
+              <span className="flex items-center gap-2">
+                <FaPlus className="mt-0" />
+                Create Post
+              </span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Posts Grid */}
       <div>
         {buttonClick === "all" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <PostImageCard />
+            <div
+              className="cursor-pointer"
+              onClick={() => setViewSinglePost(true)}
+            >
+              <PostImageCard />
+            </div>
             <PostImageCard />
             <PostImageCard />
             <PostImageCard />
@@ -95,14 +140,28 @@ export default function Post() {
             <PostImageCard />
             <PostImageCard />
           </div>
-        ) : (
+        ) :buttonClick ==="follow"? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <PostImageCard content="Tomorrow at 8 pm" image="/dance.jpg" name="Priyanshu" level="4"  />
-            <PostImageCard content="Today at 10 pm" image="/musicband.webp" name="Sandeep" level="3" />
+            <PostImageCard
+              description="Tomorrow at 8 pm"
+              imageLink="/dance.jpg"
+              name="Priyanshu"
+              level="4"
+            />
+            <PostImageCard
+              description="Today at 10 pm"
+              imageLink="/musicband.webp"
+              name="Sandeep"
+              level="3"
+            />
             <PostImageCard />
-            
           </div>
-        )}
+        ):(<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {postData?.map((data,_id)=>(
+            <div key={_id}> <PostImageCard data={data} setViewSinglePost={setViewSinglePost}/></div>
+            
+          ))}
+        </div>)}
       </div>
 
       {/* Image Upload Modal */}
@@ -117,7 +176,22 @@ export default function Post() {
             >
               <GiCrossedBones size={24} />
             </button>
-            <ImageUpload />
+            <ImageUpload id={id} />
+          </div>
+        </div>
+      )}
+      {viewSinglePost && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+          <div className="relative bg-white rounded-lg p-4">
+            <button
+              onClick={() => {
+                setViewSinglePost(null);
+              }}
+              className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+            >
+              <GiCrossedBones size={24} />
+            </button>
+            <SinglePost viewSinglePost={viewSinglePost} />
           </div>
         </div>
       )}
