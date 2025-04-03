@@ -3,12 +3,14 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaArrowLeft } from "react-icons/fa";
 import { url } from "../url/url";
+import { useNavigate } from "react-router-dom";
 export default function Profile({ activeItem, setActiveItem, user }) {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [error, setError] = useState("");
   const [fetchLocation, setFetchLocation] = useState(false);
   const id = localStorage.getItem("id");
+  const navigate= useNavigate()
   // console.log(id, "inside profile");
   useEffect(() => {
     // Get the user's current location
@@ -155,7 +157,7 @@ export default function Profile({ activeItem, setActiveItem, user }) {
         <div className="mt-8 text-center">
           <button
             onClick={() => {
-              Navigate("/editProfile");
+              navigate("/editProfile");
             }}
             className="bg-teal-500 text-white px-6 py-2 rounded-lg shadow-md hover:bg-teal-700 transition duration-300 ease-in-out"
           >

@@ -22,6 +22,7 @@ export default function Login({ setName }) {
 
   const onSubmit = async (formData) => {
     console.log(formData);
+    setLoading(true);
     try {
       // API call to check if user exists with provided username, email, and password
       const response = await axios.post(`${url}/api/user/login`, formData);
@@ -40,7 +41,7 @@ export default function Login({ setName }) {
         setName(userData?.name);
         localStorage.setItem("id", user.id);
         localStorage.setItem("token", token);
-        
+
         navigate("/home"); // Redirect to home page or dashboard
       } else {
         toast.error("Invalid credentials. Please try again.");
@@ -51,6 +52,7 @@ export default function Login({ setName }) {
         error.response?.data?.message || "Login failed. Please try again."
       );
     }
+    setLoading(false);
   };
 
   return (
@@ -110,7 +112,7 @@ export default function Login({ setName }) {
               type="submit"
               className="bg-teal-blue hover:bg-light-blue w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-              Submit
+             <div className="flex justify-center items-center">{loading ? <div class="loader"></div> :"Submit"}</div>
             </button>
           </div>
         </form>

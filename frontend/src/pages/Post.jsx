@@ -8,20 +8,29 @@ import NotLoggedIn from "../components/NotLoggedIn";
 import SinglePost from "../components/SinglePost";
 import axios from "axios";
 import { url } from "../url/url";
+import { FcDataRecovery } from "react-icons/fc";
 
 export default function Post() {
   const [buttonClick, setButtonClick] = useState("follow");
   const [viewSinglePost, setViewSinglePost] = useState(null);
   const [createPost, setCreatePost] = useState(false);
-  const [postIdArray, setPostIdArray]=useState(null)
-  const [postData, setPostData]= useState(null)
-  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage, id,userDetail } =
-    useContext(UserContext);
+  const [postIdArray, setPostIdArray] = useState(null);
+  const [myPostData, setMyPostData] = useState(null);
+  const [allPostData, setAllPostData] = useState(null);
+  const [followPostData, setFollowPostData] = useState(null);
+  const {
+    isLoggedIn,
+    setIsLoggedIn,
+    notLoggedInPage,
+    setNotLoggedInPage,
+    id,
+    userDetail,
+  } = useContext(UserContext);
 
-//  console.log(userDetail)
-//  setPostIdArray(userDetail.posts);
+  console.log(userDetail?.otherProfile?.following);
+  //  setPostIdArray(userDetail.posts);
   useEffect(() => {
-    if (createPost|| viewSinglePost) {
+    if (createPost || viewSinglePost) {
       // Lock the scroll when the modal is open
       document.body.style.overflow = "hidden";
     } else {
@@ -35,23 +44,60 @@ export default function Post() {
     };
   }, [createPost, viewSinglePost]);
 
-  useEffect(()=>{
-    
-
+  useEffect(() => {
     // setPostIdArray(userDetail?.posts);
     // console.log(postIdArray)
 
-    const postDataFunc = async()=>{
-      const response = await axios.get(`${url}/api/user/getPostByUserId/${id}`)
-      console.log(response)
-      setPostData(response?.data?.posts)
+    const myPostDataFunc = async () => {
+      const response = await axios.get(`${url}/api/user/getPostByUserId/${id}`);
+      // console.log(response);
+      const sorted = response?.data?.posts?.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setMyPostData(sorted);
 
-      console.log(postData)
+      // console.log(myPostData);
+    };
 
+    const allPostDataFunc = async () => {
+      const response = await axios.get(`${url}/api/user/getAllPost`);
+      // console.log(response);
+      const sorted = response?.data?.posts?.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
 
-    }
-    postDataFunc()
-  },[userDetail])
+      setAllPostData(sorted);
+      // console.log(allPostData);
+    };
+
+    const followPostDataFunc = async () => {
+      const response = await Promise.all(
+        userDetail?.otherProfile?.following?.map((id) =>
+          axios.get(`${url}/api/user/getPostByUserId/${id}`)
+        )
+      );
+
+      // console.log(response)
+      const data = response.map((res) => res?.data?.posts);
+      const other = [];
+
+      // Use forEach() instead of map()
+      data?.forEach((d) => d?.forEach((m) => other.push(m)));
+
+      console.log(other);
+      const sorted = other.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      setFollowPostData(sorted);
+
+      // console.log(data);
+    };
+
+    myPostDataFunc();
+    allPostDataFunc();
+    followPostDataFunc();
+  }, [userDetail]);
 
   return (
     <div className="relative md:px-28 md:py-10 my-5 bg-gray-50">
@@ -125,43 +171,39 @@ export default function Post() {
       <div>
         {buttonClick === "all" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div
-              className="cursor-pointer"
-              onClick={() => setViewSinglePost(true)}
-            >
-              <PostImageCard />
-            </div>
-            <PostImageCard />
-            <PostImageCard />
-            <PostImageCard />
-            <PostImageCard />
-            <PostImageCard />
-            <PostImageCard />
-            <PostImageCard />
-            <PostImageCard />
+            {allPostData?.map((data, _id) => (
+              <div key={_id}>
+                <PostImageCard
+                  data={data}
+                  setViewSinglePost={setViewSinglePost}
+                />
+              </div>
+            ))}
           </div>
-        ) :buttonClick ==="follow"? (
+        ) : buttonClick === "follow" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <PostImageCard
-              description="Tomorrow at 8 pm"
-              imageLink="/dance.jpg"
-              name="Priyanshu"
-              level="4"
-            />
-            <PostImageCard
-              description="Today at 10 pm"
-              imageLink="/musicband.webp"
-              name="Sandeep"
-              level="3"
-            />
-            <PostImageCard />
+            {followPostData?.map((data, _id) => (
+              <div key={_id}>
+                <PostImageCard
+                  data={data}
+                  setViewSinglePost={setViewSinglePost}
+                />
+              </div>
+            ))}
           </div>
-        ):(<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {postData?.map((data,_id)=>(
-            <div key={_id}> <PostImageCard data={data} setViewSinglePost={setViewSinglePost}/></div>
-            
-          ))}
-        </div>)}
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {myPostData?.map((data, _id) => (
+              <div key={_id}>
+                {" "}
+                <PostImageCard
+                  data={data}
+                  setViewSinglePost={setViewSinglePost}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Image Upload Modal */}

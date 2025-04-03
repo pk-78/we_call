@@ -6,6 +6,7 @@ import {
   dailyCheckIn,
   editLocation,
   editUser,
+  getAllPost,
   getAlluser,
   getPostById,
   getPostByUserId,
@@ -36,5 +37,6 @@ router.post("/dailyCheckIn/:id", dailyCheckIn)
 router.post("/schedule/:id",postUpload, addPost)
 router.post("/getPost",getPostById)
 router.get("/getPostByUserId/:id",getPostByUserId)
+router.get("/getAllPost",getAllPost)
 
 export default router;

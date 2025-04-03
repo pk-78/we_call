@@ -20,25 +20,7 @@ export default function EditProfile() {
         </h1>
 
         <form onSubmit={handleSubmit(OnSubmit)} className="space-y-6">
-          {/* Profile Picture Upload */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="profilePicture"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Profile Picture
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              id="profilePicture"
-              {...register("profilePicture", {
-                required: "Profile Picture is required",
-              })}
-              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-600 focus:border-teal-600"
-            />
-          </div>
-
+        
           {/* UserId Input */}
           <div className="flex flex-col">
             <label
@@ -62,7 +44,7 @@ export default function EditProfile() {
           </div>
 
           {/* ID Input */}
-          <div className="flex flex-col">
+          {/* <div className="flex flex-col">
             <label
               htmlFor="Id"
               className="block text-sm font-medium text-gray-700"
@@ -79,7 +61,7 @@ export default function EditProfile() {
             {errors.Id && (
               <p className="text-pink-500 text-xs mt-1">{errors.Id.message}</p>
             )}
-          </div>
+          </div> */}
 
           {/* Email Input */}
           <div className="flex flex-col">

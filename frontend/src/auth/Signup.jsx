@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Link, NavLink, useNavigate } from "react-router-dom";
@@ -15,10 +15,12 @@ export default function Signup() {
     reset,
   } = useForm();
   const navigate = useNavigate();
+  const [loading, setLoading]= useState(false)
   const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
 
   const onSubmit = async (data) => {
     console.log(data)
+    setLoading(true)
     if (password.length <= 8) {
       toast.error("password should have atleast 8 character");
     } else if (data.password !== data.confirmPassword) {
@@ -40,6 +42,7 @@ export default function Signup() {
         );
       }
     }
+    setLoading(false)
   };
 
   return (
@@ -190,7 +193,7 @@ export default function Signup() {
               type="submit"
               className="bg-teal-blue hover:bg-light-blue w-full  text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-              Submit
+             <div className="flex justify-center items-center">{loading ? <div class="loader"></div> :"Submit"}</div>
             </button>
           </div>
         </form>

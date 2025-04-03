@@ -9,7 +9,7 @@ export default function PostImageCard({
   name = "pk78",
   // level = "1",
   data = "",
-  setViewSinglePost
+  setViewSinglePost,
 }) {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
@@ -17,9 +17,11 @@ export default function PostImageCard({
 
   console.log(data);
   return (
-    <div className="rounded-lg overflow-hidden shadow-lg bg-white relative cursor-pointer" 
-    onClick={() => setViewSinglePost(data)}>
-      <div className="my-1 py-2 justify-between flex font-semibold">
+    <div
+      className="rounded-lg overflow-hidden shadow-lg p-1 bg-white relative cursor-pointer"
+      onClick={() => setViewSinglePost(data)}
+    >
+      <div className=" py-1 justify-between flex font-semibold">
         <span>Date:{data?.date}</span> <span>Time:{data?.time}</span>
       </div>
       {/* Main Image */}

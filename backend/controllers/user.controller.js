@@ -539,3 +539,30 @@ export const getPostByUserId = async (req, res) => {
   }
 };
 
+export const getAllPost= async(req,res)=>{
+
+  try {
+    const allPost = await Post.find()
+    if(!allPost){
+      return res.status(404).json({
+        success:false,
+        message:"No post found"
+      })
+    }
+    return res.status(200).json({
+      success:true,
+      message:"Post Fetch Successfully",
+      posts: allPost
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success:false,
+      message:"Something went wrong",
+      error:error
+    })
+    
+  }
+
+
+}
+
