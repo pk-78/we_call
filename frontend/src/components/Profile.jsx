@@ -10,8 +10,9 @@ export default function Profile({ activeItem, setActiveItem, user }) {
   const [error, setError] = useState("");
   const [fetchLocation, setFetchLocation] = useState(false);
   const id = localStorage.getItem("id");
-  const navigate= useNavigate()
+  const navigate = useNavigate();
   // console.log(id, "inside profile");
+  console.log(user);
   useEffect(() => {
     // Get the user's current location
     if (navigator.geolocation) {
@@ -122,7 +123,7 @@ export default function Profile({ activeItem, setActiveItem, user }) {
           <div className="text-left">
             <p className="text-xl font-medium text-gray-700">{user.name}</p>
             <p className="text-gray-800 font-medium">
-              ID: <span>{user.userName}</span>
+              Username: <span>{user.userName}</span>
             </p>
             <p className="text-gray-800 font-medium">
               Email: <span>{user.email}</span>{" "}
@@ -144,7 +145,10 @@ export default function Profile({ activeItem, setActiveItem, user }) {
               )}
             </p>
             <p className="text-gray-800 font-medium">
-              Language: <span>{user.language}</span>
+              Language:{" "}
+              {user?.language?.map((lang, key) => (
+                <span key={key}>{lang},</span>
+              ))}
             </p>
 
             {/* <p className="text-gray-800 font-medium">Password</p> */}

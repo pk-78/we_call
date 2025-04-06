@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import UserProfile from "../models/userProfile.model.js";
 import Post from "../models/post.model.js";
+import bcrypt from "bcrypt";
 
 export const createUser = async (req, res) => {
   const { name, userName, email, gender, password, confirmPassword } = req.body;
@@ -36,11 +37,13 @@ export const createUser = async (req, res) => {
         error: "Password and confirmPassword is not matching",
       });
     }
+
     if (password.length < 8) {
       return res
         .status(400)
         .json({ success: false, error: "Please enter a strong password" });
     }
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newProfile = new UserProfile(); // Default values from schema will be applied
     await newProfile.save();
 
@@ -50,7 +53,7 @@ export const createUser = async (req, res) => {
       userName,
       email,
       gender,
-      password,
+      password: hashedPassword,
       confirmPassword,
       otherProfile: newProfile._id, // Link the UserProfile to this User
     });
@@ -82,8 +85,10 @@ export const loginUser = async (req, res) => {
         message: "User not found with the provided email.",
       });
     }
+    console.log(user);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if (user.password !== password) {
+    if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password.",
@@ -116,36 +121,59 @@ export const editUser = async (req, res) => {
   try {
     const { id } = req.params;
     const {
-      age,
-      location,
       name,
+      userName,
       language,
+      age,
+      oldPassword,
       password,
       confirmPassword,
       hobby,
       description,
       tags,
     } = req.body;
-    // console.log(id)
-    const user = await User.findOneAndUpdate(
-      { _id: id },
-      { name, age, location, language, hobby, description, tags },
-      { new: true }
-    );
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found with the provided userid.",
-      });
-    }
+    console.log(req.body);
 
     if (password !== confirmPassword) {
       return res.status(401).json({
         success: false,
-        error: "Password and confirmPassword is not matching",
+        error: "Password and confirmPassword do not match",
       });
     }
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found with the provided ID.",
+      });
+    }
+    if(oldPassword){
+      const checkHashedPAss = await bcrypt.hash(oldPassword, 10);
+    if (user.password !== checkHashedPAss) {
+      return res.status(400).json({
+        success: false,
+        message: "Incorrect Old password",
+      });
+    }
+    }
+
+    // Update only the provided fields
+    user.userName = userName || user.userName;
+    user.name = name || user.name;
+    user.age = age || user.age;
+    user.language = language || user.language;
+    user.hobby = hobby || user.hobby;
+    user.description = description || user.description;
+    user.tags = tags || user.tags;
+
+    if (password) {
+      user.password = await bcrypt.hash(password, 10);
+    }
+
+    await user.save();
+
     res.status(200).json({ message: "User updated successfully", user });
   } catch (err) {
     console.error(err);
@@ -156,6 +184,7 @@ export const editUser = async (req, res) => {
     });
   }
 };
+
 export const editLocation = async (req, res) => {
   try {
     const { id } = req.params;
@@ -450,7 +479,7 @@ export const addPost = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const { description, time, date } = req.body;
+    const { description, time, date} = req.body;
     const user = await User.findById(id);
     if (!user) {
       return res.status(404).json({
@@ -474,6 +503,7 @@ export const addPost = async (req, res) => {
       description,
       date,
       time,
+      owner:id
     });
 
     // Save the post to DB
@@ -497,7 +527,6 @@ export const getPostById = async (req, res) => {
   const { id } = req.body;
 
   try {
-    
     const post = await Post.findById(id);
     if (!post) {
       return res.status(400).json({
@@ -516,10 +545,10 @@ export const getPostById = async (req, res) => {
   }
 };
 export const getPostByUserId = async (req, res) => {
-  const { id } = req.params; 
+  const { id } = req.params;
   try {
     // Find the user and populate the 'posts' field with actual post data
-    const user = await User.findById(id).populate("posts"); 
+    const user = await User.findById(id).populate("posts");
 
     if (!user) {
       return res.status(404).json({
@@ -539,30 +568,29 @@ export const getPostByUserId = async (req, res) => {
   }
 };
 
-export const getAllPost= async(req,res)=>{
-
+export const getAllPost = async (req, res) => {
   try {
-    const allPost = await Post.find()
-    if(!allPost){
+    const allPost = await Post.find();
+    if (!allPost) {
       return res.status(404).json({
-        success:false,
-        message:"No post found"
-      })
+        success: false,
+        message: "No post found",
+      });
     }
     return res.status(200).json({
-      success:true,
-      message:"Post Fetch Successfully",
-      posts: allPost
-    })
+      success: true,
+      message: "Post Fetch Successfully",
+      posts: allPost,
+    });
   } catch (error) {
     return res.status(500).json({
-      success:false,
-      message:"Something went wrong",
-      error:error
-    })
-    
+      success: false,
+      message: "Something went wrong",
+      error: error,
+    });
   }
+};
 
-
-}
-
+export const transaction = async (req, res) => {
+  const { id } = req.params;
+};

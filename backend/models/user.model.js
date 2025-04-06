@@ -26,16 +26,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    isUser:{
+      type:Boolean,
+      default:true
+    },
     description: {
       type: String,
       default: "Welcome to my place , please follow me for more",
     },
     password: {
-      type: String,
-      required: true,
-      select: false,
-    },
-    confirmPassword: {
       type: String,
       required: true,
       select: false,
@@ -172,7 +171,7 @@ const userSchema = new mongoose.Schema(
       default: 1,
     },
     TotalEarning: {
-      type: String,
+      type: Number,
       default: 0,
     },
     todayEarning: {

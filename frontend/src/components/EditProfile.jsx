@@ -1,5 +1,80 @@
-import React from "react";
+import axios from "axios";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { url } from "../url/url";
+import UserContext from "../context/UserContext";
+import toast from "react-hot-toast";
+
+const hobbiesEnum = [
+  "Reading",
+  "Traveling",
+  "Cooking",
+  "Gardening",
+  "Photography",
+  "Music",
+  "Dancing",
+  "Painting",
+  "Sports",
+  "Fitness",
+  "Writing",
+  "Crafting",
+  "Fishing",
+  "Gaming",
+  "Yoga",
+  "Meditation",
+  "Hiking",
+  "Cycling",
+  "Collecting",
+  "Watching Movies",
+];
+
+const languagesEnum = [
+  "Hindi",
+  "English",
+  "Punjabi",
+  "Marathi",
+  "Gujarati",
+  "Tamil",
+  "Telugu",
+  "Malayalam",
+  "Kannada",
+  "Bengali",
+  "Odia",
+  "Assamese",
+  "Urdu",
+];
+
+const tagsEnum = [
+  "Kind",
+  "Generous",
+  "Compassionate",
+  "Loving",
+  "Empathetic",
+  "Caring",
+  "Adventurous",
+  "Energetic",
+  "Cheerful",
+  "Charming",
+  "Optimistic",
+  "Outgoing",
+  "Creative",
+  "Imaginative",
+  "Innovative",
+  "Visionary",
+  "Curious",
+  "Intellectual",
+  "Confident",
+  "Ambitious",
+  "Determined",
+  "Fearless",
+  "Independent",
+  "Resilient",
+  "Charismatic",
+  "Friendly",
+  "Approachable",
+  "Persuasive",
+  "Diplomatic",
+];
 
 export default function EditProfile() {
   const {
@@ -8,20 +83,43 @@ export default function EditProfile() {
     formState: { errors },
   } = useForm();
 
-  function OnSubmit(data) {
+  const { id } = useContext(UserContext);
+  console.log(id);
+  const onSubmit = async (data) => {
     console.log(data);
-  }
+    try {
+      const response = await axios.put(`${url}/api/user/edituser/${id}`, data);
+      console.log("dfddfd", response);
+      toast.success(response?.data?.message);
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.response?.data?.message);
+    }
+  };
 
   return (
-    <div className="bg-gray-100 flex items-center justify-center mb-8">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <div className="bg-gray-100 flex items-center justify-center mb-10">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md overflow-y-auto max-h-[90vh]">
         <h1 className="text-3xl font-bold mb-6 text-center text-teal-600">
           Edit Profile
         </h1>
 
-        <form onSubmit={handleSubmit(OnSubmit)} className="space-y-6">
-        
-          {/* UserId Input */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* Username */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              {...register("name")}
+              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-600 focus:border-teal-600"
+            />
+          </div>
           <div className="flex flex-col">
             <label
               htmlFor="userName"
@@ -32,118 +130,26 @@ export default function EditProfile() {
             <input
               type="text"
               id="userName"
-              name="userName"
-              {...register("userName", { required: "UserName is required" })}
+              {...register("userName")}
               className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-600 focus:border-teal-600"
             />
-            {errors.userName && (
-              <p className="text-pink-500 text-xs mt-1">
-                {errors.userName.message}
-              </p>
-            )}
           </div>
 
-          {/* ID Input */}
-          {/* <div className="flex flex-col">
-            <label
-              htmlFor="Id"
-              className="block text-sm font-medium text-gray-700"
-            >
-              ID
-            </label>
-            <input
-              type="number"
-              id="Id"
-              name="Id"
-              {...register("Id", { required: "UserId is required" })}
-              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-600 focus:border-teal-600"
-            />
-            {errors.Id && (
-              <p className="text-pink-500 text-xs mt-1">{errors.Id.message}</p>
-            )}
-          </div> */}
-
-          {/* Email Input */}
+          {/* Description */}
           <div className="flex flex-col">
             <label
-              htmlFor="email"
+              htmlFor="description"
               className="block text-sm font-medium text-gray-700"
             >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              {...register("email", { required: "Email is required" })}
-              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-600 focus:border-teal-600"
-            />
-            {errors.email && (
-              <p className="text-pink-500 text-xs mt-1">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-
-          {/* Location Input */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="location"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Location
+              Description
             </label>
             <input
               type="text"
-              id="location"
-              name="location"
-              {...register("location", { required: "Location is required" })}
+              id="description"
+              {...register("description")}
               className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-600 focus:border-teal-600"
             />
-            {errors.location && (
-              <p className="text-pink-500 text-xs mt-1">
-                {errors.location.message}
-              </p>
-            )}
           </div>
-
-          {/* Gender Radio Selection */}
-          <div className="flex flex-col">
-            <h2 className="text-sm font-medium text-gray-700">Gender</h2>
-            <div className="flex space-x-4 mt-2">
-              <label htmlFor="male" className="flex items-center">
-                <input
-                  type="radio"
-                  id="male"
-                  value="male"
-                  {...register("gender", {
-                    required: "This field is required",
-                  })}
-                  className="mr-2 focus:ring-teal-600"
-                />
-                Male
-              </label>
-              <label htmlFor="female" className="flex items-center">
-                <input
-                  type="radio"
-                  id="female"
-                  value="female"
-                  {...register("gender", {
-                    required: "This field is required",
-                  })}
-                  className="mr-2 focus:ring-teal-600"
-                />
-                Female
-              </label>
-            </div>
-            {errors.gender && (
-              <p className="text-pink-500 text-xs mt-1">
-                {errors.gender.message}
-              </p>
-            )}
-          </div>
-
-          {/* Age Input */}
           <div className="flex flex-col">
             <label
               htmlFor="age"
@@ -152,42 +158,118 @@ export default function EditProfile() {
               Age
             </label>
             <input
-              type="number"
+              type="text"
               id="age"
-              name="age"
-              {...register("age", { required: "Age is required" })}
+              {...register("age")}
               className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-600 focus:border-teal-600"
             />
-            {errors.age && (
-              <p className="text-pink-500 text-xs mt-1">{errors.age.message}</p>
-            )}
           </div>
 
-          {/* Mobile Number Input */}
+          {/* Password */}
           <div className="flex flex-col">
             <label
-              htmlFor="mobileNumber"
+              htmlFor="oldPassword"
               className="block text-sm font-medium text-gray-700"
             >
-              Mobile Number
+              Old Password
             </label>
             <input
-              type="number"
-              id="mobileNumber"
-              name="mobileNumber"
-              {...register("mobileNumber", {
-                required: "Mobile Number is required",
-              })}
+              type="password"
+              id="oldPassword"
+              {...register("oldPassword")}
               className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-600 focus:border-teal-600"
             />
-            {errors.mobileNumber && (
-              <p className="text-pink-500 text-xs mt-1">
-                {errors.mobileNumber.message}
-              </p>
-            )}
+          </div>
+          <div className="flex flex-col">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              {...register("password")}
+              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-600 focus:border-teal-600"
+            />
           </div>
 
-          {/* Submit Button */}
+          {/* Confirm Password */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              id="confirmPassword"
+              {...register("confirmPassword")}
+              className="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-600 focus:border-teal-600"
+            />
+          </div>
+
+          {/* Hobbies */}
+          <div className="flex flex-col">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Hobbies
+            </label>
+            <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-gray-300 rounded-md p-2">
+              {hobbiesEnum.map((hobby) => (
+                <label
+                  key={hobby}
+                  className="flex items-center space-x-2 text-sm"
+                >
+                  <input type="checkbox" value={hobby} {...register("hobby")} />
+                  <span>{hobby}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Languages */}
+          <div className="flex flex-col">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Languages
+            </label>
+            <div className="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto border border-gray-300 rounded-md p-2">
+              {languagesEnum.map((lang) => (
+                <label
+                  key={lang}
+                  className="flex items-center space-x-2 text-sm"
+                >
+                  <input
+                    type="checkbox"
+                    value={lang}
+                    {...register("language")}
+                  />
+                  <span>{lang}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Tags */}
+          <div className="flex flex-col">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Tags
+            </label>
+            <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-gray-300 rounded-md p-2">
+              {tagsEnum.map((tag) => (
+                <label
+                  key={tag}
+                  className="flex items-center space-x-2 text-sm"
+                >
+                  <input type="checkbox" value={tag} {...register("tags")} />
+                  <span>{tag}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Submit */}
           <button
             type="submit"
             className="w-full bg-teal-600 text-white py-2 rounded-lg shadow-lg hover:bg-teal-700 transition duration-300"

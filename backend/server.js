@@ -4,6 +4,7 @@ import path from "path";
 import dotenv from "dotenv";
 import connectDB from "./db/db.js";
 import userRoutes from "./routes/userRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -17,6 +18,7 @@ const port = process.env.PORT || 5200;
 
 // Middleware
 app.use(express.json());
+
 app.use(cors());
 
 // Static files (if any)
@@ -33,6 +35,7 @@ connectDB();
 
 // Routes
 app.use("/api/user", userRoutes);
+app.use("/api/post", postRoutes);
 
 // Error handling
 app.use((err, req, res, next) => {

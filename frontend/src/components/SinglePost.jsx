@@ -1,11 +1,20 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import { FaGift } from "react-icons/fa6";
 import { url } from "../url/url";
+import UserContext from "../context/UserContext";
+import toast from "react-hot-toast";
 
 export default function SinglePost({ viewSinglePost }) {
+  const { id } = useContext(UserContext);
   const [commentToPost, setCommentToPost] = useState("");
+  const [likes, setLikes] = useState(viewSinglePost?.like || []);
+  const [isLiking, setIsLiking] = useState(false);
+  const [gifts, setGifts] = useState(viewSinglePost?.gift || []);
+  const [gifting, setGifting] = useState(false);
+  const [gifted, setGifted] = useState(viewSinglePost?.gift?.includes(id));
+
   console.log(viewSinglePost);
   const commentHandler = async () => {
     try {
@@ -17,6 +26,48 @@ export default function SinglePost({ viewSinglePost }) {
       console.log(error);
     }
   };
+
+  const handleLikeToggle = async () => {
+    try {
+      setIsLiking(true);
+      const res = await axios.post(`${url}/api/post/like/${id}`, {
+        postId: viewSinglePost._id,
+      });
+
+      // Optionally refetch post or update state
+      setLikes(res?.data?.likes);
+
+      // OR if you use a parent function to refresh data
+    } catch (err) {
+      console.error("Error toggling like:", err);
+    } finally {
+      setIsLiking(false);
+    }
+  };
+
+  const handleGift = async () => {
+    if (gifted) return; // Prevent double gifting
+
+    try {
+      setGifting(true);
+      const res = await axios.post(`${url}/api/post/gift/${id}`, {
+        postId: viewSinglePost._id,
+        postUploader: viewSinglePost?.owner,
+      });
+      console.log(res);
+      toast.success("gift sent");
+      setGifts(res?.data?.gifts)
+      setGifted(true);
+
+      // Optional: update post info
+    } catch (err) {
+      console.error("Error gifting post:", err);
+    } finally {
+      setGifting(false);
+    }
+  };
+
+  const isLiked = likes.includes(id);
   const comments = [
     {
       username: "pk78",
@@ -62,17 +113,32 @@ export default function SinglePost({ viewSinglePost }) {
       {/* Like & Gift Buttons */}
       <div className="flex items-center justify-between mt-3">
         <div className="flex items-center gap-2">
-          <button className="text-gray-600 hover:text-red-500">
-            <FaHeart size={22} />
-          </button>
-          <p className="text-gray-700">{viewSinglePost?.like?.length}</p>
+          <div className="flex items-center gap-2">
+            <button
+              className={`transition-colors ${
+                isLiked ? "text-red-500" : "text-gray-600 hover:text-red-500"
+              }`}
+              onClick={handleLikeToggle}
+              disabled={isLiking}
+            >
+              <FaHeart size={22} />
+            </button>
+            <p className="text-gray-700">{likes.length}</p>
+          </div>
+          {/* <p className="text-gray-700">{viewSinglePost?.like?.length}</p> */}
         </div>
         <div className="flex items-center gap-2">
           {" "}
-          <button className="text-gray-600 hover:text-yellow-500">
+          <button
+            className={`transition-colors ${
+              gifted ? "text-yellow-500" : "text-gray-600 hover:text-yellow-500"
+            }`}
+            onClick={handleGift}
+            disabled={gifting || gifted}
+          >
             <FaGift size={22} />
           </button>
-          <p className="text-gray-700">{viewSinglePost?.gift?.length}</p>
+          <p className="text-gray-700">{gifts?.length}</p>
         </div>
       </div>
       <div className="flex items-center justify-between bg-white shadow-md rounded-lg p-1 mt-1 border border-gray-300 w-full max-w-lg mx-auto">
