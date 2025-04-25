@@ -83,6 +83,7 @@ export const gift = async (req, res) => {
 
     const postUploaderUser = await User.findById(postUploader);
     user.coins = user.coins - 50;
+    user.coinConsumption=Number(user.coinConsumption)+50
     postUploaderUser.TotalEarning = postUploaderUser.TotalEarning + 200;
     post.gift.push(id);
 
@@ -104,6 +105,53 @@ export const gift = async (req, res) => {
       success: false,
       message: "Internal server error.",
       error: error.message,
+    });
+  }
+};
+
+export const addComment = async (req, res) => {
+  const { id } = req.params;
+  const { postId, comment } = req.body;
+
+  try {
+    if (!id || !postId) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID or Post ID is missing.",
+      });
+    }
+
+    if (!comment) {
+      return res.status(400).json({
+        success: false,
+        message: "No comment found",
+      });
+    }
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found.",
+      });
+    }
+    post.comment.push({
+      userId: id,
+
+      comment,
+    });
+
+    await post.save();
+    return res.status(200).json({
+      success: true,
+      message: "Comment added successfully",
+      comments: post.comment,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong ",
     });
   }
 };

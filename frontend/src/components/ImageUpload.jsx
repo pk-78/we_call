@@ -44,6 +44,10 @@ export default function ImageUpload({ id }) {
       
       // console.log(response);
       toast.success(response.data.message)
+      setDate("")
+      setDescription("")
+      setTime("")
+      setImage(null)
     } catch (error) {
       console.log(error);
     }

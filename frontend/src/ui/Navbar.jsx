@@ -10,6 +10,7 @@ import UserContext from "../context/UserContext";
 export default function Navbar({ name }) {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
+  const isUser = localStorage.getItem("isUser")
 
   console.log("Inside navbar:",isLoggedIn);
 
@@ -42,24 +43,9 @@ export default function Navbar({ name }) {
             </NavLink>
           </li>
 
-          {/* <li>
-            <NavLink
-              to="/party"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-white border-b-2 border-white font-bold"
-                  : "text-light-gray hover:border-b-2 hover:border-white hover:text-white transition-all"
-              }
-            > */}
-              {/* Show icon on mobile, text on larger screens */}
-              {/* <span className=" text-xl md:hidden">
-                <FaPeopleGroup />
-              </span> */}
-              {/* <span className="hidden md:inline">Party</span> */}
-            {/* </NavLink>
-          </li> */}
+         
 
-          <li>
+          {isUser === "false" &&<li>
             <NavLink
               to="/golive"
               className={({ isActive }) =>
@@ -74,7 +60,7 @@ export default function Navbar({ name }) {
               </span>
               <span className="hidden md:inline">Go Live</span>
             </NavLink>
-          </li>
+          </li>}
 
           <li>
             <NavLink

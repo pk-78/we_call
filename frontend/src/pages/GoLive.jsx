@@ -8,11 +8,14 @@ import { GiCrossedBones } from "react-icons/gi";
 
 export default function GoLive() {
   const [isLive, setIsLive] = useState(false);
+
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage, userDetail } =
     useContext(UserContext);
   // const [notLoggedInPage, setNotLoggedInPage] = useState(false);
   coins; // Example value; ideally, this would be a prop or fetched from a state/store.
+  const id = localStorage.getItem("id")
+  console.log(id)
 
   return (
     <div className=" relative max-w-md mx-auto my-2 p-6 bg-white shadow-lg rounded-lg text-center">
@@ -33,6 +36,7 @@ export default function GoLive() {
                   setNotLoggedInPage(true);
                 } else {
                   setIsLive(true);
+                  navigate(`/live-room/${id}?role=host`)
                 }
               }}
               className="mt-6 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out"

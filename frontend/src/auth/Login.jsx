@@ -41,6 +41,7 @@ export default function Login({ setName }) {
         setName(userData?.name);
         localStorage.setItem("id", user.id);
         localStorage.setItem("token", token);
+        localStorage.setItem("isUser", user.isUser);
 
         navigate("/home"); // Redirect to home page or dashboard
       } else {
@@ -112,7 +113,9 @@ export default function Login({ setName }) {
               type="submit"
               className="bg-teal-blue hover:bg-light-blue w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-             <div className="flex justify-center items-center">{loading ? <div class="loader"></div> :"Submit"}</div>
+              <div className="flex justify-center items-center">
+                {loading ? <div class="loader"></div> : "Submit"}
+              </div>
             </button>
           </div>
         </form>

@@ -20,7 +20,7 @@ import Post from "./pages/Post";
 import OtherProfile from "./components/OtherProfile";
 // import LiveWatch from "./pages/LiveRoom";
 import PartyRoom from "./pages/PartyRoom";
-import OfferPage from "./components/OfferPage";
+import OfferPage from "./pages/OfferPage";
 import Live from "./components/Live";
 import EditProfile from "./components/EditProfile";
 import LiveRoom from "./pages/LiveRoom";

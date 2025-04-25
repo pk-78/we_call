@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ImPhoneHangUp } from "react-icons/im";
 import { coins } from "../url/coins";
-import OfferPage from "./OfferPage";
+import OfferPage from "../pages/OfferPage";
 import { GiCrossedBones } from "react-icons/gi";
 import { useNavigate } from "react-router-dom";
 

@@ -8,6 +8,7 @@ import {
   editUser,
   getAllPost,
   getAlluser,
+  getNameProfile,
   getPostById,
   getPostByUserId,
   getRandomUser,
@@ -38,5 +39,6 @@ router.post("/schedule/:id",postUpload, addPost)
 router.post("/getPost",getPostById)
 router.get("/getPostByUserId/:id",getPostByUserId)
 router.get("/getAllPost",getAllPost)
+router.get("/getNameAndProfile/:id", getNameProfile)
 
 export default router;

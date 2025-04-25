@@ -26,7 +26,8 @@ export default function Post() {
     id,
     userDetail,
   } = useContext(UserContext);
-
+  const isUser = localStorage.getItem("isUser");
+  console.log(isUser)
   console.log(userDetail?.otherProfile?.following);
   //  setPostIdArray(userDetail.posts);
   useEffect(() => {
@@ -150,7 +151,7 @@ export default function Post() {
             </button>
 
             {/* Create Post Button */}
-            <button
+            {isUser==="false" && <button
               onClick={() => {
                 console.log("Create Post button clicked");
                 setCreatePost(true);
@@ -162,7 +163,7 @@ export default function Post() {
                 <FaPlus className="mt-0" />
                 Create Post
               </span>
-            </button>
+            </button>}
           </div>
         )}
       </div>
@@ -170,7 +171,7 @@ export default function Post() {
       {/* Posts Grid */}
       <div>
         {buttonClick === "all" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 h-auto">
             {allPostData?.map((data, _id) => (
               <div key={_id}>
                 <PostImageCard

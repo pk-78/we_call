@@ -105,7 +105,7 @@ export const loginUser = async (req, res) => {
 
       message: "Login successful.",
       token,
-      user: { id: user._id },
+      user: { id: user._id, isUser: user.isUser },
     });
   } catch (err) {
     console.error(err);
@@ -149,14 +149,14 @@ export const editUser = async (req, res) => {
         message: "User not found with the provided ID.",
       });
     }
-    if(oldPassword){
+    if (oldPassword) {
       const checkHashedPAss = await bcrypt.hash(oldPassword, 10);
-    if (user.password !== checkHashedPAss) {
-      return res.status(400).json({
-        success: false,
-        message: "Incorrect Old password",
-      });
-    }
+      if (user.password !== checkHashedPAss) {
+        return res.status(400).json({
+          success: false,
+          message: "Incorrect Old password",
+        });
+      }
     }
 
     // Update only the provided fields
@@ -258,7 +258,7 @@ export const getAlluser = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User not found with the provided user ID.",
+        message: "User not found .",
       });
     }
 
@@ -479,7 +479,7 @@ export const addPost = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const { description, time, date} = req.body;
+    const { description, time, date } = req.body;
     const user = await User.findById(id);
     if (!user) {
       return res.status(404).json({
@@ -493,7 +493,7 @@ export const addPost = async (req, res) => {
     }
 
     // Extract file path
-    const imageLink = `${req.protocol}://${req.get("host")}/post/${
+    const imageLink = `${req.protocol}://${req.get("host")}/posts/${
       req.file.filename
     }`;
 
@@ -503,7 +503,7 @@ export const addPost = async (req, res) => {
       description,
       date,
       time,
-      owner:id
+      owner: id,
     });
 
     // Save the post to DB
@@ -593,4 +593,35 @@ export const getAllPost = async (req, res) => {
 
 export const transaction = async (req, res) => {
   const { id } = req.params;
+};
+
+export const getNameProfile = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "No id Found",
+      });
+    }
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "User Found ",
+      users: { name: user.name, profile: user.avatar },
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
 };

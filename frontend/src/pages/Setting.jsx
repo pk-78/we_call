@@ -14,6 +14,8 @@ import { coins } from "../url/coins";
 import { FaArrowLeft, FaRegStar, FaStar } from "react-icons/fa6";
 import { FaStarHalfAlt } from "react-icons/fa";
 import UserContext from "../context/UserContext";
+import { FaCoins } from "react-icons/fa6";
+import { SiBasicattentiontoken } from "react-icons/si";
 import axios from "axios";
 import { url } from "../url/url";
 import toast from "react-hot-toast";
@@ -31,6 +33,7 @@ export default function Setting() {
   const [bannerImage, setBannerImage] = useState(null);
   const [selectedProfileFile, setSelectedProfileFile] = useState(null);
   const [selectedBannerFile, setSelectedBannerFile] = useState(null);
+  const isUser = localStorage.getItem("isUser")
 
   useEffect(() => {
     const fetchUserDetail = async () => {
@@ -77,7 +80,14 @@ export default function Setting() {
           <Message activeItem={activeItem} setActiveItem={setActiveItem} />
         );
       case "level":
-        return <Level activeItem={activeItem} setActiveItem={setActiveItem} myLevel={user?.level} myConsumption={user?.coinConsumption} />;
+        return (
+          <Level
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+            myLevel={user?.level}
+            myConsumption={user?.coinConsumption}
+          />
+        );
       case "task":
         return <Task activeItem={activeItem} setActiveItem={setActiveItem} />;
       case "backpack":
@@ -230,7 +240,7 @@ export default function Setting() {
               >
                 <p className="text-gray-700 font-semibold">Task</p>
               </button>
-              
+
               {/* <button
                 onClick={() => handleButtonClick("backpack")}
                 className={` md:px-8 px-1  text-sm md:text-lg bg-gray-200 rounded-lg text-center hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105 ${
@@ -300,7 +310,7 @@ export default function Setting() {
                   }}
                   className="absolute text-2xl sm:text-3xl top-2 right-2 text-yellow-500 hover:text-yellow-600"
                 >
-                  <MdTask className="cursor-pointer"  />
+                  <MdTask className="cursor-pointer" />
                 </button>
 
                 {bannerImage && (
@@ -328,23 +338,23 @@ export default function Setting() {
             <p className="text-sm">{user.description}</p>
             <div className="mt-2 ">
               <div className="">
-                <div className="flex lg:justify-start space-x-3 mt-2">
+                <div className="flex flex-wrap lg:justify-start space-x-3 mt-2">
                   <h3 className="text-lg font-semibold text-teal-600">
                     Language:
                   </h3>
                   {user?.language?.map((language, index) => (
-                    <span className="bg-teal-200 px-3 py-1 rounded-full text-gray-800">
+                    <span className="bg-teal-200 px-3 py-1 my-1 rounded-full text-gray-800">
                       {language}
                     </span>
                   ))}
                 </div>
               </div>
-              <div className="flex justify-center lg:justify-start space-x-3 mt-2">
+              <div className="flex flex-wrap  lg:justify-start space-x-3 mt-2">
                 <h3 className="text-lg font-semibold text-teal-600">Hobby:</h3>
                 {user?.hobby?.map((hobby, index) => (
                   <span
                     key={index}
-                    className="bg-pink-400 px-3 py-1 rounded-full text-white"
+                    className="bg-pink-400 px-3 py-1 my-1 rounded-full text-white"
                   >
                     {hobby}
                   </span>
@@ -411,13 +421,13 @@ export default function Setting() {
                 ))}
               </div>
             </div>
-            <div className="flex justify-center lg:justify-start space-x-3 mt-2">
-              <h3 className="text-lg font-bold text-teal-600">Tags:</h3>
+            <div className="flex  flex-wrap justify-center lg:justify-start space-x-3 mt-2">
+              <h3 className="text-lg font-bold text-teal-600 ">Tags:</h3>
 
               {user?.tags?.map((tag, index) => (
                 <span
                   key={index}
-                  className="bg-teal-100 px-3 py-1 rounded-full text-gray-800"
+                  className="bg-teal-100 px-3 py-1  my-1 rounded-full text-gray-800"
                 >
                   {tag}
                 </span>
@@ -430,8 +440,18 @@ export default function Setting() {
                 <span className="text-gray-700 font-semibold text-lg">
                   Total Coins:
                 </span>
-                <span className="text-xl text-teal-600 font-bold">{user?.coins}</span>
+                <span className="text-xl gap-2 flex text-teal-600 font-bold">
+                  {user?.coins} <FaCoins className="" />
+                </span>
               </div>
+              {isUser ==="false" &&<div className="flex items-center justify-between">
+                <span className="text-gray-700 font-semibold text-lg">
+                  Total Earnings:
+                </span>
+                <span className="text-xl gap-2 flex text-teal-600 font-bold">
+                  {user?.TotalEarning} <SiBasicattentiontoken />
+                </span>
+              </div>}
               {/* <div className="flex items-center justify-between">
                 <span className="text-gray-700 font-semibold text-lg">
                   My Calling Price:

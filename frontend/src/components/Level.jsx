@@ -10,30 +10,38 @@ export default function Level({
 }) {
   const [upperLimitConsumption, setUpperLimitConsuption] = useState("");
   const [lowerLimitConsumption, setLowerLimitConsuption] = useState("");
+  const [level, setLevel] = useState(null);
 
   useEffect(() => {
 
     const checkLevel = async () => {
-      if (Number(myLevel) === 1) {
+      if (Number(myConsumption) < 1000) {
         setUpperLimitConsuption(1000);
+        setLevel(1)
         setLowerLimitConsuption(0);
-      } else if (Number(myLevel) === 2) {
+      } else if (Number(myConsumption) >= 1000 && myConsumption<2500) {
         setUpperLimitConsuption(2500);
-        setLowerLimitConsuption(1000)
-      } else if (Number(myLevel) === 3) {
+        setLevel(2)
+        setLowerLimitConsuption(1000);
+      } else if (Number(myConsumption) >= 2500 && myConsumption<5000) {
         setUpperLimitConsuption(5000);
+        setLevel(3)
         setLowerLimitConsuption(2500)
-      } else if (Number(myLevel) === 4) {
+      } else if (Number(myConsumption) >= 5000 && myConsumption<10000) {
         setUpperLimitConsuption(10000);
+        setLevel(4)
         setLowerLimitConsuption(5000)
-      } else if (Number(myLevel) === 6) {
+      } else if (Number(myConsumption) >= 10000 && myConsumption<25000) {
         setUpperLimitConsuption(25000);
+        setLevel(5)
         setLowerLimitConsuption(5000)
       }
       
     };
     checkLevel();
-  }, [myLevel]);
+  }, [myConsumption]);
+
+  console.log(myConsumption)
 
   return (
     <div className="p-6  h-[569px] rounded-lg  flex flex-col justify-center items-center ">
@@ -63,7 +71,7 @@ export default function Level({
             <p className="text-gray-700 text-xl font-medium">
               Your Current Level:
             </p>
-            <p className="text-4xl text-teal-500 font-bold">{myLevel}</p>
+            <p className="text-4xl text-teal-500 font-bold">{level}</p>
           </div>
 
           {/* Progress Bar */}
@@ -101,7 +109,7 @@ export default function Level({
               more coins to reach
               <span className="text-teal-600 font-semibold">
                 {" "}
-                Level {Number(myLevel) + 1}
+                Level {Number(level) + 1}
               </span>
               .
             </p>

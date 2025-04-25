@@ -1,7 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
+import axios from "axios";
+import { url } from "../url/url";
 
 export default function PostImageCard({
   description = "No live Today",
@@ -14,11 +16,31 @@ export default function PostImageCard({
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage } =
     useContext(UserContext);
+  console.log(data?.owner);
+  const [nameProfile, setNameProfile] = useState(null);
+
+  useEffect(() => {
+    const findName = async () => {
+      console.log("mai hu yha");
+      try {
+        console.log(`${url}/api/user/getNameAndProfile/${data?.owner}`);
+        const res = await axios.get(
+          `${url}/api/user/getNameAndProfile/${data?.owner}`
+        );
+        console.log("yha tk aaya");
+        console.log(res?.data?.users);
+        setNameProfile(res?.data?.users);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    findName();
+  }, []);
 
   console.log(data);
   return (
     <div
-      className="rounded-lg overflow-hidden shadow-lg p-1 bg-white relative cursor-pointer"
+      className="rounded-lg overflow-hidden shadow-lg h-auto p-1 bg-white relative cursor-pointer"
       onClick={() => setViewSinglePost(data)}
     >
       <div className=" py-1 justify-between flex font-semibold">
@@ -54,7 +76,7 @@ export default function PostImageCard({
         <div className="flex-shrink-0">
           <img
             className="w-8 h-8 rounded-full cursor-pointer"
-            src="/profile_man.png"
+            src={nameProfile?.profile || "/profile_man.png"}
             onClick={() => navigate("/profile")}
             alt="Profile"
           />
@@ -66,7 +88,7 @@ export default function PostImageCard({
             className="text-gray-700 text-base font-semibold cursor-pointer"
             onClick={() => navigate("/profile")}
           >
-            {name}
+            {nameProfile?.name||"Missing "}
           </p>
           {/* <p className="text-gray-500 text-sm">Level {level}</p> */}
         </div>

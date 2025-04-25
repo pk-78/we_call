@@ -1,34 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
+import { url } from "../url/url";
+import axios from "axios";
+import PaymentButton from "../components/PaymentButton";
 
 export default function OfferPage() {
   const offers = [
     {
-      price: "10 Rs",
+      price: "10",
       coins: 200,
-      pinkCards: 1,
-      orangeCards: 2,
-      description: "Single pink card, 2 orange cards, and 200 coins",
     },
     {
-      price: "50 Rs",
+      price: "50",
       coins: 500,
-      pinkCards: 2,
-      orangeCards: 2,
-      description: "2 pink cards, 2 orange cards, and 500 coins",
     },
     {
-      price: "100 Rs",
+      price: "100",
       coins: 1000,
-      pinkCards: 4,
-      orangeCards: 5,
-      description: "1000 coins, 4 pink cards, and 5 orange cards",
     },
     {
-      price: "300 Rs",
+      price: "300",
       coins: 5000,
-      pinkCards: 5,
-      randomCards: 10,
-      description: "5000 coins, 5 pink cards, and 10 random cards",
     },
   ];
 
@@ -48,7 +39,9 @@ export default function OfferPage() {
               alt="Coins"
               className="h-32 w-32 mx-auto mb-4"
             />
-            <h2 className="text-2xl font-bold text-teal-800">{offer.price}</h2>
+            <h2 className="text-2xl font-bold text-teal-800">
+              {offer.price} Rs
+            </h2>
             <p className="mt-2 text-sm text-gray-600">{offer.description}</p>
             <div className="mt-4">
               <p className="text-teal-700 font-semibold">
@@ -69,9 +62,7 @@ export default function OfferPage() {
                 </p>
               )} */}
             </div>
-            <button className="mt-6 bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-500 transition-colors">
-              Buy Now
-            </button>
+            <PaymentButton price={offer.price} coins={offer.coins} />
           </div>
         ))}
       </div>

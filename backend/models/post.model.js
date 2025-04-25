@@ -25,7 +25,12 @@ const postSchema = new mongoose.Schema(
     owner:{
       type:String
     },
-    comment:[]
+    comment: [{
+      userId: String,
+      comment: String
+    }],
+    
+    
   },
   { timestamps: true }
 );

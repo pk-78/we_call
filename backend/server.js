@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import connectDB from "./db/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js"
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -36,6 +37,7 @@ connectDB();
 // Routes
 app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
+app.use("/api/payment", paymentRoutes);
 
 // Error handling
 app.use((err, req, res, next) => {
@@ -46,4 +48,8 @@ app.use((err, req, res, next) => {
 // Start server
 app.listen(port, () => {
   console.log(`Server started on http://localhost:${port}`);
+});
+
+app.get("/", (req, res) => {
+  res.send("hello jee");
 });
