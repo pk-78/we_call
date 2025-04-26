@@ -28,7 +28,7 @@ export default function DailyCheckIn({checkIn}) {
             key={index}
             className={`flex flex-col items-center justify-center p-4 border rounded-lg shadow-sm transition-transform transform hover:scale-105 
               ${
-                index === Number(checkIn-1)
+                index === Number(checkIn-1) || (index === 7 && Number(checkIn)>=7 )
                   ? "bg-teal-100 border-teal-400"
                   : "bg-gray-50 border-gray-300"
               }`}

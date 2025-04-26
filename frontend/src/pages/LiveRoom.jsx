@@ -66,11 +66,13 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 
 const Room = () => {
-  // const { roomId } = useParams();
+  const { id } = useParams();
   const [searchParams] = useSearchParams();
   const containerRef = useRef(null);
   const initializeRef = useRef(false);
-  const roomId= localStorage.getItem("id")
+  // const roomId= localStorage.getItem("id")
+  const roomId= id
+  console.log(roomId)
 
   const appId = 823274026;
   const serverSecret = "6f40692561db94794ce2599b7bc00671";

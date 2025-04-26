@@ -446,9 +446,9 @@ export const dailyCheckIn = async (req, res) => {
     }
 
     if (new Date(user.lastLogin).toDateString() === yesterday.toDateString()) {
-      user.dailyCheckIn += 1;
+      Number(user.dailyCheckIn) += 1;
     } else {
-      user.dailyCheckIn = 1;
+      Number(user.dailyCheckIn) = 1;
     }
     console.log(today);
     console.log(yesterday);
