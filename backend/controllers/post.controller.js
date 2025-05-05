@@ -54,14 +54,36 @@ export const toggleLike = async (req, res) => {
 
 export const gift = async (req, res) => {
   const { id } = req.params;
-  const { postId, postUploader } = req.body;
+  const { postId, postUploader, gift } = req.body;
+
+  const giftData = {
+    butterfly: 50,
+    lollipop: 75,
+    rose: 100,
+  };
+
+  const earnData = {
+    butterfly: 400,
+    lollipop: 600,
+    rose: 800,
+  };
 
   try {
     // Validate
-    if (!id || !postId) {
+    if (!id || !postId || !gift) {
       return res.status(400).json({
         success: false,
-        message: "User ID or Post ID is missing.",
+        message: "User ID, Post ID, or Gift is missing.",
+      });
+    }
+
+    const giftCost = giftData[gift];
+    const earningAmount = earnData[gift];
+
+    if (!giftCost || !earningAmount) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid gift selected.",
       });
     }
 
@@ -74,17 +96,29 @@ export const gift = async (req, res) => {
     }
 
     const user = await User.findById(id);
-    if (user.coins < 50) {
+    if (user.coins < giftCost) {
       return res.status(400).json({
         success: false,
-        message: "!You do not have enought balance",
+        message: "You do not have enough balance.",
       });
     }
+    if (!user.gift) user.gift = {};
+
+    // user.gift[gift] = (user.gift[gift] || 0) + 1;
 
     const postUploaderUser = await User.findById(postUploader);
-    user.coins = user.coins - 50;
-    user.coinConsumption=Number(user.coinConsumption)+50
-    postUploaderUser.TotalEarning = postUploaderUser.TotalEarning + 200;
+    if (!postUploaderUser.gift) postUploaderUser.gift = {};
+
+    postUploaderUser.gift[gift] = (postUploaderUser.gift[gift] || 0) + 1;
+
+    // Deduct coins according to gift
+    user.coins = user.coins - giftCost;
+    user.coinConsumption = Number(user.coinConsumption) + giftCost;
+
+    // Add earning according to gift
+    postUploaderUser.TotalEarning =
+      (postUploaderUser.TotalEarning || 0) + earningAmount;
+
     post.gift.push(id);
 
     await post.save();
@@ -93,7 +127,7 @@ export const gift = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Gift Sent",
+      message: `${gift} sent successfully.`,
       giftCount: post.gift.length,
       gifts: post.gift,
       postUploaderUser,

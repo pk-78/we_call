@@ -166,6 +166,11 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    gift: {
+      butterfly: { type: Number, default: 0 },
+      lollipop: { type: Number, default: 0 },
+      rose: { type: Number, default: 0 }
+    },
     level: {
       type: String,
       default: 1,

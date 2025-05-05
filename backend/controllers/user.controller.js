@@ -6,7 +6,8 @@ import Post from "../models/post.model.js";
 import bcrypt from "bcrypt";
 
 export const createUser = async (req, res) => {
-  const { name, userName, email, gender, password, confirmPassword } = req.body;
+  const { name, userName, email, gender, password, confirmPassword, userType } =
+    req.body;
   try {
     if (
       [name, userName, email, gender, password, confirmPassword].some(
@@ -46,6 +47,10 @@ export const createUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newProfile = new UserProfile(); // Default values from schema will be applied
     await newProfile.save();
+    
+
+    const isUser = userType !== "streamer";
+
 
     // Create a new User and link the UserProfile
     const newUser = new User({
@@ -55,6 +60,7 @@ export const createUser = async (req, res) => {
       gender,
       password: hashedPassword,
       confirmPassword,
+      isUser,
       otherProfile: newProfile._id, // Link the UserProfile to this User
     });
 
@@ -253,7 +259,7 @@ export const getuserById = async (req, res) => {
 
 export const getAlluser = async (req, res) => {
   try {
-    const user = await User.find().populate("otherProfile");
+    const user = await User.find({isUser:false}).populate("otherProfile");
 
     if (!user) {
       return res.status(404).json({
@@ -288,7 +294,7 @@ export const getUserByLocation = async (req, res) => {
     }
 
     const user = await User.find({
-      $or: [{ "location.city": city }, { "location.state": state }],
+      $or: [{ "location.city": city }, { "location.state": state }, {isUser:false}],
     }).populate("otherProfile");
     res.status(200).json({
       success: true,
@@ -318,7 +324,7 @@ export const getRandomUser = async (req, res) => {
 
   try {
     // Find a user where at least one tag matches
-    const user = await User.find({ tags: { $in: tag } }).populate(
+    const user = await User.find({ tags: { $in: tag }, isUser:false }).populate(
       "otherProfile"
     );
 
@@ -446,9 +452,9 @@ export const dailyCheckIn = async (req, res) => {
     }
 
     if (new Date(user.lastLogin).toDateString() === yesterday.toDateString()) {
-      Number(user.dailyCheckIn) += 1;
+      user.dailyCheckIn = Number(user.dailyCheckIn) + 1;
     } else {
-      Number(user.dailyCheckIn) = 1;
+      user.dailyCheckIn = 1;
     }
     console.log(today);
     console.log(yesterday);
@@ -615,7 +621,60 @@ export const getNameProfile = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User Found ",
-      users: { name: user.name, profile: user.avatar },
+      users: { name: user.name, profile: user.avatar,_id:user._id },
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+export const startLive = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User Not Found",
+      });
+    }
+    user.isLive = true;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "User Is Live",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+export const endLive = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User Not Found",
+      });
+    }
+    user.isLive = false;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "User Is Not Live",
     });
   } catch (error) {
     console.log(error);

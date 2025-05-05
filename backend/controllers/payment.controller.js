@@ -40,8 +40,8 @@ export const checkPaymentAndAddCoins = async (req, res) => {
     key_secret: process.env.KEY_SECRET,
   });
 
-  console.log( amount);
-  console.log(  coinsToAdd);
+  console.log(amount);
+  console.log(coinsToAdd);
   try {
     const payment = await razorpay.payments.fetch(paymentId);
     if (!payment) {
@@ -64,7 +64,7 @@ export const checkPaymentAndAddCoins = async (req, res) => {
         message: "Payment is not authorized",
       });
     }
-    if ((Number(payment.amount)/100) !== Number(amount)) {
+    if (Number(payment.amount) / 100 !== Number(amount)) {
       return res.status(400).json({
         success: false,
         message: "Amount do not match",
@@ -118,8 +118,35 @@ export const checkPayment = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json("Internal server Error");
+    return res.status(500).json({message:"Internal server Error"});
   }
 };
 
-export const paymentHistory = async (req, res) => {};
+export const paymentHistory = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "UserId not found",
+      });
+    }
+
+    const history = await Payment.find({ userId: id });
+    if (!history) {
+      return res.status(400).json({
+        success: false,
+        message: "No History Found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      history,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({message:"Internal server Error"});
+  }
+};
