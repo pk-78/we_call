@@ -133,44 +133,40 @@ export default function OtherProfile({ coins }) {
         {/* Profile Info */}
         <div className="lg:w-2/3 px-2 lg:px-0">
           {/* Bio Section */}
-          <div className="text-left">
-            <p className="text-gray-700">{user?.description}</p>
-            <div className="flex  lg:justify-start space-x-3 mt-2">
-              <h3 className="text-lg font-semibold text-teal-600">Language:</h3>
-              {user?.language?.map((language, index) => (
-                <span
-                  key={index}
-                  className="bg-teal-200 px-3 py-1 rounded-full text-gray-800"
-                >
-                  {language}
-                </span>
-              ))}
+          <div className="mt-2 ">
+              <div className="">
+                <div className="flex flex-wrap lg:justify-start space-x-3 mt-2">
+                  <h3 className="text-lg font-semibold text-teal-600">
+                    Language:
+                  </h3>
+                  {user?.language?.map((language, index) => (
+                    <span className="bg-teal-200 px-3 py-1 my-1 rounded-full text-gray-800">
+                      {language}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="flex flex-wrap  lg:justify-start space-x-3 mt-2">
+                <h3 className="text-lg font-semibold text-teal-600">Hobby:</h3>
+                {user?.hobby?.map((hobby, index) => (
+                  <span
+                    key={index}
+                    className="bg-pink-400 px-3 py-1 my-1 rounded-full text-white"
+                  >
+                    {hobby}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-
-          {/* Hobbies Section */}
-          <div className="mt-2">
-            <div className="flex  lg:justify-start space-x-3 mt-2">
-              <h3 className="text-lg font-semibold text-teal-600">Hobby:</h3>
-              {user?.hobby?.map((hobby, index) => (
-                <span
-                  key={index}
-                  className="bg-pink-400 text-white px-3 py-1 rounded-full"
-                >
-                  {hobby}
-                </span>
-              ))}
-            </div>
-          </div>
 
           {/* Stats: Friends, Followers, Following */}
-          <div className="flex justify-around mt-6 text-center lg:justify-start lg:space-x-8">
-            <div className="flex flex-col">
+          <div className="flex ml-2 gap-4 mt-6 text-center lg:justify-start lg:space-x-8">
+            {/* <div className="flex flex-col">
               <span className="text-gray-600">Friends</span>
               <span className="text-xl font-bold">
                 {user?.otherProfile?.friends?.length}
               </span>
-            </div>
+            </div> */}
             <div className="flex flex-col">
               <span className="text-gray-600">Followers</span>
               <span className="text-xl font-bold">
@@ -186,7 +182,7 @@ export default function OtherProfile({ coins }) {
           </div>
 
           {/* Rating Section */}
-          <div className="mt-6 flex  justify-between">
+          <div className="mt-6 flex  ">
             <div>
               <h3 className="text-lg font-bold text-gray-700">
                 Rating:{user?.rating}
@@ -222,6 +218,45 @@ export default function OtherProfile({ coins }) {
               ))}
             </div>
           </div>
+          <div className="flex">
+              <div className="font-semibold">Gifts:</div>
+              
+              <div className="flex gap-4 px-4 py-2 bg-white rounded-lg ">
+                {/* Single Gift */}
+                <div className=" flex flex-col items-center hover:scale-105 transition-transform">
+                  <img
+                    src="/butterfly.jpg"
+                    alt="Butterfly"
+                    className="h-20 w-20 rounded-md object-cover"
+                  />
+                  <div className="flex gap-1 mt-1 text-teal-700 font-semibold">
+                    {user?.gift?.butterfly}X
+                  </div>
+                </div>
+
+                <div className=" flex flex-col items-center hover:scale-105 transition-transform">
+                  <img
+                    src="/lollipop.jpg"
+                    alt="Lollipop"
+                    className="h-20 w-20 rounded-md object-cover"
+                  />
+                  <div className="flex gap-1 mt-1 text-teal-700 font-semibold">
+                    {user?.gift?.lollipop}X
+                  </div>
+                </div>
+
+                <div className=" flex flex-col items-center hover:scale-105 transition-transform">
+                  <img
+                    src="/rose.png"
+                    alt="Rose"
+                    className="h-20 w-20 rounded-md object-cover"
+                  />
+                  <div className="flex gap-1 mt-1 text-teal-700 font-semibold">
+                    {user?.gift?.rose}X
+                  </div>
+                </div>
+              </div>
+            </div>
 
           {/* Tags Section */}
           <div className="my-2">

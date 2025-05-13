@@ -36,6 +36,8 @@ export default function Setting() {
   const [selectedBannerFile, setSelectedBannerFile] = useState(null);
   const isUser = localStorage.getItem("isUser");
   const [loading, setLoading]= useState(false)
+  const [uploadBannerLoading, setUploadBannerLoading]= useState(false)
+  const [uploadProfileLoading, setUploadProfileLoading]= useState(false)
 
   useEffect(() => {
     
@@ -143,6 +145,7 @@ export default function Setting() {
     if (!id) {
       console.log("No id found");
     }
+    setUploadProfileLoading(true)
     try {
       const formData = new FormData();
       formData.append("profilePicture", profileImage);
@@ -164,6 +167,7 @@ export default function Setting() {
       console.log(error);
       toast.error("Something Went Wrong");
     }
+    setUploadProfileLoading(false)
   };
   const handleUploadBanner = async () => {
     if (!bannerImage) {
@@ -172,6 +176,7 @@ export default function Setting() {
     if (!id) {
       console.log("No id found");
     }
+    setUploadBannerLoading(true)
     try {
       const formData = new FormData();
       formData.append("bannerImage", bannerImage);
@@ -192,6 +197,7 @@ export default function Setting() {
       console.log(error);
       toast.error("Something Went Wrong");
     }
+    setUploadBannerLoading(false)
   };
   if (loading) {
     return (
@@ -331,7 +337,9 @@ export default function Setting() {
                     onClick={handleUploadBanner}
                     className="absolute text-base font-semibold py-1 bg-teal-600 px-2 rounded text-white  top-18 right-2"
                   >
-                    Upload Banner
+                   <div className="flex justify-center items-center">
+                {uploadBannerLoading ?"Uploading..." : "Upload Banner"}
+              </div>
                   </button>
                 )}
                 {profileImage && (
@@ -339,7 +347,9 @@ export default function Setting() {
                     onClick={handleUploadProfile}
                     className="absolute text-base font-semibold py-1 bg-teal-600 px-2 rounded text-white  bottom-4 right-2"
                   >
-                    Upload Profile
+                   <div className="flex justify-center items-center">
+                {uploadProfileLoading ?"Uploading..."  : "Upload Profile"}
+              </div>
                   </button>
                 )}
               </div>
@@ -377,12 +387,12 @@ export default function Setting() {
 
             {/* Stats: Friends, Followers, Following */}
             <div className="flex justify-around gap-2 mt-6 text-center lg:justify-start lg:space-x-8">
-              <div className="flex flex-col">
+              {/* <div className="flex flex-col">
                 <span className="text-gray-600">Friends</span>
                 <span className="text-xl font-bold">
                   {user?.otherProfile?.friends?.length}
                 </span>
-              </div>
+              </div> */}
               <div className="flex flex-col">
                 <span className="text-gray-600">Followers</span>
                 <span className="text-xl font-bold">

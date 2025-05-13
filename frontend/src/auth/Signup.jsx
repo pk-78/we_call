@@ -242,12 +242,12 @@ export default function Signup() {
             </button>
           </div>
         </form>
-        <div className="text-center mt-4">
+        {/* <div className="text-center mt-4">
           <p className="text-gray-700 mb-2">OR</p>
           <button className="flex items-center justify-center w-full bg-teal-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
             Sign up with <FcGoogle className="ml-2" />
           </button>
-        </div>
+        </div> */}
         <div className="mt-6 text-center">
           <p className="text-gray-700">
             Already have an account?{" "}

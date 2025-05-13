@@ -354,6 +354,7 @@ export const getRandomUser = async (req, res) => {
 };
 export const profilePicture = async (req, res) => {
   const { id } = req.params;
+  const imageUrl = req.file.path;
   console.log(req.file);
   try {
     if (!req.file) {
@@ -362,12 +363,12 @@ export const profilePicture = async (req, res) => {
         message: "No file found",
       });
     }
-    const profileLink = `${req.protocol}://${req.get("host")}/profile/${
-      req.file.filename
-    }`;
+    // const profileLink = `${req.protocol}://${req.get("host")}/profile/${
+    //   req.file.filename
+    // }`;
     const user = await User.findByIdAndUpdate(
       id,
-      { avatar: profileLink },
+      { avatar: imageUrl },
       { new: true }
     );
     if (!user) {
@@ -380,7 +381,7 @@ export const profilePicture = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Profile Picture updated SuccessFully",
-      profileLink,
+      profileLink:imageUrl,
     });
   } catch (error) {
     console.log("error in profile picture", error);
@@ -392,6 +393,7 @@ export const profilePicture = async (req, res) => {
 };
 export const bannerPicture = async (req, res) => {
   const { id } = req.params;
+  const imageUrl = req.file.path;
   console.log(req.file);
   try {
     if (!req.file) {
@@ -400,12 +402,12 @@ export const bannerPicture = async (req, res) => {
         message: "No file found",
       });
     }
-    const bannerLink = `${req.protocol}://${req.get("host")}/banner/${
-      req.file.filename
-    }`;
+    // const bannerLink = `${req.protocol}://${req.get("host")}/banner/${
+    //   req.file.filename
+    // }`;
     const user = await User.findByIdAndUpdate(
       id,
-      { coverImage: bannerLink },
+      { coverImage: imageUrl },
       { new: true }
     );
     if (!user) {
@@ -418,7 +420,7 @@ export const bannerPicture = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Cover Picture updated SuccessFully",
-      bannerLink,
+      bannerLink:imageUrl,
     });
   } catch (error) {
     console.log("error in profile picture", error);
@@ -486,6 +488,9 @@ export const dailyCheckIn = async (req, res) => {
 
 export const addPost = async (req, res) => {
   const { id } = req.params;
+  const imageUrl = req.file.path; // This is the Cloudinary URL
+  console.log(imageUrl)
+
 
   try {
     const { description, time, date } = req.body;
@@ -502,13 +507,13 @@ export const addPost = async (req, res) => {
     }
 
     // Extract file path
-    const imageLink = `${req.protocol}://${req.get("host")}/posts/${
-      req.file.filename
-    }`;
+    // const imageLink = `${req.protocol}://${req.get("host")}/posts/${
+    //   req.file.filename
+    // }`;
 
     // Create a new post
     const newPost = new Post({
-      imageLink,
+      imageLink:imageUrl,
       description,
       date,
       time,
