@@ -19,22 +19,22 @@ export default function Level({
         setUpperLimitConsuption(1000);
         setLevel(1)
         setLowerLimitConsuption(0);
-      } else if (Number(myConsumption) >= 1000 && myConsumption<2500) {
-        setUpperLimitConsuption(2500);
+      } else if (Number(myConsumption) >= 1000 && myConsumption<5000) {
+        setUpperLimitConsuption(5000);
         setLevel(2)
         setLowerLimitConsuption(1000);
-      } else if (Number(myConsumption) >= 2500 && myConsumption<5000) {
-        setUpperLimitConsuption(5000);
-        setLevel(3)
-        setLowerLimitConsuption(2500)
       } else if (Number(myConsumption) >= 5000 && myConsumption<10000) {
         setUpperLimitConsuption(10000);
+        setLevel(3)
+        setLowerLimitConsuption(5000)
+      } else if (Number(myConsumption) >= 10000 && myConsumption<20000) {
+        setUpperLimitConsuption(20000);
         setLevel(4)
-        setLowerLimitConsuption(5000)
-      } else if (Number(myConsumption) >= 10000 && myConsumption<25000) {
-        setUpperLimitConsuption(25000);
+        setLowerLimitConsuption(10000)
+      } else if (Number(myConsumption) >= 20000 && myConsumption<50000) {
+        setUpperLimitConsuption(50000);
         setLevel(5)
-        setLowerLimitConsuption(5000)
+        setLowerLimitConsuption(2000)
       }
       
     };

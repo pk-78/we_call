@@ -14,8 +14,8 @@ export default function FollowButton({
   const myId = localStorage.getItem("id");
   const { setNotLoggedInPage, isLoggedIn } = useContext(UserContext);
   const [showButton, setShowButton] = useState(true);
-  console.log(followingList);
-  console.log("Meri id ", myId);
+  // console.log(followingList);
+  // console.log("Meri id ", myId);
   const followUnfollow = async (userId) => {
     // console.log("Saamne wale kii id", userId);
 

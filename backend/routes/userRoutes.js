@@ -2,6 +2,7 @@ import express from "express";
 import {
   addPost,
   bannerPicture,
+  changeUPi,
   createUser,
   dailyCheckIn,
   editLocation,
@@ -47,5 +48,6 @@ router.post("/startLive/:id", startLive)
 router.post("/endLive/:id", endLive)
 router.post("/streamcoindeductpermin/:id", streamCoinDeductperMin)
 router.post("/streamcoindeductstart/:id", streamCoinDeductstart)
+router.post("/changeUpi/:id", changeUPi)
 
 export default router;

@@ -9,7 +9,9 @@ export default function PaymentButton({ price, coins }) {
   const [responseState, setResponseState] = useState();
   const [enterAmount, setEnterAmount] = useState();
 
-  const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
+  const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY ;
+
+  
 
   const loadScript = (src) => {
     return new Promise((resolve) => {

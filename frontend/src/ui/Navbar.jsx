@@ -6,11 +6,14 @@ import { FaPeopleGroup } from "react-icons/fa6";
 import { LuLogOut } from "react-icons/lu";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import UserContext from "../context/UserContext";
+import { BiWalletAlt } from "react-icons/bi";
 
 export default function Navbar({ name }) {
   const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
   const isUser = localStorage.getItem("isUser")
+  const userType = localStorage.getItem("userType")
+  console.log(userType)
 
   console.log("Inside navbar:",isLoggedIn);
 
@@ -21,6 +24,9 @@ export default function Navbar({ name }) {
     navigate("/login");
   }
 
+  if(userType==="admin")
+    return 
+
   return (
     <nav className="bg-teal-800 p-4">
       <div className="container mx-auto flex items-center justify-between">
@@ -28,7 +34,7 @@ export default function Navbar({ name }) {
         <ul className="flex flex-grow justify-center md:space-x-6 space-x-9">
           <li>
             <NavLink
-              to="/home"
+              to="/"
               className={({ isActive }) =>
                 isActive
                   ? "text-white border-b-2 border-white font-bold"
@@ -45,7 +51,7 @@ export default function Navbar({ name }) {
 
          
 
-          {isUser === "false" &&<li>
+          {isUser === "false" && isLoggedIn && <li>
             <NavLink
               to="/golive"
               className={({ isActive }) =>
@@ -78,6 +84,23 @@ export default function Navbar({ name }) {
               <span className="hidden md:inline">Posts</span>
             </NavLink>
           </li>
+
+          { isUser === "false" && isLoggedIn && <li>
+            <NavLink
+              to="/wallet"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-white border-b-2 border-white font-bold"
+                  : "text-light-gray hover:border-b-2 hover:border-white hover:text-white transition-all"
+              }
+            >
+              {/* Show icon on mobile, text on larger screens */}
+              <span className=" text-xl md:hidden">
+              <BiWalletAlt />
+              </span>
+              <span className="hidden md:inline">Wallet</span>
+            </NavLink>
+          </li>}
 
           {isLoggedIn && (
             <li>

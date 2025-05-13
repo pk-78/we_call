@@ -26,9 +26,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    isUser:{
-      type:Boolean,
-      default:true
+    isUser: {
+      type: Boolean,
+      default: true,
     },
     description: {
       type: String,
@@ -50,6 +50,9 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    upiId: {
+      type: String,
+    },
 
     location: {
       city: {
@@ -169,7 +172,7 @@ const userSchema = new mongoose.Schema(
     gift: {
       butterfly: { type: Number, default: 0 },
       lollipop: { type: Number, default: 0 },
-      rose: { type: Number, default: 0 }
+      rose: { type: Number, default: 0 },
     },
     level: {
       type: String,

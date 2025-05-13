@@ -43,54 +43,51 @@ export default function PostImageCard({
       className="rounded-lg overflow-hidden shadow-lg h-auto p-1 bg-white relative cursor-pointer"
       onClick={() => setViewSinglePost(data)}
     >
-      <div className=" py-1 justify-between flex font-semibold">
-        <span>Date:{data?.date}</span> <span>Time:{data?.time}</span>
+      <div className=" px-4 py-2 bg-teal-600 text-white rounded-t-lg text-sm font-semibold tracking-wide">
+        {/* <span className="text-white bg-teal-600 px-2 py-1 rounded-md shadow-sm">
+          Schedule
+        </span> */}
+        <div className="flex justify-between">
+          <span className="whitespace-nowrap">📆 {data?.date || "N/A"}</span>
+          <span className="whitespace-nowrap">⏰ {data?.time || "N/A"}</span>
+        </div>
       </div>
+
       {/* Main Image */}
-      <div className="relative flex justify-center items-center">
+      <div className="relative w-full max-w-[330px] mx-auto">
         <img
-          className="md:w-[300px] w-[330px] h-[400px]  object-cover rounded-lg"
-          src={data?.imageLink ? data?.imageLink : imageLink}
+          className="w-full aspect-[3/4] object-cover rounded-lg"
+          src={data?.imageLink || imageLink}
           alt="Post image"
         />
-        {/* Follow Button */}
-        {/* <button
-          onClick={() => {
-            if (!isLoggedIn) {
-              setNotLoggedInPage(true);
-            } else {
-            }
-          }}
-          className={` flex gap-1 absolute top-2 md:right-3 right-6 bg-teal-600 bg-opacity-20 text-white text-sm py-1 px-3 rounded-full shadow-lg hover:bg-teal-600 focus:outline-none`}
-        >
-          <FaPlus className="mt-1" />
-          Follow
-        </button> */}
       </div>
-      <div className="pl-4  text-sm">
-        <p>{data?.description ? data?.description : description}</p>
+
+      {/* Description */}
+      <div className="px-4 py-2 text-sm text-gray-700">
+        <p className="leading-snug">{data?.description || description}</p>
       </div>
+
       {/* Profile Section */}
-      <div className="flex items-center px-4">
+      <div className="flex items-center px-4  border-t border-gray-100 ">
         {/* Profile Image */}
         <div className="flex-shrink-0">
           <img
-            className="w-8 h-8 rounded-full cursor-pointer"
+            className="w-9 h-9 rounded-full border border-gray-300 object-cover cursor-pointer hover:scale-105 transition-transform duration-200"
             src={nameProfile?.profile || "/profile_man.png"}
-            onClick={() => navigate("/profile")}
+            onClick={() => navigate(`/profile/${nameProfile._id}`)}
             alt="Profile"
           />
         </div>
 
         {/* User Info */}
-        <div className="ml-4 mb-1">
+        <div className="ml-3">
           <p
-            className="text-gray-700 text-base font-semibold cursor-pointer"
-            onClick={() => navigate("/profile")}
+            className="text-gray-800 text-sm md:text-base font-semibold hover:text-teal-600 transition-colors duration-200 cursor-pointer"
+            onClick={() => navigate(`/profile/${nameProfile._id}`)}
           >
-            {nameProfile?.name||"Missing "}
+            {nameProfile?.name || "Unknown User"}
           </p>
-          {/* <p className="text-gray-500 text-sm">Level {level}</p> */}
+          {/* <p className="text-gray-500 text-xs">Level {level}</p> */}
         </div>
       </div>
     </div>

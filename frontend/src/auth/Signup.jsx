@@ -15,12 +15,12 @@ export default function Signup() {
     reset,
   } = useForm();
   const navigate = useNavigate();
-  const [loading, setLoading]= useState(false)
+  const [loading, setLoading] = useState(false);
   const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
 
   const onSubmit = async (data) => {
-    console.log(data)
-    setLoading(true)
+    console.log(data);
+    setLoading(true);
     if (password.length <= 8) {
       toast.error("password should have atleast 8 character");
     } else if (data.password !== data.confirmPassword) {
@@ -42,7 +42,7 @@ export default function Signup() {
         );
       }
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   return (
@@ -115,7 +115,50 @@ export default function Signup() {
             )}
           </div>
 
-          <div className="mb-4">
+          <div className="mb-2">
+            <h2 className="text-gray-800 font-semibold text-sm mb-1">
+              Choose User Type
+            </h2>
+            <div className="flex items-center gap-6">
+              <label
+                htmlFor="streamer"
+                className="flex items-center cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  id="streamer"
+                  value="streamer"
+                  className="form-radio text-teal-600"
+                  {...register("userType", {
+                    required: "This field is required",
+                  })}
+                />
+                <span className="ml-2 text-sm text-gray-700">Streamer</span>
+              </label>
+              <label
+                htmlFor="viewer"
+                className="flex items-center cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  id="viewer"
+                  value="viewer"
+                  className="form-radio text-teal-600"
+                  {...register("userType", {
+                    required: "This field is required",
+                  })}
+                />
+                <span className="ml-2 text-sm text-gray-700">Viewer</span>
+              </label>
+            </div>
+            {errors.userType && (
+              <p className="text-red-500 text-xs mt-1 italic">
+                {errors.userType.message}
+              </p>
+            )}
+          </div>
+
+          <div className="mb-2">
             <h2 className="text-gray-700 font-bold mb-2">Choose Gender</h2>
             <label htmlFor="male" className="mr-4">
               <input
@@ -193,7 +236,9 @@ export default function Signup() {
               type="submit"
               className="bg-teal-blue hover:bg-light-blue w-full  text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-             <div className="flex justify-center items-center">{loading ? <div class="loader"></div> :"Submit"}</div>
+              <div className="flex justify-center items-center">
+                {loading ? <div class="loader"></div> : "Submit"}
+              </div>
             </button>
           </div>
         </form>

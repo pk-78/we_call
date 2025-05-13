@@ -68,6 +68,7 @@ export const adminLogin = async (req, res) => {
       message: "Login Successfully",
       token,
       adminId: admin._id,
+      userType:"admin"
     });
   } catch (error) {
     console.log(error);

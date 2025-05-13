@@ -19,10 +19,11 @@ import { SiBasicattentiontoken } from "react-icons/si";
 import axios from "axios";
 import { url } from "../url/url";
 import toast from "react-hot-toast";
+import SettingSkeleton from "../skeleton/SettingSkeleton";
 
 export default function Setting() {
   const navigate = useNavigate();
-  const [activeItem, setActiveItem] = useState(""); // Store the active component
+  const [activeItem, setActiveItem] = useState("");
   const [dailyCheckIn, setDailyCheckIn] = useState(false);
   const [user, setUser] = useState("");
   const { id, userDetail } = useContext(UserContext);
@@ -33,10 +34,13 @@ export default function Setting() {
   const [bannerImage, setBannerImage] = useState(null);
   const [selectedProfileFile, setSelectedProfileFile] = useState(null);
   const [selectedBannerFile, setSelectedBannerFile] = useState(null);
-  const isUser = localStorage.getItem("isUser")
+  const isUser = localStorage.getItem("isUser");
+  const [loading, setLoading]= useState(false)
 
   useEffect(() => {
+    
     const fetchUserDetail = async () => {
+      setLoading(true)
       try {
         const response = await axios.get(`${url}/api/user/getuser/${id}`);
         console.log(response);
@@ -45,6 +49,7 @@ export default function Setting() {
         console.log(error);
         toast.error("Something wrong while fetching details");
       }
+      setLoading(false)
     };
 
     if (id) {
@@ -188,14 +193,22 @@ export default function Setting() {
       toast.error("Something Went Wrong");
     }
   };
+  if (loading) {
+    return (
+      <div className="flex justify-center items-start p-2 sm:p-6 bg-gray-200 min-h-screen">
+        <SettingSkeleton />
+      </div>
+    );
+  }
+  
 
   return (
-    <div className="flex justify-center items-start p-2 mb-4 sm:p-6 bg-gray-200 min-h-screen">
+    <div className="flex justify-center items-start p-2 mb-10 sm:p-6 bg-gray-200 min-h-screen">
       {/* Settings Card */}
 
       {/* Component Slide-in Effect */}
       {!activeItem ? (
-        <div className="relative bg-white shadow-lg rounded-lg w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-3xl p-4 sm:p-6">
+        <div className="relative bg-white shadow-lg rounded-lg w-full  sm:max-w-md md:max-w-lg lg:max-w-3xl p-4 sm:p-6">
           <div className="flex flex-col items-start">
             <div className=" relative w-full lg:space-y-2">
               <img
@@ -232,14 +245,14 @@ export default function Setting() {
               >
                 <p className="text-gray-700 font-semibold">Level</p>
               </button>
-              <button
+              {/* <button
                 onClick={() => handleButtonClick("task")}
                 className={` md:px-8 px-1  text-sm md:text-lg bg-gray-200 rounded-lg text-center hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105 ${
                   activeItem === "task" ? "bg-gray-300" : ""
                 }`}
               >
                 <p className="text-gray-700 font-semibold">Task</p>
-              </button>
+              </button> */}
 
               {/* <button
                 onClick={() => handleButtonClick("backpack")}
@@ -421,6 +434,45 @@ export default function Setting() {
                 ))}
               </div>
             </div>
+            <div className="flex">
+              <div className="font-semibold">Gifts:</div>
+              <div className="flex gap-4 px-4 py-2 bg-white rounded-lg ">
+                {/* Single Gift */}
+                <div className=" flex flex-col items-center hover:scale-105 transition-transform">
+                  <img
+                    src="butterfly.jpg"
+                    alt="Butterfly"
+                    className="h-20 w-20 rounded-md object-cover"
+                  />
+                  <div className="flex gap-1 mt-1 text-teal-700 font-semibold">
+                    {user?.gift?.butterfly}X
+                  </div>
+                </div>
+
+                <div className=" flex flex-col items-center hover:scale-105 transition-transform">
+                  <img
+                    src="lollipop.jpg"
+                    alt="Lollipop"
+                    className="h-20 w-20 rounded-md object-cover"
+                  />
+                  <div className="flex gap-1 mt-1 text-teal-700 font-semibold">
+                    {user?.gift?.lollipop}X
+                  </div>
+                </div>
+
+                <div className=" flex flex-col items-center hover:scale-105 transition-transform">
+                  <img
+                    src="rose.png"
+                    alt="Rose"
+                    className="h-20 w-20 rounded-md object-cover"
+                  />
+                  <div className="flex gap-1 mt-1 text-teal-700 font-semibold">
+                    {user?.gift?.rose}X
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="flex  flex-wrap justify-center lg:justify-start space-x-3 mt-2">
               <h3 className="text-lg font-bold text-teal-600 ">Tags:</h3>
 
@@ -444,14 +496,16 @@ export default function Setting() {
                   {user?.coins} <FaCoins className="" />
                 </span>
               </div>
-              {isUser ==="false" &&<div className="flex items-center justify-between">
-                <span className="text-gray-700 font-semibold text-lg">
-                  Total Earnings:
-                </span>
-                <span className="text-xl gap-2 flex text-teal-600 font-bold">
-                  {user?.TotalEarning} <SiBasicattentiontoken />
-                </span>
-              </div>}
+              {isUser === "false" && (
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-700 font-semibold text-lg">
+                    Total Earnings:
+                  </span>
+                  <span className="text-xl gap-2 flex text-teal-600 font-bold">
+                    {user?.TotalEarning} <SiBasicattentiontoken />
+                  </span>
+                </div>
+              )}
               {/* <div className="flex items-center justify-between">
                 <span className="text-gray-700 font-semibold text-lg">
                   My Calling Price:

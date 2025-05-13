@@ -9,6 +9,7 @@ import axios from "axios";
 import { url } from "../url/url";
 import toast from "react-hot-toast";
 import FollowButton from "./FollowButton";
+import { MdLiveTv } from "react-icons/md";
 
 export default function LiveCard({
   rate,
@@ -19,7 +20,7 @@ export default function LiveCard({
   user = "",
 }) {
   const myId = localStorage.getItem("id");
- 
+
   const navigate = useNavigate();
   const {
     isLoggedIn,
@@ -27,32 +28,67 @@ export default function LiveCard({
     notLoggedInPage,
     setNotLoggedInPage,
     followingList,
-    userDetail
-
+    userDetail,
   } = useContext(UserContext);
-  const isEligibleToCall =userDetail?.coins >= user?.rate;
+  const isEligibleToCall = userDetail?.coins >= user?.rate;
   const buttonColor =
     userDetail?.coins >= user?.rate
       ? "bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700"
       : "bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700";
   // console.log(user);
 
+  const joinStreaming = async () => {
+    console.log(userDetail._id);
+    try {
+      const response = await axios.post(
+        `${url}/api/user/streamcoindeductstart/${userDetail._id}`,
+        {
+          streamerId: user._id,
+        }
+      );
+      console.log(response);
+      if (response.data.success === true) {
+        navigate(`/live-room/${user._id}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="border border-gray-300 rounded-xl shadow-lg w-80 bg-white overflow-hidden hover:shadow-2xl hover:shadow-light-blue/30 transition-all duration-300 ease-in-out transform hover:scale-105">
       {/* Image Section */}
       <div className="relative group ">
         <img
-          src={user?.avatar? user?.avatar:"/car.jpg"}
-          
+          src={user?.avatar ? user?.avatar : "/car.jpg"}
           alt="Wait for the images"
           onClick={() => {
-            navigate(`/live-room/${user?._id}`);
+            if (!user?.isLive) {
+              toast.error("User is not live");
+              return;
+            }
+
+            if (userDetail?.coins < 10) {
+              toast.error("You don't have enough balance");
+              return;
+            }
+            joinStreaming();
+
+            navigate(`/live-room/${user._id}`);
           }}
           className="w-full h-[400px] object-cover cursor-pointer rounded-t-xl transform transition-transform duration-00 "
         />
         <div className="flex gap-1 absolute top-2 right-2">
           <FollowButton followingList={followingList} userId={user._id} />
         </div>
+        {user?.isLive && (
+          <div className="flex gap-1 absolute top-2 left-2">
+            <div className="flex gap-2 bg-teal-600 text-white rounded-full px-2 ">
+              Live
+              <MdLiveTv className="mt-1 " />
+            </div>
+          </div>
+        )}
         {/* Call Button */}
         {/* <button
           onClick={() => {
@@ -78,14 +114,15 @@ export default function LiveCard({
           <div className="flex items-center space-x-2">
             {/* Profile Image */}
             <div className="relative">
-            <img
-              src={user?.avatar?user?.avatar:"/profile_man.png"}
-              alt="Profile"
-              onClick={() => navigate(`/profile/${user?._id}`)}
-              className="  w-9 h-9 border-2 border-teal-600  rounded-full object-cover cursor-pointer"
-            />
-            <span className="absolute bottom-0 right-0 inline-block w-3 h-3 bg-green-500 rounded-full"></span>
-            
+              <img
+                src={user?.avatar ? user?.avatar : "/profile_man.png"}
+                alt="Profile"
+                onClick={() => navigate(`/profile/${user?._id}`)}
+                className="  w-9 h-9 border-2 border-teal-600  rounded-full object-cover cursor-pointer"
+              />
+              {user?.isLive && (
+                <span className="absolute bottom-0 right-0 inline-block w-3 h-3 bg-green-500 rounded-full"></span>
+              )}
             </div>
             <div>
               <p
@@ -118,7 +155,6 @@ export default function LiveCard({
         {/* Additional Info */}
         <div className="flex justify-between items-center text-sm text-gray-600">
           <div className="flex items-center space-x-2">
-            
             {/* <p>Online Now</p>  */}
           </div>
           {/* <p className="text-gray-500">

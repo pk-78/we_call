@@ -9,9 +9,7 @@ export default function ImageUpload({ id }) {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
-  const [myId, setMyId]= useState(id)
-
-  console.log("Meri h", id);
+  const [myId, setMyId] = useState(id);
 
   function submitImage(e) {
     const file = e.target.files[0];
@@ -28,10 +26,9 @@ export default function ImageUpload({ id }) {
     formData.append("date", date);
     formData.append("time", time);
     formData.append("description", description);
-    formData.append("postImage", image); // Ensure it's a File object
-    
-    // console.log(formData);
-    try {      
+    formData.append("postImage", image);
+
+    try {
       const response = await axios.post(
         `${url}/api/user/schedule/${myId}`,
         formData,
@@ -41,22 +38,24 @@ export default function ImageUpload({ id }) {
           },
         }
       );
-      
-      // console.log(response);
-      toast.success(response.data.message)
-      setDate("")
-      setDescription("")
-      setTime("")
-      setImage(null)
+
+      toast.success(response.data.message);
+      setDate("");
+      setDescription("");
+      setTime("");
+      setImage(null);
     } catch (error) {
       console.log(error);
     }
   };
+
   return (
-    <div className="h-[700px] w-[500px] bg-white shadow-lg rounded-lg p-6 mx-auto overflow-y-auto">
+    <div className="max-w-xl w-full md:w-[500px] mx-auto bg-white shadow-lg rounded-lg p-4 sm:p-6 md:p-8 overflow-y-auto h-auto max-h-[90vh]">
       {/* Title */}
       <div className="mb-6 text-center">
-        <h1 className="text-3xl font-bold text-teal-600">Create Post</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-teal-600">
+          Create Post
+        </h1>
       </div>
 
       {/* Form Section */}
@@ -65,84 +64,82 @@ export default function ImageUpload({ id }) {
         <div className="flex flex-col items-center justify-center">
           <label
             htmlFor="fileUpload"
-            className="w-full cursor-pointer border-2 border-dashed border-gray-300 p-6 text-center rounded-lg hover:border-teal-500 hover:bg-gray-100"
+            className="w-full cursor-pointer border-2 border-dashed border-gray-300 p-4 sm:p-6 text-center rounded-lg hover:border-teal-500 hover:bg-gray-100"
           >
             <input
               id="fileUpload"
               type="file"
-              className="hidden"
-              //   accept="image"
               accept="image/*, video/*"
+              className="hidden"
               onChange={submitImage}
             />
             <p className="text-gray-600">
               {image ? (
-                <p className="text-red-600">Choose another Image</p>
+                <span className="text-red-600">Choose another Image</span>
               ) : (
                 "Click to choose image"
               )}
             </p>
           </label>
         </div>
-        {image ? <img className="h-60  " src={imageUrl} alt="" /> : ""}
 
-        {/* Description Input */}
+        {image && (
+          <img
+            className="h-40 sm:h-60 object-cover mx-auto rounded-md"
+            src={imageUrl}
+            alt="preview"
+          />
+        )}
+
+        {/* Description */}
         <div className="flex flex-col">
-          <label
-            htmlFor="description"
-            className="text-gray-700 font-medium mb-2"
-          >
+          <label htmlFor="description" className="text-gray-700 font-medium mb-2">
             Description
           </label>
           <input
             type="text"
             id="description"
             value={description}
-            onChange={(e) => {
-              console.log(e.target.value);
-              setDescription(e.target.value);
-            }}
-            className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
-            placeholder="Write a description..."
-          />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="date" className="text-gray-700 font-medium mb-2">
-            Description
-          </label>
-          <input
-            type="date"
-            id="date"
-            value={date}
-            onChange={(e) => {
-              setDate(e.target.value);
-            }}
-            className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
-            placeholder="Write a description..."
-          />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="time" className="text-gray-700 font-medium mb-2">
-            Description
-          </label>
-          <input
-            type="time"
-            id="time"
-            value={time}
-            onChange={(e) => {
-              setTime(e.target.value);
-            }}
+            onChange={(e) => setDescription(e.target.value)}
             className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
             placeholder="Write a description..."
           />
         </div>
 
-        {/* Submit Button */}
+        {/* Date */}
+        <div className="flex flex-col">
+          <label htmlFor="date" className="text-gray-700 font-medium mb-2">
+            Date
+          </label>
+          <input
+            type="date"
+            id="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+          />
+        </div>
+
+        {/* Time */}
+        <div className="flex flex-col">
+          <label htmlFor="time" className="text-gray-700 font-medium mb-2">
+            Time
+          </label>
+          <input
+            type="time"
+            id="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+          />
+        </div>
+
+        {/* Submit */}
         <div className="text-center">
           <button
             type="submit"
             onClick={submitHandler}
-            className="bg-teal-600 text-white py-2 px-6 rounded-lg font-semibold shadow-md hover:bg-teal-700 focus:outline-none"
+            className="w-full sm:w-auto bg-teal-600 text-white py-2 px-6 rounded-lg font-semibold shadow-md hover:bg-teal-700 focus:outline-none"
           >
             Post
           </button>

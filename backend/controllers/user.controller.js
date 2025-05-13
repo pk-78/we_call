@@ -47,10 +47,8 @@ export const createUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newProfile = new UserProfile(); // Default values from schema will be applied
     await newProfile.save();
-    
 
     const isUser = userType !== "streamer";
-
 
     // Create a new User and link the UserProfile
     const newUser = new User({
@@ -259,7 +257,7 @@ export const getuserById = async (req, res) => {
 
 export const getAlluser = async (req, res) => {
   try {
-    const user = await User.find({isUser:false}).populate("otherProfile");
+    const user = await User.find({ isUser: false }).populate("otherProfile");
 
     if (!user) {
       return res.status(404).json({
@@ -294,7 +292,11 @@ export const getUserByLocation = async (req, res) => {
     }
 
     const user = await User.find({
-      $or: [{ "location.city": city }, { "location.state": state }, {isUser:false}],
+      $or: [
+        { "location.city": city },
+        { "location.state": state },
+        { isUser: false },
+      ],
     }).populate("otherProfile");
     res.status(200).json({
       success: true,
@@ -324,9 +326,10 @@ export const getRandomUser = async (req, res) => {
 
   try {
     // Find a user where at least one tag matches
-    const user = await User.find({ tags: { $in: tag }, isUser:false }).populate(
-      "otherProfile"
-    );
+    const user = await User.find({
+      tags: { $in: tag },
+      isUser: false,
+    }).populate("otherProfile");
 
     if (!user) {
       return res.status(404).json({
@@ -621,7 +624,7 @@ export const getNameProfile = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User Found ",
-      users: { name: user.name, profile: user.avatar,_id:user._id },
+      users: { name: user.name, profile: user.avatar, _id: user._id },
     });
   } catch (error) {
     console.log(error);
@@ -675,6 +678,35 @@ export const endLive = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User Is Not Live",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+export const changeUPi = async (req, res) => {
+  const { id } = req.params;
+  const { upiId } = req.body;
+  console.log(upiId)
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User Not Found",
+      });
+    }
+
+    user.upiId = upiId;
+    await user.save();
+    return res.status(200).json({
+      success: true,
+      message: "Upi Id changed",
+      upiId: user.upiId,
     });
   } catch (error) {
     console.log(error);

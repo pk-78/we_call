@@ -24,6 +24,9 @@ import OfferPage from "./pages/OfferPage";
 import Live from "./components/Live";
 import EditProfile from "./components/EditProfile";
 import LiveRoom from "./pages/LiveRoom";
+import MyWallet from "./pages/MyWallet";
+import AdminHome from "./admin/AdminHome";
+import AdminLogin from "./admin/adminLogin";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -57,6 +60,13 @@ function App() {
         <Route path="/pricing" element={<OfferPage />} />
         <Route path="/live" element={<Live />} />
         <Route path="/editProfile" element={<EditProfile />} />
+        <Route path="/wallet" element={<MyWallet />} />
+
+
+        {/* admin */}
+
+        <Route path="/adminHomepage" element={<AdminHome/>} />
+        <Route path="/adminLogin" element={<AdminLogin/>} />
 
         {/* // </PrivateRoute>
           // } */}

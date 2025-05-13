@@ -1,37 +1,32 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { FaHeart } from "react-icons/fa";
-import { FaGift } from "react-icons/fa6";
+import { FaHeart, FaCoins, FaGift } from "react-icons/fa";
 import { url } from "../url/url";
 import UserContext from "../context/UserContext";
 import toast from "react-hot-toast";
 import SingleComment from "./SingleComment";
 
 export default function SinglePost({ viewSinglePost }) {
-  const { id } = useContext(UserContext);
+  const { id, userDetail } = useContext(UserContext);
   const [commentToPost, setCommentToPost] = useState("");
   const [nameProfile, setNameProfile] = useState(null);
   const [likes, setLikes] = useState(viewSinglePost?.like || []);
   const [isLiking, setIsLiking] = useState(false);
   const [gifts, setGifts] = useState(viewSinglePost?.gift || []);
+  const [giftSection, setGiftSection] = useState(false);
   const [gifting, setGifting] = useState(false);
   const [showComment, setShowComment] = useState(false);
   const [gifted, setGifted] = useState(viewSinglePost?.gift?.includes(id));
+  const [userCoin, setUserCoin] = useState(userDetail?.coins);
+  const [clickedGift, setClickedGift] = useState(null);
 
-  console.log(viewSinglePost);
 
   useEffect(() => {
     const findName = async () => {
-      console.log("mai hu yha");
       try {
-        console.log(
-          `${url}/api/user/getNameAndProfile/${viewSinglePost?.owner}`
-        );
         const res = await axios.get(
           `${url}/api/user/getNameAndProfile/${viewSinglePost?.owner}`
         );
-        console.log("yha tk aaya");
-        // console.log(res?.data?.users);
         setNameProfile(res?.data?.users);
       } catch (error) {
         console.log(error);
@@ -39,14 +34,13 @@ export default function SinglePost({ viewSinglePost }) {
     };
     findName();
   }, []);
+
   const commentHandler = async () => {
-    console.log(commentToPost);
     try {
       const response = await axios.post(`${url}/api/post/comment/${id}`, {
         postId: viewSinglePost._id,
         comment: commentToPost,
       });
-      console.log(response);
       toast.success("Comment Added");
       setCommentToPost("");
     } catch (error) {
@@ -60,11 +54,7 @@ export default function SinglePost({ viewSinglePost }) {
       const res = await axios.post(`${url}/api/post/like/${id}`, {
         postId: viewSinglePost._id,
       });
-
-      // Optionally refetch post or update state
       setLikes(res?.data?.likes);
-
-      // OR if you use a parent function to refresh data
     } catch (err) {
       console.error("Error toggling like:", err);
     } finally {
@@ -72,34 +62,41 @@ export default function SinglePost({ viewSinglePost }) {
     }
   };
 
-  const handleGift = async () => {
-    if (gifted) return; // Prevent double gifting
+  const handleGift = async (gift) => {
+    const giftData = {
+      butterfly: 50,
+      lollipop: 75,
+      rose: 100,
+    };
 
-    try {
-      setGifting(true);
-      const res = await axios.post(`${url}/api/post/gift/${id}`, {
-        postId: viewSinglePost._id,
-        postUploader: viewSinglePost?.owner,
-      });
-      console.log(res);
-      toast.success("gift sent");
-      setGifts(res?.data?.gifts);
-      setGifted(true);
+    if (giftData[gift] > userCoin) {
+      toast.error("You Don't Have Enough Coins");
+    } else {
+      try {
+        setGifting(true);
+        setClickedGift(gift); // for animation
 
-      // Optional: update post info
-    } catch (err) {
-      console.error("Error gifting post:", err);
-    } finally {
-      setGifting(false);
+        const res = await axios.post(`${url}/api/post/gift/${id}`, {
+          postId: viewSinglePost._id,
+          postUploader: viewSinglePost?.owner,
+          gift,
+        });
+        setUserCoin(res.data.user.coins);
+        toast.success("Gift Sent");
+        setGifts(res?.data?.gifts);
+        setGifted(true);
+      } catch (err) {
+        console.error("Error gifting post:", err);
+      } finally {
+        setGifting(false);
+      }
     }
   };
-
-  console.log(viewSinglePost?.owner, "mai hoon");
 
   const isLiked = likes.includes(id);
 
   return (
-    <div className="max-w-lg mx-auto h-[700px] w-[500px] bg-white shadow-lg rounded-lg p-4 overflow-y-auto">
+    <div className="mx-auto w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl bg-white shadow-lg rounded-lg p-4 h-[90vh] overflow-y-auto">
       {/* User Info */}
       <div className="flex items-center gap-3">
         <img
@@ -111,8 +108,10 @@ export default function SinglePost({ viewSinglePost }) {
       </div>
 
       {/* Post Description */}
-      <p className="mt-2 text-gray-700">{viewSinglePost?.description}</p>
-      <div className="flex justify-between font-semibold">
+      <p className="mt-2 text-gray-700 text-sm sm:text-base">
+        {viewSinglePost?.description}
+      </p>
+      <div className="flex justify-between font-semibold text-xs sm:text-sm">
         <span>Date: {viewSinglePost?.date}</span>
         <span>Time: {viewSinglePost?.time}</span>
       </div>
@@ -122,81 +121,117 @@ export default function SinglePost({ viewSinglePost }) {
         <img
           src={viewSinglePost?.imageLink || "/dance.jpg"}
           alt="Post"
-          className=" h-96 rounded-lg"
+          className="w-full max-h-[500px] object-contain rounded-lg"
         />
       </div>
 
       {/* Like & Gift Buttons */}
       <div className="flex items-center justify-between mt-3">
         <div className="flex items-center gap-2">
+          <button
+            className={`transition-colors ${
+              isLiked ? "text-red-500" : "text-gray-600 hover:text-red-500"
+            }`}
+            onClick={handleLikeToggle}
+            disabled={isLiking}
+          >
+            <FaHeart size={22} />
+          </button>
+          <p className="text-gray-700 text-sm">{likes.length}</p>
+        </div>
+
+        {/* Gift Section */}
+        {giftSection ? (
+          <div className="relative flex flex-col items-end">
+            <button
+              onClick={() => setGiftSection(false)}
+              className="absolute -top-3 -right-3 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 shadow-md"
+            >
+              ×
+            </button>
+            <div className="flex gap-4 flex-wrap justify-end p-4 bg-white border border-gray-300 rounded-lg shadow-lg">
+              {["butterfly", "lollipop", "rose"].map((gift) => (
+                <div
+                key={gift}
+                onClick={() => handleGift(gift)}
+                className={`cursor-pointer flex flex-col items-center transition-transform duration-300 ease-in-out 
+                  ${clickedGift === gift ? "animate-bounceOnce scale-110" : "hover:scale-105"}`}
+                onAnimationEnd={() => setClickedGift(null)}
+              >
+                <img
+                  src={`${gift}.jpg`}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "rose.png";
+                  }}
+                  alt={gift}
+                  className="h-20 w-20 rounded-md object-cover"
+                />
+                <div className="flex gap-1 mt-1 text-teal-700 font-semibold">
+                  {gift === "butterfly" ? 50 : gift === "lollipop" ? 75 : 100} <FaCoins className="mt-1" />
+                </div>
+              </div>
+              
+              ))}
+            </div>
+          </div>
+        ) : (
           <div className="flex items-center gap-2">
             <button
               className={`transition-colors ${
-                isLiked ? "text-red-500" : "text-gray-600 hover:text-red-500"
+                gifted
+                  ? "text-yellow-500"
+                  : "text-gray-600 hover:text-yellow-500"
               }`}
-              onClick={handleLikeToggle}
-              disabled={isLiking}
+              onClick={() => setGiftSection(true)}
             >
-              <FaHeart size={22} />
+              <FaGift size={22} />
             </button>
-            <p className="text-gray-700">{likes.length}</p>
+            <p className="text-gray-700 text-sm">{gifts?.length}</p>
           </div>
-          {/* <p className="text-gray-700">{viewSinglePost?.like?.length}</p> */}
-        </div>
-        <div className="flex items-center gap-2">
-          {" "}
-          <button
-            className={`transition-colors ${
-              gifted ? "text-yellow-500" : "text-gray-600 hover:text-yellow-500"
-            }`}
-            onClick={handleGift}
-            disabled={gifting || gifted}
-          >
-            <FaGift size={22} />
-          </button>
-          <p className="text-gray-700">{gifts?.length}</p>
-        </div>
+        )}
       </div>
-      <div className="flex items-center justify-between bg-white shadow-md rounded-lg p-1 mt-1 border border-gray-300 w-full max-w-lg mx-auto">
-        {/* Input Field */}
+
+      {/* Comment Input */}
+      <div className="flex items-center bg-white shadow-md rounded-lg p-1 mt-3 border border-gray-300 w-full">
         <input
           type="text"
           placeholder="Add a comment..."
           value={commentToPost}
           onChange={(e) => setCommentToPost(e.target.value)}
-          className="w-full p-3 border-none outline-none bg-transparent text-gray-700 placeholder-gray-500"
+          className="w-full p-3 border-none outline-none bg-transparent text-gray-700 placeholder-gray-500 text-sm"
         />
-
-        {/* Submit Button */}
         <button
           onClick={commentHandler}
-          className="flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition"
+          className="flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition text-sm"
         >
           Submit
         </button>
       </div>
 
-      {/* Comments Section */}
-      <div class="mt-3 text-gray-600 text-sm cursor-pointer hover:text-gray-800">
+      {/* Toggle Comments */}
+      <div className="mt-3 text-gray-600 text-sm cursor-pointer hover:text-gray-800">
         <button
-          onClick={() => {
-            setShowComment(!showComment);
-          }}
+          onClick={() => setShowComment(!showComment)}
           className="font-bold"
         >
-          {showComment ? "Hide Comment" : "Show Comments"}
+          {showComment ? "Hide Comments" : "Show Comments"}
         </button>
       </div>
 
-      {showComment?
-        <div class="mt-4">
-          {viewSinglePost?.comment.map((comment) => (
-            <div class="flex items-start space-x-4 border-opacity-90 border rounded-md my-2 p-1  border-gray-200">
+      {/* Comments Section */}
+      {showComment && (
+        <div className="mt-4 space-y-2">
+          {viewSinglePost?.comment.map((comment, index) => (
+            <div
+              key={index}
+              className="flex items-start space-x-4 border border-gray-200 rounded-md p-2"
+            >
               <SingleComment comment={comment} />
             </div>
           ))}
-        </div>: null
-      }
+        </div>
+      )}
     </div>
   );
 }

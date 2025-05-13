@@ -6,23 +6,31 @@ import { FaPlus } from "react-icons/fa6";
 import axios from "axios";
 import { url } from "../url/url";
 import FollowButton from "./FollowButton";
+import SettingSkeleton from "../skeleton/SettingSkeleton";
 
 export default function OtherProfile({ coins }) {
   const navigate = useNavigate();
   const [user, setuser] = useState([]);
-  const { isLoggedIn, setIsLoggedIn, notLoggedInPage, setNotLoggedInPage,followingList } =
-    useContext(UserContext);
+  const {
+    isLoggedIn,
+    setIsLoggedIn,
+    notLoggedInPage,
+    setNotLoggedInPage,
+    followingList,
+  } = useContext(UserContext);
   const { id } = useParams();
   const myId = localStorage.getItem("id");
   const [fullStar, setFullStar] = useState(null);
   const [halfStar, setHalfStar] = useState(null);
   const [emptyStar, setEmptyStar] = useState(null);
   const [followerList, setFollowersList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // console.log(id);
 
   useEffect(() => {
     const fetchUserDetail = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(`${url}/api/user/getuser/${id}`);
         console.log(response?.data?.user);
@@ -31,6 +39,7 @@ export default function OtherProfile({ coins }) {
       } catch (error) {
         console.log(error);
       }
+      setLoading(false);
     };
     const showRating = async () => {
       const intPart = Math.trunc(user?.rating);
@@ -49,6 +58,10 @@ export default function OtherProfile({ coins }) {
     fetchUserDetail();
     showRating();
   }, [id]);
+
+  if (loading) {
+    return <div className="flex justify-center items-center"><SettingSkeleton /></div>;
+  }
 
   return (
     <div className="flex justify-center items-start p-2 mb-8 bg-gray-200 min-h-screen">

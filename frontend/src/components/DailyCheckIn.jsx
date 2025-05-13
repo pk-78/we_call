@@ -1,8 +1,11 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { RiCoinLine } from "react-icons/ri";
+import { url } from "../url/url";
 
 export default function DailyCheckIn({checkIn}) {
   console.log(checkIn)
+  const [ streak, setStreak] = useState(checkIn)
   const days = [
     { day: "Day 1", reward: 50 },
     { day: "Day 2", reward: 60 },
@@ -13,6 +16,22 @@ export default function DailyCheckIn({checkIn}) {
     { day: "Day 7", reward: 110 },
     { day: "Day 7 +", reward: 150 },
   ];
+  const id= localStorage.getItem("id")
+
+  useEffect(()=>{
+    async function checkIn(){
+
+      const response = await axios.post(`${url}/api/user/dailyCheckIn/${id}`)
+
+      console.log(response);
+      setStreak(response?.data?.streak)
+
+
+    }
+
+
+    checkIn();
+  },[])
 
   return (
     <div className="max-w-md mx-auto cursor-pointer bg-white p-6 rounded-lg shadow-md">
@@ -28,7 +47,7 @@ export default function DailyCheckIn({checkIn}) {
             key={index}
             className={`flex flex-col items-center justify-center p-4 border rounded-lg shadow-sm transition-transform transform hover:scale-105 
               ${
-                index === Number(checkIn-1) || (index === 7 && Number(checkIn)>=7 )
+                index === Number(checkIn-1) || (index === 7 && Number(checkIn)>7 )
                   ? "bg-teal-100 border-teal-400"
                   : "bg-gray-50 border-gray-300"
               }`}

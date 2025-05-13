@@ -7,6 +7,7 @@ import NotLoggedIn from "../components/NotLoggedIn";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { url } from "../url/url";
+import SkeletonLiveCard from "../skeleton/SkeletonLiveCard";
 
 export default function Home() {
   const [buttonClick, setButtonClick] = useState("random");
@@ -33,10 +34,10 @@ export default function Home() {
   } = useContext(UserContext);
   // console.log(location);
   // console.log(city, state);
-  console.log(followingList);
+  // console.log(followingList);
 
   useEffect(() => {
-    if (state === undefined && state === undefined) {
+    if (city === undefined && state === undefined) {
       setNotState(true);
     }
     const fetchLocationUsers = async () => {
@@ -51,10 +52,15 @@ export default function Home() {
         const filterdLocationUser = response?.data?.user?.filter(
           (user) => user._id !== id
         );
-        setLocationUser(filterdLocationUser);
+
+        const isLiveLocationUser = filterdLocationUser?.sort((a, b) => {
+          if (a.isLive === b.isLive) return 0; // No change if both are same
+          return a.isLive ? -1 : 1;
+        });
+        setLocationUser(isLiveLocationUser);
         // console.log(locationUser)
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
       setIsLoading(false);
     };
@@ -63,20 +69,19 @@ export default function Home() {
     }
   }, [city, state]);
   useEffect(() => {
-
     const checkIn = async () => {
       try {
         const checkInResponse = await axios.post(
           `${url}/api/user/dailyCheckIn/${id}`
         );
-        console.log(checkInResponse);
+        // console.log(checkInResponse);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
 
     const fetchRandomUsers = async () => {
-      console.log(tag);
+      // console.log(tag);
       setRandomLoading(true);
       try {
         const response = await axios.post(`${url}/api/user/getRandomUser`, {
@@ -86,10 +91,14 @@ export default function Home() {
         const filteredRandomuser = response?.data?.user?.filter(
           (user) => user._id !== id
         );
-        setRandomUser(filteredRandomuser);
+        const isLiveRandomUser = filteredRandomuser?.sort((a, b) => {
+          if (a.isLive === b.isLive) return 0; // No change if both are same
+          return a.isLive ? -1 : 1;
+        });
+        setRandomUser(isLiveRandomUser);
         // console.log(randomUser);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
       setRandomLoading(false);
     };
@@ -99,7 +108,10 @@ export default function Home() {
     const todayDate = new Date().toDateString(); // Normalize today's date to a string
     // console.log(todayDate)
     // console.log(new Date(userDetail?.lastLogin).toDateString())
-    if ((new Date(userDetail?.lastLogin).toDateString() !== todayDate)&& userDetail?.lastLogin) {
+    if (
+      new Date(userDetail?.lastLogin).toDateString() !== todayDate &&
+      userDetail?.lastLogin
+    ) {
       checkIn();
     }
   }, [tag]);
@@ -125,7 +137,8 @@ export default function Home() {
               uniqueUsers.push(newUser);
             }
           });
-          return uniqueUsers;
+          const sortedUsers = uniqueUsers.sort((a, b) => b.isLive - a.isLive);
+          return sortedUsers;
         });
       } catch (error) {
         console.error("Error fetching following users:", error);
@@ -139,13 +152,13 @@ export default function Home() {
     }
   }, [followingList]);
 
-  console.log(followingUser);
-  console.log(randomUser);
-  console.log(locationUser);
+  // console.log(followingUser);
+  // console.log(randomUser);
+  // console.log(locationUser);
 
   // function buttonHandler(clickedValue) {
   //   setButtonClick(clickedValue);
-  //   console.log(buttonClick);
+    // console.log(buttonClick);
   // }
 
   function checkRequestCall() {}
@@ -156,15 +169,12 @@ export default function Home() {
   return (
     <div className=" relative md:px-28 md:py-10 my-5 bg-gray-50">
       {/* Title Section */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="md:text-3xl pl-5 font-bold text-gray-800">
-          Currently Live
-        </h1>
+      <div className="flex justify-center items-center mb-6">
         {isLoggedIn && (
           <div className="space-x-4 pr-4">
             <button
               onClick={() => {
-                console.log("daab diye nearby ko");
+                // console.log("daab diye nearby ko");
                 setButtonClick("nearby");
               }}
               className={`md:px-4 px-1 py-2 md:text-base text-sm  ${
@@ -177,7 +187,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => {
-                console.log("daab diye random ko");
+                // console.log("daab diye random ko");
                 setButtonClick("random");
               }}
               className={`md:px-4 px-1 py-2 md:text-base text-sm ${
@@ -190,7 +200,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => {
-                console.log("daab diye follow ko");
+                // console.log("daab diye follow ko");
                 setButtonClick("follow");
               }}
               className={`md:px-4 px-1 py-2 md:text-base text-sm  ${
@@ -207,40 +217,179 @@ export default function Home() {
 
       {/* Live Cards Grid Section */}
       <div>
-        {buttonClick === "follow" ? (
-          followingLoading ? (
-            <div>Loading your follower </div>
+        <h3 className="md:text-3xl pl-5 mb-4 font-bold text-gray-800">
+          Currenty Live
+        </h3>
+        <div className="flex justify-center items-center">
+          {buttonClick === "follow" ? (
+            followingLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+                {[...Array(6)].map((_, index) => (
+                  <SkeletonLiveCard key={index} />
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
+                {followingUser?.filter((user) => user?.isLive)?.length >= 1 ? (
+                  followingUser
+                    ?.filter((user) => user?.isLive)
+                    ?.map((user, index) => (
+                      <LiveCard
+                        key={index}
+                        user={user}
+                        rate={300}
+                        requestCall={requestCall}
+                        setRequestCall={setRequestCall}
+                        setCheckEnoughBalance={setCheckEnoughBalance}
+                      />
+                    ))
+                ) : (
+                  <div className="my-20 text-2xl text-center w-full">
+                    No one is live from your follower list
+                  </div>
+                )}
+              </div>
+            )
+          ) : buttonClick === "nearby" ? (
+            notState ? (
+              <div className="text-center font-bold text-2xl text-red-600">
+                Please update Your Location In Setting
+              </div>
+            ) : loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+                {[...Array(6)].map((_, index) => (
+                  <SkeletonLiveCard key={index} />
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
+                {locationUser?.filter((user) => user?.isLive)?.length >= 1 ? (
+                  locationUser
+                    ?.filter((user) => user?.isLive)
+                    ?.map((user, index) => (
+                      <div key={index}>
+                        <LiveCard
+                          // id={id}
+                          user={user}
+                          rate={200}
+                          requestCall={requestCall}
+                          setRequestCall={setRequestCall}
+                          setCheckEnoughBalance={setCheckEnoughBalance}
+                        />
+                      </div>
+                    ))
+                ) : (
+                  <div className="my-20 text-2xl text-center w-full">
+                    No one is Live near you
+                  </div>
+                )}
+              </div>
+            )
+          ) : randomLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+              {[...Array(6)].map((_, index) => (
+                <SkeletonLiveCard key={index} />
+              ))}
+            </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
-              {followingUser.length >= 1 ? (
-                followingUser?.map((user, index) => (
-                  <LiveCard
-                    key={index}
-                    user={user}
-                    rate={300}
-                    requestCall={requestCall}
-                    setRequestCall={setRequestCall}
-                    setCheckEnoughBalance={setCheckEnoughBalance}
-                  />
-                ))
+              {randomUser?.filter((user) => user?.isLive)?.length >= 1 ? (
+                randomUser
+                  ?.filter((user) => user?.isLive)
+                  ?.map((user, index) => (
+                    <div key={index}>
+                      <LiveCard
+                        // id={id}
+                        user={user}
+                        rate={200}
+                        requestCall={requestCall}
+                        setRequestCall={setRequestCall}
+                        setCheckEnoughBalance={setCheckEnoughBalance}
+                      />
+                    </div>
+                  ))
               ) : (
-                <div className="text-2xl text-center w-full">
-                  You have empty following list, please follow someone
+                <div className="my-20 text-2xl text-center w-full">
+                  No one is live, please come later
                 </div>
               )}
             </div>
-          )
-        ) : buttonClick === "nearby" ? (
-          notState ? (
-            <div className="text-center font-bold text-2xl text-red-600">
-              Please update Your Location In Setting
+          )}
+        </div>
+      </div>
+      <div className="mb-16">
+        <h3 className="md:text-3xl pl-5 font-bold text-gray-800">Not Live</h3>
+        <div className="flex justify-center items-center ">
+          {buttonClick === "follow" ? (
+            followingLoading ? (
+              <div className="grid grid-cols-1   sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+                {[...Array(6)].map((_, index) => (
+                  <SkeletonLiveCard key={index} />
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
+                {followingUser?.filter((user) => !user?.isLive)?.length >= 1 ? (
+                  followingUser?.filter((user) => !user?.isLive)?.map((user, index) => (
+                    <LiveCard
+                      key={index}
+                      user={user}
+                      rate={300}
+                      requestCall={requestCall}
+                      setRequestCall={setRequestCall}
+                      setCheckEnoughBalance={setCheckEnoughBalance}
+                    />
+                  ))
+                ) : (
+                  <div className="text-2xl text-center w-full">
+                    You have empty following list, please follow someone
+                  </div>
+                )}
+              </div>
+            )
+          ) : buttonClick === "nearby" ? (
+            notState ? (
+              <div className="text-center font-bold text-2xl text-red-600">
+                Please update Your Location In Setting
+              </div>
+            ) : loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+                {[...Array(6)].map((_, index) => (
+                  <SkeletonLiveCard key={index} />
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
+                {locationUser?.filter((user) => !user?.isLive)?.length >= 1 ? (
+                  locationUser?.filter((user) => !user?.isLive)?.map((user, index) => (
+                    <div key={index}>
+                      <LiveCard
+                        // id={id}
+                        user={user}
+                        rate={200}
+                        requestCall={requestCall}
+                        setRequestCall={setRequestCall}
+                        setCheckEnoughBalance={setCheckEnoughBalance}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-2xl text-center w-full">
+                    No users nearby you , Please come later
+                  </div>
+                )}
+              </div>
+            )
+          ) : randomLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+              {[...Array(6)].map((_, index) => (
+                <SkeletonLiveCard key={index} />
+              ))}
             </div>
-          ) : loading ? (
-            <div>Fetching users near you</div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
-              {locationUser.length >= 1 ? (
-                locationUser?.map((user, index) => (
+              {randomUser?.filter((user) => !user?.isLive)?.length >= 1 ? (
+                randomUser?.filter((user) => !user?.isLive)?.map((user, index) => (
                   <div key={index}>
                     <LiveCard
                       // id={id}
@@ -254,35 +403,12 @@ export default function Home() {
                 ))
               ) : (
                 <div className="text-2xl text-center w-full">
-                  No users nearby you , Please come later
+                  Please refresh page to watch more users
                 </div>
               )}
             </div>
-          )
-        ) : randomLoading ? (
-          <div>Fetching Random Users</div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 lg:px-16">
-            {randomUser.length >= 1 ? (
-              randomUser?.map((user, index) => (
-                <div key={index}>
-                  <LiveCard
-                    // id={id}
-                    user={user}
-                    rate={200}
-                    requestCall={requestCall}
-                    setRequestCall={setRequestCall}
-                    setCheckEnoughBalance={setCheckEnoughBalance}
-                  />
-                </div>
-              ))
-            ) : (
-              <div className="text-2xl text-center w-full">
-                Please refresh page to watch more users
-              </div>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {requestCall && (
