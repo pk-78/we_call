@@ -10,10 +10,11 @@ export default function MyWallet() {
   const [newUpiId, setNewUpiId] = useState("");
   const [history, setHistory] = useState([]);
   const id = localStorage.getItem("id");
+  const [tokenBalance, setTokenBalance] = useState(0);
 
   const handleWithdraw = async () => {
     // alert("Withdraw request initiated!");
-    if (userDetail?.TotalEarning < 23000) {
+    if (userDetail?.TotalEarning < 2300) {
       return toast.error("You should have atleast 23000 tokens");
     }
     try {
@@ -23,6 +24,7 @@ export default function MyWallet() {
       );
       console.log(response);
       toast.success("Payment request initiated");
+      setTokenBalance(0);
     } catch (error) {
       console.log(error);
       toast.error("Error in money withdrawl");
@@ -32,7 +34,7 @@ export default function MyWallet() {
   const handleUPIChange = async () => {
     try {
       const response = await axios.post(`${url}/api/user/changeUpi/${id}`, {
-        upiId:newUpiId,
+        upiId: newUpiId,
       });
       console.log(response);
       setUpiId(newUpiId);
@@ -65,6 +67,12 @@ export default function MyWallet() {
 
     fetchTransaction();
   }, [id]);
+  useEffect(() => {
+    if (userDetail?.TotalEarning) {
+      setTokenBalance(userDetail.TotalEarning);
+    }
+  }, [userDetail]);
+
   console.log(history);
 
   return (
@@ -80,15 +88,12 @@ export default function MyWallet() {
           </div>
           <div>
             <p className="text-sm text-gray-200">Token Balance</p>
-            <p className="text-lg font-bold">{userDetail?.TotalEarning}</p>
+            <p className="text-lg font-bold">{tokenBalance}</p>
           </div>
           <div>
             <p className="text-sm text-gray-200">Equivalent Money</p>
             <p className="text-lg font-bold">
-              ₹
-              {userDetail?.TotalEarning
-                ? (Number(userDetail.TotalEarning) / 226).toFixed(2)
-                : "0.00"}
+              ₹{(Number(tokenBalance) / 22.6).toFixed(2)}
             </p>
           </div>
           <div>

@@ -114,6 +114,8 @@ import axios from "axios";
 import { url } from "../url/url";
 import UserContext from "../context/UserContext";
 import NoBalanceLeftLive from "../components/NoBalanceLeftLive";
+import { useDetectBackButton } from "../context/useDetectBackButton";
+
 
 const Room = () => {
   const { id } = useParams();
@@ -126,6 +128,14 @@ const Room = () => {
   const [counter, setCounter] = useState(0);
   const [noBalance, setNoBalance] = useState(false);
   const intervalRef = useRef(null);
+
+  useDetectBackButton(() => {
+    const shouldLeave = window.confirm("Do you really want to leave the live room?");
+    if (!shouldLeave) {
+      window.history.pushState(null, "", window.location.pathname); // cancel the back
+    }
+    console.log("kuh ha")
+  });
 
   const userRole = searchParams.get("role");
   console.log(userRole);
@@ -277,10 +287,8 @@ const Room = () => {
   }, [roomId]);
   useEffect(() => {
     const liveCoinDeductPerMin = async () => {
-      if(userRole==="host"){
-
-        return 
-
+      if (userRole === "host") {
+        return;
       }
       try {
         const response = await axios.post(
@@ -321,6 +329,7 @@ const Room = () => {
 
   return (
     <div>
+     
       {noBalance && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <NoBalanceLeftLive />

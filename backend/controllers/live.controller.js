@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 import User from "../models/user.model.js";
 
-export const streamCoinDeductperMin = async (req,res) => {
+export const streamCoinDeductperMin = async (req, res) => {
   const { id } = req.params;
 
   const { streamerId } = req.body;
-  console.log(streamerId)
+  console.log(streamerId);
 
   try {
     const user = await User.findById(id);
@@ -30,7 +30,8 @@ export const streamCoinDeductperMin = async (req,res) => {
       });
     }
     user.coins = user.coins - 10;
-    streamer.TotalEarning = (streamer.TotalEarning || 0) + 100;
+    user.coinConsumption = Number(user.coinConsumption) + 10;
+    streamer.TotalEarning = (streamer.TotalEarning || 0) + 10;
 
     await user.save();
     await streamer.save();
@@ -48,11 +49,11 @@ export const streamCoinDeductperMin = async (req,res) => {
     });
   }
 };
-export const streamCoinDeductstart = async (req,res) => {
+export const streamCoinDeductstart = async (req, res) => {
   const { id } = req.params;
 
   const { streamerId } = req.body;
-  console.log(streamerId)
+  console.log(streamerId);
 
   try {
     const user = await User.findById(id);
@@ -77,7 +78,8 @@ export const streamCoinDeductstart = async (req,res) => {
       });
     }
     user.coins = user.coins - 5;
-    streamer.TotalEarning = (streamer.TotalEarning || 0) + 50;
+    user.coinConsumption = Number(user.coinConsumption) + 5;
+    streamer.TotalEarning = (streamer.TotalEarning || 0) + 5;
 
     await user.save();
     await streamer.save();

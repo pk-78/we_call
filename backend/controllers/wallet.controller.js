@@ -13,7 +13,7 @@ export const initiateTransaction = async (req, res) => {
         message: "No user found",
       });
     }
-    if (user.TotalEarning < 23000) {
+    if (user.TotalEarning < 2300) {
       return res.status(400).json({
         success: false,
         message: "Not enough balance",
@@ -21,7 +21,7 @@ export const initiateTransaction = async (req, res) => {
     }
 
     const token = user.TotalEarning;
-    const amount = (token / 226).toFixed(2);
+    const amount = (token / 22.6).toFixed(2);
 
     user.TotalEarning = 0;
     await user.save();

@@ -63,9 +63,9 @@ export const gift = async (req, res) => {
   };
 
   const earnData = {
-    butterfly: 400,
-    lollipop: 600,
-    rose: 800,
+    butterfly: 40,
+    lollipop: 60,
+    rose: 80,
   };
 
   try {

@@ -1,31 +1,61 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { FaHome } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
 import { MdLiveTv, MdPostAdd } from "react-icons/md";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { LuLogOut } from "react-icons/lu";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams, useLocation } from "react-router-dom"; // <-- Added useLocation
 import UserContext from "../context/UserContext";
 import { BiWalletAlt } from "react-icons/bi";
+import axios from "axios";
+import { url } from "../url/url";
 
 export default function Navbar({ name }) {
   const navigate = useNavigate();
+  const location = useLocation(); // <-- Hook to get current URL
   const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
-  const isUser = localStorage.getItem("isUser")
-  const userType = localStorage.getItem("userType")
-  console.log(userType)
+  const isUser = localStorage.getItem("isUser");
+  const userType = localStorage.getItem("userType");
+  const id = localStorage.getItem("id");
 
-  console.log("Inside navbar:",isLoggedIn);
+
+  console.log("Inside navbar:", isLoggedIn);
+
+  // 🧠 Hide navbar if route is `/live-room/:id`
+  const shouldHideNavbar = /^\/live-room\/[^/]+$/.test(location.pathname);
+  const prevValueRef = useRef(shouldHideNavbar);
+  useEffect(() => {
+    const endLive = async () => {
+      try {
+        const response = await axios.post(`${url}/api/user/endLive/${id}`);
+        console.log("✅ Live ended API response:", response.data);
+      } catch (error) {
+        console.error("❌ Error ending live:", error);
+      }
+    };
+
+    // Trigger only when value changes from true to false
+    if (prevValueRef.current === true && shouldHideNavbar === false) {
+      endLive();
+      setTimeout(() => {
+        navigate("/", { replace: true });
+        window.location.reload();
+      }, 200);
+    }
+
+    // Update previous value
+    prevValueRef.current = shouldHideNavbar;
+  }, [shouldHideNavbar, id, navigate]);
+  if (shouldHideNavbar) return null;
 
   function logoutHandler() {
-    setIsLoggedIn(false); // Update the state correctly
+    setIsLoggedIn(false);
     localStorage.removeItem("token");
     localStorage.removeItem("id");
     navigate("/login");
   }
 
-  if(userType==="admin")
-    return 
+  if (userType === "admin") return null;
 
   return (
     <nav className="bg-teal-800 p-4">
@@ -49,24 +79,24 @@ export default function Navbar({ name }) {
             </NavLink>
           </li>
 
-         
-
-          {isUser === "false" && isLoggedIn && <li>
-            <NavLink
-              to="/golive"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-white border-b-2 border-white font-bold"
-                  : "text-light-gray hover:border-b-2 hover:border-white hover:text-white transition-all"
-              }
-            >
-              {/* Show icon on mobile, text on larger screens */}
-              <span className=" text-xl md:hidden">
-                <MdLiveTv />
-              </span>
-              <span className="hidden md:inline">Go Live</span>
-            </NavLink>
-          </li>}
+          {isUser === "false" && isLoggedIn && (
+            <li>
+              <NavLink
+                to="/golive"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-white border-b-2 border-white font-bold"
+                    : "text-light-gray hover:border-b-2 hover:border-white hover:text-white transition-all"
+                }
+              >
+                {/* Show icon on mobile, text on larger screens */}
+                <span className=" text-xl md:hidden">
+                  <MdLiveTv />
+                </span>
+                <span className="hidden md:inline">Go Live</span>
+              </NavLink>
+            </li>
+          )}
 
           <li>
             <NavLink
@@ -85,22 +115,24 @@ export default function Navbar({ name }) {
             </NavLink>
           </li>
 
-          { isUser === "false" && isLoggedIn && <li>
-            <NavLink
-              to="/wallet"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-white border-b-2 border-white font-bold"
-                  : "text-light-gray hover:border-b-2 hover:border-white hover:text-white transition-all"
-              }
-            >
-              {/* Show icon on mobile, text on larger screens */}
-              <span className=" text-xl md:hidden">
-              <BiWalletAlt />
-              </span>
-              <span className="hidden md:inline">Wallet</span>
-            </NavLink>
-          </li>}
+          {isUser === "false" && isLoggedIn && (
+            <li>
+              <NavLink
+                to="/wallet"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-white border-b-2 border-white font-bold"
+                    : "text-light-gray hover:border-b-2 hover:border-white hover:text-white transition-all"
+                }
+              >
+                {/* Show icon on mobile, text on larger screens */}
+                <span className=" text-xl md:hidden">
+                  <BiWalletAlt />
+                </span>
+                <span className="hidden md:inline">Wallet</span>
+              </NavLink>
+            </li>
+          )}
 
           {isLoggedIn && (
             <li>
