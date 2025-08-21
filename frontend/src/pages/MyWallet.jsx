@@ -5,18 +5,25 @@ import { url } from "../url/url";
 import toast from "react-hot-toast";
 
 export default function MyWallet() {
+  const {
+    isLoggedIn,
+
+    userDetail,
+  } = useContext(UserContext);
   const [showUPIModal, setShowUPIModal] = useState(false);
-  const [upiId, setUpiId] = useState("sachin@upi");
+  const [upiId, setUpiId] = useState(userDetail?.upiId);
   const [newUpiId, setNewUpiId] = useState("");
   const [history, setHistory] = useState([]);
   const id = localStorage.getItem("id");
   const [tokenBalance, setTokenBalance] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const handleWithdraw = async () => {
     // alert("Withdraw request initiated!");
     if (userDetail?.TotalEarning < 2300) {
-      return toast.error("You should have atleast 23000 tokens");
+      return toast.error("You should have atleast 2300 tokens");
     }
+    setLoading(true);
     try {
       const response = await axios.post(
         `${url}/api/wallet/initiateTransaction/${id}`,
@@ -29,6 +36,7 @@ export default function MyWallet() {
       console.log(error);
       toast.error("Error in money withdrawl");
     }
+    setLoading(false);
   };
 
   const handleUPIChange = async () => {
@@ -45,11 +53,6 @@ export default function MyWallet() {
       toast.error("Something went wrong");
     }
   };
-  const {
-    isLoggedIn,
-
-    userDetail,
-  } = useContext(UserContext);
 
   useEffect(() => {
     const fetchTransaction = async () => {
@@ -73,7 +76,7 @@ export default function MyWallet() {
     }
   }, [userDetail]);
 
-  console.log(history);
+  console.log(userDetail);
 
   return (
     <div className="p-4 space-y-6">
@@ -114,7 +117,9 @@ export default function MyWallet() {
             onClick={handleWithdraw}
             className="bg-white text-teal-600 font-semibold px-4 py-2 rounded-lg hover:bg-gray-100 transition"
           >
-            Withdraw Money
+            <div className="flex justify-center items-center">
+              {loading ? "Please Wait..." : "Withdraw Money"}
+            </div>
           </button>
         </div>
       </div>
@@ -137,7 +142,9 @@ export default function MyWallet() {
             {history?.map((trans, id) => (
               <tbody key={id}>
                 <tr className="text-center text-sm">
-                  <td className="py-2 px-4 border">{trans?.createdAt}</td>
+                  <td className="py-2 px-4 border">
+                    {trans?.createdAt?.split("T")[0]}
+                  </td>
 
                   <td className="py-2 px-4 border">₹{trans?.amount}</td>
 

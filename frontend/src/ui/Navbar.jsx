@@ -17,7 +17,7 @@ export default function Navbar({ name }) {
   const isUser = localStorage.getItem("isUser");
   const userType = localStorage.getItem("userType");
   const id = localStorage.getItem("id");
-
+  console.log(isLoggedIn);
 
   console.log("Inside navbar:", isLoggedIn);
 
@@ -56,6 +56,9 @@ export default function Navbar({ name }) {
   }
 
   if (userType === "admin") return null;
+  // if( isLoggedIn=== false) return null;
+  if (location.pathname === "/login") return null;
+  if (location.pathname === "/signup") return null;
 
   return (
     <nav className="bg-teal-800 p-4">
@@ -158,9 +161,9 @@ export default function Navbar({ name }) {
         <div className="flex space-x-4">
           {isLoggedIn ? (
             <div className="flex gap-3 text-xl">
-              <h2 className="text-light-gray hover:text-white transition-colors cursor-pointer duration-300">
+              {/* <h2 className="text-light-gray hover:text-white transition-colors cursor-pointer duration-300">
                 {name}
-              </h2>
+              </h2> */}
               <button
                 className="text-light-gray hover:text-white transition-colors duration-300"
                 onClick={logoutHandler}

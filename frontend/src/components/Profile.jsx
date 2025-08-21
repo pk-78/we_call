@@ -109,14 +109,14 @@ export default function Profile({ activeItem, setActiveItem, user }) {
           {/* Profile Picture */}
           <div className="relative">
             <img
-              src="/profile_man.png"
+              src={user?.avatar}
               alt="Profile"
               className="rounded-full h-32 w-32 object-cover border-4 border-teal-500"
             />
             {/* Edit Icon */}
-            <button className="absolute bottom-0 right-0 bg-teal-500 hover:bg-teal-700 text-white text-xs rounded-full p-1">
+            {/* <button className="absolute bottom-0 right-0 bg-teal-500 hover:bg-teal-700 text-white text-xs rounded-full p-1">
               ✏️
-            </button>
+            </button> */}
           </div>
 
           {/* Gmail */}

@@ -1,10 +1,9 @@
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
-import { url } from "../url/url";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { url } from "../url/url";
 import UserContext from "../context/UserContext";
 
 export default function Signup() {
@@ -12,31 +11,23 @@ export default function Signup() {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
+  const { setIsLoggedIn } = useContext(UserContext);
 
   const onSubmit = async (data) => {
-    console.log(data);
     setLoading(true);
-    if (password.length <= 8) {
-      toast.error("password should have atleast 8 character");
+    if (data.password.length <= 8) {
+      toast.error("Password should have at least 8 characters");
     } else if (data.password !== data.confirmPassword) {
-      toast.error("Password and confirm password are not matching");
+      toast.error("Password and confirm password do not match");
     } else {
       try {
-        // Send POST request to the API
-
         const response = await axios.post(`${url}/api/user/signup`, data);
-
-        // Handle success response
         toast.success(response.data.message || "Signup successful!");
         navigate("/login");
       } catch (error) {
-        // Handle error response
-        console.log(error);
         toast.error(
           error.response?.data?.error || "Signup failed. Please try again."
         );
@@ -46,215 +37,223 @@ export default function Signup() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-light-gray">
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-teal-blue mb-4 text-center">
-          Signup
-        </h1>
+    <div className="min-h-screen flex flex-col bg-gradient-to-r from-teal-100 via-teal-200 to-teal-300 text-black p-6">
+      {/* Top Logo */}
+      <div className="flex justify-left mb-6">
+        <img src="./we_stream.png" alt="Logo" className="w-60 h-auto" />
+      </div>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-4">
-            <label
-              htmlFor="name"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Enter Your Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              placeholder="Name"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              {...register("name", { required: "This field is required" })}
-            />
-            {errors.name && (
-              <p className="text-red-500 text-xs italic">
-                {errors.name.message}
-              </p>
-            )}
-          </div>
+      {/* Bottom: Intro + Signup Side by Side */}
+      <div className="flex flex-col md:flex-row flex-1 justify-center items-center gap-10 px-6">
+        {/* Left Side - Intro */}
+        <div className="flex-1 max-w-xl">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            Join the global
+            <br />
+            <span className="text-teal-700">live-streaming platform</span>
+          </h1>
+          <p className="text-lg md:text-xl text-teal-800 mb-8">
+            Engage, entertain, and share your world with others.
+          </p>
+        </div>
 
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Enter Your Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              placeholder="Email"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              {...register("email", { required: "This field is required" })}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-xs italic">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="userName"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Enter Your Username
-            </label>
-            <input
-              type="text"
-              id="userName"
-              placeholder="UserName"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              {...register("userName", { required: "This field is required" })}
-            />
-            {errors.userName && (
-              <p className="text-red-500 text-xs italic">
-                {errors.userName.message}
-              </p>
-            )}
-          </div>
+        {/* Right Side - Signup Form */}
+        <div className="w-full max-w-md bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md">
+          <h1 className="text-2xl font-bold text-center text-teal-700 mb-6">
+            Signup
+          </h1>
 
-          <div className="mb-2">
-            <h2 className="text-gray-800 font-semibold text-sm mb-1">
-              Choose User Type
-            </h2>
-            <div className="flex items-center gap-6">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {/* Name */}
+            <div className="mb-4">
               <label
-                htmlFor="streamer"
-                className="flex items-center cursor-pointer"
+                htmlFor="name"
+                className="block text-gray-700 font-medium mb-1"
               >
-                <input
-                  type="radio"
-                  id="streamer"
-                  value="streamer"
-                  className="form-radio text-teal-600"
-                  {...register("userType", {
-                    required: "This field is required",
-                  })}
-                />
-                <span className="ml-2 text-sm text-gray-700">Streamer</span>
+                Enter Your Name
               </label>
-              <label
-                htmlFor="viewer"
-                className="flex items-center cursor-pointer"
-              >
-                <input
-                  type="radio"
-                  id="viewer"
-                  value="viewer"
-                  className="form-radio text-teal-600"
-                  {...register("userType", {
-                    required: "This field is required",
-                  })}
-                />
-                <span className="ml-2 text-sm text-gray-700">Viewer</span>
-              </label>
+              <input
+                type="text"
+                id="name"
+                {...register("name", { required: "This field is required" })}
+                className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+              {errors.name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
-            {errors.userType && (
-              <p className="text-red-500 text-xs mt-1 italic">
-                {errors.userType.message}
-              </p>
-            )}
-          </div>
 
-          <div className="mb-2">
-            <h2 className="text-gray-700 font-bold mb-2">Choose Gender</h2>
-            <label htmlFor="male" className="mr-4">
+            {/* Email */}
+            <div className="mb-4">
+              <label
+                htmlFor="email"
+                className="block text-gray-700 font-medium mb-1"
+              >
+                Enter Your Email
+              </label>
               <input
-                type="radio"
-                id="male"
-                value="male"
-                className="mr-2"
-                {...register("gender", { required: "This field is required" })}
+                type="email"
+                id="email"
+                {...register("email", { required: "This field is required" })}
+                className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
-              Male
-            </label>
-            <label htmlFor="female">
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+
+            {/* Username */}
+            <div className="mb-4">
+              <label
+                htmlFor="userName"
+                className="block text-gray-700 font-medium mb-1"
+              >
+                Enter Your Username
+              </label>
               <input
-                type="radio"
-                id="female"
-                value="female"
-                className="mr-2"
-                {...register("gender", { required: "This field is required" })}
+                type="text"
+                id="userName"
+                {...register("userName", {
+                  required: "This field is required",
+                })}
+                className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
-              Female
-            </label>
-            {errors.gender && (
-              <p className="text-red-500 text-xs italic">
-                {errors.gender.message}
-              </p>
-            )}
-          </div>
+              {errors.userName && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.userName.message}
+                </p>
+              )}
+            </div>
 
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Enter Your Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              placeholder="Password"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              {...register("password", { required: "This field is required" })}
-            />
-            {errors.password && (
-              <p className="text-red-500 text-xs italic">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
+            {/* User Type */}
+            <div className="mb-4">
+              <h2 className="text-gray-700 font-medium mb-2">
+                Choose User Type
+              </h2>
+              <div className="flex gap-6">
+                {["streamer", "viewer"].map((type) => (
+                  <label
+                    key={type}
+                    className="flex items-center cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      value={type}
+                      {...register("userType", {
+                        required: "This field is required",
+                      })}
+                      className="form-radio text-teal-600"
+                    />
+                    <span className="ml-2 capitalize text-sm text-gray-700">
+                      {type}
+                    </span>
+                  </label>
+                ))}
+              </div>
+              {errors.userType && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.userType.message}
+                </p>
+              )}
+            </div>
 
-          <div className="mb-4">
-            <label
-              htmlFor="confirmPassword"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Confirm Your Password
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              placeholder="Confirm Password"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              {...register("confirmPassword", {
-                required: "This field is required",
-              })}
-            />
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-xs italic">
-                {errors.confirmPassword.message}
-              </p>
-            )}
-          </div>
+            {/* Gender */}
+            <div className="mb-4">
+              <h2 className="text-gray-700 font-medium mb-2">Choose Gender</h2>
+              <div className="flex gap-6">
+                {["male", "female"].map((gender) => (
+                  <label
+                    key={gender}
+                    className="flex items-center cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      value={gender}
+                      {...register("gender", {
+                        required: "This field is required",
+                      })}
+                      className="form-radio text-teal-600"
+                    />
+                    <span className="ml-2 capitalize text-sm text-gray-700">
+                      {gender}
+                    </span>
+                  </label>
+                ))}
+              </div>
+              {errors.gender && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.gender.message}
+                </p>
+              )}
+            </div>
 
-          <div className="flex items-center justify-between">
+            {/* Password */}
+            <div className="mb-4">
+              <label
+                htmlFor="password"
+                className="block text-gray-700 font-medium mb-1"
+              >
+                Enter Your Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                {...register("password", {
+                  required: "This field is required",
+                })}
+                className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            {/* Confirm Password */}
+            <div className="mb-4">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-gray-700 font-medium mb-1"
+              >
+                Confirm Your Password
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                {...register("confirmPassword", {
+                  required: "This field is required",
+                })}
+                className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
+            </div>
+
+            {/* Submit Button */}
             <button
               type="submit"
-              className="bg-teal-blue hover:bg-light-blue w-full  text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="w-full bg-teal-600 hover:bg-teal-700 text-white py-2 rounded mt-4 transition"
             >
-              <div className="flex justify-center items-center">
-                {loading ? <div class="loader"></div> : "Submit"}
-              </div>
+              {loading ? "Loading..." : "Submit"}
             </button>
+          </form>
+
+          <div className="text-center mt-6">
+            <p className="text-gray-700">
+              Already have an account?{" "}
+              <NavLink to="/login" className="text-teal-700 hover:underline">
+                Login
+              </NavLink>
+            </p>
           </div>
-        </form>
-        {/* <div className="text-center mt-4">
-          <p className="text-gray-700 mb-2">OR</p>
-          <button className="flex items-center justify-center w-full bg-teal-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            Sign up with <FcGoogle className="ml-2" />
-          </button>
-        </div> */}
-        <div className="mt-6 text-center">
-          <p className="text-gray-700">
-            Already have an account?{" "}
-            <NavLink to="/login" className="text-teal-blue hover:underline">
-              Login
-            </NavLink>
-          </p>
         </div>
       </div>
     </div>

@@ -242,10 +242,10 @@ export default function Setting() {
                 onChange={handleBannerImage}
               />
             </div>
-            <div className="flex gap-1 md:gap-1 my-1">
+            <div className="flex gap-4 md:gap-6 my-1">
               <button
                 onClick={() => handleButtonClick("level")}
-                className={` md:px-8 px-1  text-sm md:text-lg bg-gray-200 rounded-lg text-center hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105 ${
+                className={` md:px-8 px-4  text-xl md:text-xl bg-gray-200 rounded-lg text-center hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105 ${
                   activeItem === "level" ? "bg-gray-300" : ""
                 }`}
               >
@@ -278,7 +278,7 @@ export default function Setting() {
               </button> */}
               <button
                 onClick={() => handleButtonClick("profile")}
-                className={` md:px-8 px-1  text-sm md:text-lg bg-gray-200 rounded-lg text-center hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105 ${
+                className={` md:px-8  px-2  text-lg  md:text-lg bg-gray-200 rounded-lg text-center hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105 ${
                   activeItem === "profile" ? "bg-gray-300" : ""
                 }`}
               >
@@ -286,7 +286,7 @@ export default function Setting() {
               </button>
               <button
                 onClick={() => navigate("/pricing")}
-                className={` md:px-8 px-1  text-sm md:text-lg bg-gray-200 rounded-lg text-center hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105 ${
+                className={` md:px-8  px-2  text-lg  md:text-lg bg-gray-200 rounded-lg text-center hover:bg-gray-300 transition duration-300 ease-in-out transform hover:scale-105 ${
                   activeItem === "task" ? "bg-gray-300" : ""
                 }`}
               >
@@ -407,7 +407,7 @@ export default function Setting() {
               </div>
             </div>
 
-            <div className="mt-6 flex  justify-between">
+            { isUser === "false" && <div className="mt-6 flex  justify-between">
               <div>
                 <h3 className="text-lg font-bold text-gray-700">
                   Rating: <span>{user?.rating}</span>
@@ -443,8 +443,8 @@ export default function Setting() {
                   />
                 ))}
               </div>
-            </div>
-            <div className="flex">
+            </div>}
+            {isUser === "false" && <div className="flex">
               <div className="font-semibold">Gifts:</div>
               <div className="flex gap-4 px-4 py-2 bg-white rounded-lg ">
                 {/* Single Gift */}
@@ -481,7 +481,7 @@ export default function Setting() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div>}
 
             <div className="flex  flex-wrap justify-center lg:justify-start space-x-3 mt-2">
               <h3 className="text-lg font-bold text-teal-600 ">Tags:</h3>

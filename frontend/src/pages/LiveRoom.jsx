@@ -130,7 +130,7 @@ const Room = () => {
   const intervalRef = useRef(null);
 
   useDetectBackButton(() => {
-    const shouldLeave = window.confirm("Do you really want to leave the live room?");
+    const shouldLeave = window.confirm("You are about to leave the room...");
     if (!shouldLeave) {
       window.history.pushState(null, "", window.location.pathname); // cancel the back
     }
@@ -145,8 +145,8 @@ const Room = () => {
   const roomId = id;
   console.log(userDetail?.name);
 
-  const appId = 823274026;
-  const serverSecret = "6f40692561db94794ce2599b7bc00671";
+  const appId = 1500866468;
+  const serverSecret = "6c7d134db693eccde69b26d8bc535436";
 
   const userID = Date.now().toString(); // Unique ID for user
   const userName = userDetail?.name || "pk"; // change if you want dynamic

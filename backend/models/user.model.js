@@ -147,7 +147,7 @@ const userSchema = new mongoose.Schema(
     },
     rate: {
       type: Number,
-      default: 200,
+      default: 10,
     },
     rating: {
       type: String,

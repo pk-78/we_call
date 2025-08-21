@@ -1,7 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
-
 import toast from "react-hot-toast";
 import axios from "axios";
 import { url } from "../url/url";
@@ -11,101 +10,104 @@ export default function AdminLogin() {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (formData) => {
-    console.log(formData);
     setLoading(true);
     try {
       const response = await axios.post(`${url}/api/admin/adminLogin`, formData);
-
-      console.log(response);
-      const {success, adminId, userType}= response.data
-      console.log(adminId)
+      const { success, adminId, userType } = response.data;
 
       if (success) {
         toast.success("Login successful!");
-       
-        localStorage.setItem("userType",userType)
+        localStorage.setItem("userType", userType);
         navigate("/adminHomePage");
       } else {
         toast.error("Invalid credentials. Please try again.");
       }
     } catch (error) {
-      console.log(error);
       toast.error(
-        error.response?.data?.message || "Login failed. Please try again."
+        error?.response?.data?.message || "Login failed. Please try again."
       );
     }
     setLoading(false);
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-light-gray">
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-teal-blue mb-4 text-center">
-          Admin Login
+    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-r from-teal-100 via-teal-200 to-teal-300 text-black">
+      {/* Left Side - Welcome Text */}
+      <div className="flex-1 flex flex-col justify-center p-8 md:p-16">
+        <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          Welcome Back, <br />
+          <span className="text-teal-700">Admin</span>
         </h1>
+        <p className="text-lg md:text-xl text-teal-800 mb-8">
+          Manage your platform with ease and control.
+        </p>
+      </div>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Enter Your Email
-            </label>
+      {/* Right Side - Login Form */}
+      <div className="flex-1 flex items-center justify-center px-4 py-8">
+        <div className="w-full max-w-md bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md">
+          <h1 className="text-2xl font-bold text-center text-teal-700 mb-6">
+            Admin Login
+          </h1>
 
-            <input
-              type="email"
-              id="email"
-              placeholder="Email"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              {...register("email", { required: "This field is required" })}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-xs italic">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {/* Email */}
+            <div className="mb-4">
+              <label htmlFor="email" className="block text-gray-700 font-medium mb-1">
+                Enter Your Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                placeholder="admin@example.com"
+                {...register("email", { required: "This field is required" })}
+                className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              )}
+            </div>
 
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Enter Your Password
-            </label>
+            {/* Password */}
+            <div className="mb-4">
+              <label htmlFor="password" className="block text-gray-700 font-medium mb-1">
+                Enter Your Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                placeholder="••••••••"
+                {...register("password", { required: "This field is required" })}
+                className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+              )}
+            </div>
 
-            <input
-              type="password"
-              id="password"
-              placeholder="Password"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              {...register("password", { required: "This field is required" })}
-            />
-            {errors.password && (
-              <p className="text-red-500 text-xs italic">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
-
-          <div className="flex items-center justify-between">
+            {/* Submit Button */}
             <button
               type="submit"
-              className="bg-teal-blue hover:bg-light-blue w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="w-full bg-teal-600 hover:bg-teal-700 text-white py-2 rounded mt-4 transition"
             >
-              <div className="flex justify-center items-center">
-                {loading ? <div class="loader"></div> : "Submit"}
-              </div>
+              {loading ? "Loading..." : "Submit"}
             </button>
+          </form>
+
+          <div className="text-center mt-6">
+            <p className="text-gray-700 text-sm">
+              Not an admin?{" "}
+              <NavLink to="/" className="text-teal-700 hover:underline">
+                Go to Home
+              </NavLink>
+            </p>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

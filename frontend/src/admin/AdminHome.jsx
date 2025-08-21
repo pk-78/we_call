@@ -104,7 +104,7 @@ export default function AdminHome() {
         <div className="bg-gray-50 m-4">
           <h3 className="mb-2 text-xl">
             {filter?.charAt(0).toUpperCase() + filter?.slice(1).toLowerCase()}{" "}
-            Patments
+            Payments
           </h3>
 
           {filteredPayments.length === 0 ? (
@@ -112,7 +112,7 @@ export default function AdminHome() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {filteredPayments.map((payment) => (
-                <PaymentCard key={payment.id} payment={payment} />
+                <PaymentCard key={payment.id} payment={payment} filteredPayments={filteredPayments} />
               ))}
             </div>
           )}

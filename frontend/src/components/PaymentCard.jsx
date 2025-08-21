@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { url } from "../url/url";
+import toast from "react-hot-toast";
 
-export default function PaymentCard({ payment }) {
+export default function PaymentCard({ payment, filteredPayments }) {
   const [action, setAction] = useState(""); // "approve" or "reject"
   const [transactionId, setTransactionId] = useState("");
   const [comment, setComment] = useState("");
@@ -28,12 +29,15 @@ export default function PaymentCard({ payment }) {
         comment,
       });
       console.log(response);
+      toast.success("Status Changed Successfully")
     } catch (error) {
       console.log(error);
+      toast.error("Error in changing status")
     }
 
     setLoading(false);
   };
+  console.log(filteredPayments)
 
   return (
     <div className="border border-teal-500 rounded-xl w-80 p-4 shadow-md bg-white transition-transform duration-300 hover:shadow-lg hover:scale-[1.02]">
